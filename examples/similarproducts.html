@@ -1,0 +1,93 @@
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/uploadsearch.css" />
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script type="text/javascript" src="http://opoloo.github.io/jquery_upload_preview/assets/js/jquery.uploadPreview.min.js"></script>
+  <script type="text/javascript" src="js/snippet.js"></script>
+  <script type="text/javascript">
+
+    $(function() {
+      // TODO: insert your app key here
+      visearch.set("app_key", "YOUR_APP_KEY");
+
+      //setup image preview box
+      $.uploadPreview({
+        input_field: "#image",   // Default: .image-upload
+        preview_box: "#image-preview",  // Default: .image-preview
+        label_field: "#image-label",    // Default: .image-label
+      });
+      // setup display template
+      var response_template = Handlebars.compile($("#response-template").html());
+
+      //setup visearch client.
+      $("form .submit").click(function() {
+        if ($("#image").val() != "") {
+          event.preventDefault();
+          $(".submit .glyphicon").show();
+          //*************************
+          //start of the viserach api
+          visearch.similarproducts({
+            image: $("#image")[0],
+            fl: ["im_url","price"]
+          }, function(res) {
+            if(res.status == "OK"){
+              $(".main .similars").html(response_template(res));
+            }else{
+              $(".main .similars").html(res.error);
+            }
+            $(".submit .glyphicon").hide();
+          }, function(err){
+            /**
+             *{message:"Failed to fetch"}
+             **/
+            alert(err);
+          });
+          // end of the viserach api
+
+          //*************************
+        } else {
+          alert("please select a image.")
+        }
+        return false;
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="main container-fluid">
+    <div class="content">
+      <h2>Example for uploadsearch with uploaded image file</h2>
+      <form action="" method="">
+        <div class="row">
+          <div id="image-preview" class="col-xs-10 col-sm-10 col-md-4">
+            <label for="image" id="image-label">Choose File</label>
+            <input type="file" name="image" id="image" accept="image/*;capture=camera"/>
+          </div>
+        </div>
+        <div class="row">
+          <button class="submit" class="prefix">
+            Search
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ></span>
+          </button>
+        </div>
+      </form>
+    </div>
+    <div>
+      <div class="similars">
+      </div>
+    </div>
+  </div>
+
+  <script id="response-template" type="text/x-handlebars-template">
+    <h4>Find Similars Result</h4>
+		{{#each product_types}}
+			<div>{{type}}</div>
+			<div>{{box}}</div>
+		{{/each}}
+  </script>
+</body>
+</html>

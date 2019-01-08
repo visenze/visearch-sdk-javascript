@@ -1,0 +1,13 @@
+.similars {}
+.similars .entry {
+  float: left;
+  width: 100px;
+  height: 100px;
+  margin: 10px 5px;
+  border: 1px solid #ECEBEB;
+  cursor: pointer;
+}
+.similars .entry img {
+  max-height: 100px;
+  max-width: 100px;
+}
