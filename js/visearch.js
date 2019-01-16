@@ -294,11 +294,11 @@
         const values = params[param];
         if (Array.isArray(values)) {
           for (const i in values) {
-            if (values.hasOwnProperty(i)) {
+            if (values.hasOwnProperty(i) && values[i] != null) {
               postData.append(param, values[i]);
             }
           }
-        } else {
+        } else if (values != null) {
           postData.append(param, values);
         }
       }
