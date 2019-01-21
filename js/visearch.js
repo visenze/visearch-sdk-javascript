@@ -294,11 +294,11 @@
         const values = params[param];
         if (Array.isArray(values)) {
           for (const i in values) {
-            if (values.hasOwnProperty(i)) {
+            if (values.hasOwnProperty(i) && values[i] != null) {
               postData.append(param, values[i]);
             }
           }
-        } else {
+        } else if (values != null) {
           postData.append(param, values);
         }
       }
@@ -402,5 +402,11 @@
   // Export for Node module
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = $visearch;
+  }
+
+  // Fix Lodash object leaking to window due to Webpack issue
+  // Reference: https://github.com/webpack/webpack/issues/4465
+  if (typeof window !== 'undefined' && window._ && window._.noConflict) {
+    window._.noConflict();
   }
 }(typeof self !== 'undefined' ? self : this));
