@@ -65,7 +65,7 @@
         const param = params[property];
         // do stuff
         if (isArray(param)) {
-          for (let i = 0; i < params.length; i += 1) {
+          for (let i = 0; i < param.length; i += 1) {
             this.addQueryParam(property, param[i]);
           }
         } else {

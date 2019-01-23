@@ -1,6 +1,6 @@
 {
   "name": "visearch-javascript-sdk",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "JavaScript SDK for ViSearch of visenze.com",
   "main": "./js/index.js",
   "scripts": {
