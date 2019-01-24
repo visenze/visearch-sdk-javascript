@@ -3,10 +3,12 @@ const uglify = require('gulp-uglify');
 const sourcemaps = require('gulp-sourcemaps');
 const stream = require('webpack-stream');
 const rename = require('gulp-rename');
+const awspublish = require('gulp-awspublish');
 const replace = require('gulp-replace-task');
 const { exec } = require('child_process');
 const { version } = require('./package.json');
 const webpackConfig = require('./webpack.config.js');
+const awsProfile = require('./aws-profile.json');
 
 const SETTINGS = {
   DEST_BUILD: 'dist/js',
@@ -33,6 +35,27 @@ gulp.task('webpack-production', () => gulp.src('./js/visearch.js') // gulp looks
 gulp.task('webpack-snippet', () => gulp.src('./examples/js/snippet.js') // gulp looks for all source files under specified SETTINGS
   .pipe(uglify()) // minifies the code for better compression
   .pipe(gulp.dest(SETTINGS.DEST_BUILD)));
+
+if (awsProfile && awsProfile.params && awsProfile.params.Bucket) {
+
+  // create a new publisher
+  const publisher = awspublish.create(awsProfile);
+
+  // define custom headers
+  const headers = {
+    'Cache-Control': 'max-age=315360000, no-transform, public',
+  };
+
+  gulp.task('deploy', () => gulp.src(`dist/js/visearch-${version}.min.js`)
+    .pipe(rename((path) => {
+      // upload folder name
+      path.dirname = '/visearch/dist/js/';
+    }))
+    .pipe(awspublish.gzip({ ext: '' }))
+    .pipe(publisher.publish(headers, { force: true }))
+    .pipe(awspublish.reporter()));
+
+}
 
 gulp.task('watch', () => {
   gulp.watch('./js/visearch.js', gulp.series('webpack'));

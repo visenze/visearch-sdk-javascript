@@ -5,3 +5,6 @@ webpack.config.js
 testServer.js
 test*.js
 *.tgz
+.codeclimate.yml
+.eslintrc.js
+aws-profile.json

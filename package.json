@@ -22,6 +22,7 @@
     "eslint-plugin-import": "^2.14.0",
     "exports-loader": "^0.7.0",
     "gulp": "^4.0.0",
+    "gulp-awspublish": "^4.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace-task": "^0.11.0",
     "gulp-sourcemaps": "^2.6.4",
