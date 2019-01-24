@@ -7,3 +7,4 @@ test*.js
 *.tgz
 .codeclimate.yml
 .eslintrc.js
+aws-profile.json
