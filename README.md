@@ -433,7 +433,7 @@ visearch.search({
 
 * `action`
 
-The action type of this event. Currently we support three types, `click`, `add_to_cart`, and `add_to_wishlist`.
+The action type of this event. We are currently able to support `click`. More actions will be supported in the future.
 
 ```js
 visearch.send({
