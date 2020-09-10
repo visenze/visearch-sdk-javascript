@@ -411,10 +411,9 @@ In addition, to improve subsequent search quality, it is recommended to send use
 User action can be sent through an event handler. Register an event handler to the element in which the user will interact.
 
 ```js
-visearch.send({
-  reqid: 'xxxxxx',
+visearch.send(action, {
+  queryId: 'xxxxxx',
   im_name: 'xxxxxx',
-  action: 'action type',
 });
 ```
 
@@ -433,13 +432,12 @@ visearch.search({
 
 * `action`
 
-The action type of this event. Currently we support three types, `click`, `add_to_cart`, and `add_to_wishlist`.
+The action type of this event. action type can be arbitrary string, Currently we support types: `click`, `search`, `view`, `product_click`, `product_view`, `add_to_cart`, and `transaction`.
 
 ```js
-visearch.send({
-  reqid: 'xxxxxx',
+visearch.send("click", {
+  queryId: 'xxxxxx',
   im_name: 'xxxxxx',
-  action: 'click',
 });
 ```
 

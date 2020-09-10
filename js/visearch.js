@@ -12,6 +12,7 @@
   } = require('lodash/core');
   const URI = require('jsuri');
   const FormData = require('form-data');
+  const va = require('visenze-tracking-javascript') 
 
   if (typeof module === 'undefined' || !module.exports) {
     // For non-Node environments
@@ -94,6 +95,9 @@
   // Use prototypes to define all internal methods
   const prototypes = {};
 
+  // tracker to send event 
+  let tracker; 
+
   // Config settings
   prototypes.set = function () {
     if (arguments.length === 2) {
@@ -117,47 +121,26 @@
   // Event tracking methods
   // *********************************************
 
-  const EVENTS = {
-    actions: '__aq.gif', // Used to capture action requests send from client side.
-  };
-
   /**
    * Sends event to tracking service.
    */
-  const sendEvent = function (eventMethod, params) {
-    try {
-      params.v = generateUUID();
-      params.cid = settings.app_key;
-      const url = new URI(settings.track_end_point || TRACK_END_POINT)
-        .setPath(eventMethod)
-        .addQueryParams(params)
-        .toString();
-      if (typeof document !== 'undefined') {
-        const img = document.createElement('img');
-        img.src = url;
-        img.width = 1;
-        img.height = 1;
-        img.async = true;
-        if (document.body != null) {
-          document.body.appendChild(img);
-        }
-      } else {
-        fetch(url, {
-          method: 'GET',
-        }).catch((ex) => {
-          console.error('Failed to send event tracking', ex);
-        });
+  const sendEvent = function (action, params) {
+    if(settings.tracker_code) {
+      if(!tracker) {
+        tracker = va.init({code: settings.tracker_code, uid: settings.uid})
       }
-    } catch (err) {
-      console.error(`Failed to send events: ${err}`);
+
+      tracker.sendEvent(action, params, err => {
+        console.log("Failed to send events: ", err)
+      })
     }
   };
 
   /**
    * Sends tracking event to server.
    */
-  prototypes.send = (params) => {
-    sendEvent(EVENTS.actions, params);
+  prototypes.send = (action, params) => {
+    sendEvent(action, params);    
   };
 
   // *********************************************
@@ -234,9 +217,9 @@
         const stop = new Date().getTime();
         console.log(`ViSearch ${path} finished in ${stop - start}ms`);
         if (options.track_enable && json.status === 'OK') {
-          sendEvent(EVENTS.actions, {
-            reqid,
-            action: path,
+          sendEvent("search", {
+            queryId: reqid,
+            name: path,
             total_time: stop - start,
           });
         }
@@ -391,9 +374,8 @@
     if (reqid && imName) {
       // Get event 'action' for current page, will set it as 'click' action by default if not specified.
       const action = getQueryParamValue(curUri, QUERY_ACTION) || 'click';
-      sendEvent(EVENTS.actions, {
-        reqid: getQueryParamValue(curUri, QUERY_REQID),
-        action,
+      sendEvent(action, {
+        queryId: getQueryParamValue(curUri, QUERY_REQID),
         im_name: getQueryParamValue(curUri, QUERY_IMNAME),
       });
     }
