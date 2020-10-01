@@ -1,30 +1,35 @@
-## visearch-javascript-sdk 
+# visearch-javascript-sdk
 
 [![npm version](https://img.shields.io/npm/v/visearch-javascript-sdk.svg?style=flat)](https://www.npmjs.com/package/visearch-javascript-sdk)
 
 JavaScript SDK for ViSearch
 
 ----
+
 ## Table of Contents
-1. [Overview](#1-overview)
-1. [Setup and initialization](#2-setup-and-initialization)
-   1. [Run the demo](#21-run-the-demo)
-1. [Searching Images](#3-searching-images)
-   1. [Visually Similar Recommendations](#31-visually-similar-recommendations)
-   1. [Search by Image](#32-search-by-image)
-   1. [Selection Box](#321-selection-box)
-   1. [Multiple Product Search](#33-multiple-product-search)
-   1. [Color Search](#34-color-search)
-1. [Search Results](#4-search-results)
-1. [Advanced Search Parameters](#5-advanced-search-parameters)
-   1. [Retrieving Metadata](#51-retrieving-metadata)
-   1. [Filtering Results](#52-filtering-results)
-   1. [Result Score](#53-result-score)
-   1. [Automatic Object Recognition Beta](#54-automatic-object-recognition-beta)
-1. [Event tracking](#6-event-tracking)
-   1. [Event handler](#61-event-handler)
-   1. [Tracking via url](#62-tracking-via-url)
-1. [FAQ](#7-faq)
+
+- [visearch-javascript-sdk](#visearch-javascript-sdk)
+  - [Table of Contents](#table-of-contents)
+  - [1. Overview](#1-overview)
+  - [2. Setup and initialization](#2-setup-and-initialization)
+    - [2.1 Run the Demo](#21-run-the-demo)
+  - [3. Searching Images](#3-searching-images)
+    - [3.1 Visually Similar Recommendations](#31-visually-similar-recommendations)
+    - [3.2 Search by Image](#32-search-by-image)
+      - [3.2.1 Selection Box](#321-selection-box)
+    - [3.3 Multiple Product Search](#33-multiple-product-search)
+    - [3.4 Color Search](#34-color-search)
+  - [4. Search Results](#4-search-results)
+  - [5. Advanced Search Parameters](#5-advanced-search-parameters)
+    - [5.1 Retrieving Metadata](#51-retrieving-metadata)
+    - [5.2 Filtering Results](#52-filtering-results)
+    - [5.3 Result Score](#53-result-score)
+    - [5.4 Automatic Object Recognition Beta](#54-automatic-object-recognition-beta)
+  - [6. Event Tracking](#6-event-tracking)
+    - [6.1 Event handler](#61-event-handler)
+    - [6.2 Tracking via URL](#62-tracking-via-url)
+  - [7. FAQ](#7-faq)
+
 ----
 
 ## 1. Overview
@@ -43,12 +48,15 @@ For usage within a web page, paste the following snippet into the header of your
 <script type="text/javascript">
 !function(e,r,t,s,a){e.__visearch_obj=a;var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)}var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-1.5.2.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h)}(window,document,"script",0,"visearch");
 visearch.set('app_key', 'YOUR_APP_KEY');
+visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
 </script>
 ```
 
 This snippet will load `visearch.js` onto the page asynchronously, so it will not affect your page load speed.
 
-Replace `YOUR_APP_KEY` with your ViSearch Client-side App Key. It is recommended to initiate the client when the SDK is loaded into the page.
+Replace `YOUR_APP_KEY` with your ViSearch Client-side App Key.
+Replace `YOUR_TRACKER_CODE` with your ViSenze Analytics tracking code.
+It is recommended to initiate the client when the SDK is loaded into the page.
 
 Your credentials can be found in [ViSearch Dashboard](https://dashboard.visenze.com)
 
@@ -64,6 +72,7 @@ import visearch from 'visearch-javascript-sdk';
 
 // Set up keys
 visearch.set('app_key', 'YOUR_APP_KEY');
+visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
 visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS); // optional; default value is 15000
 visearch.set('endpoint', YOUR_ENDPOINT); // optional; default value is http://visearch.visenze.com
 ```

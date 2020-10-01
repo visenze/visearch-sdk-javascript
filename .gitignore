@@ -6,3 +6,5 @@ dist/
 *.tgz
 .sass-cache/
 .idea/
+.npmrc
+aws-profile.json

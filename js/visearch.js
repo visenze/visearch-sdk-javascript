@@ -12,7 +12,7 @@
   } = require('lodash/core');
   const URI = require('jsuri');
   const FormData = require('form-data');
-  const va = require('visenze-tracking-javascript') 
+  const va = require('visenze-tracking-javascript');
 
   if (typeof module === 'undefined' || !module.exports) {
     // For non-Node environments
@@ -23,16 +23,6 @@
   // *********************************************
   // Helper methods
   // *********************************************
-
-  function generateUUID() {
-    let d = new Date().getTime();
-    const uuid = 'xxxxxxxx.xxxx.4xxx.yxxx.xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = (d + Math.random() * 16) % 16 | 0;
-      d = Math.floor(d / 16);
-      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-    return uuid;
-  }
 
   function timeout(ms, promise) {
     return new Promise((resolve, reject) => {
@@ -53,7 +43,6 @@
   const VERSION = '@@version'; // Gulp will replace this with actual version number
   const USER_AGENT = `visearch-js-sdk/${VERSION}`;
   const END_POINT = '//visearch.visenze.com/';
-  const TRACK_END_POINT = '//track.visenze.com/';
 
   /**
    * Adds a list of query parameters
@@ -96,7 +85,7 @@
   const prototypes = {};
 
   // tracker to send event 
-  let tracker; 
+  let tracker;
 
   // Config settings
   prototypes.set = function () {
@@ -125,9 +114,9 @@
    * Sends event to tracking service.
    */
   const sendEvent = function (action, params) {
-    if(settings.tracker_code) {
-      if(!tracker) {
-        tracker = va.init({code: settings.tracker_code, uid: settings.uid})
+    if (settings.tracker_code) {
+      if (!tracker) {
+        tracker = va.init({ code: settings.tracker_code, uid: settings.uid })
       }
 
       tracker.sendEvent(action, params, err => {
@@ -140,7 +129,7 @@
    * Sends tracking event to server.
    */
   prototypes.send = (action, params) => {
-    sendEvent(action, params);    
+    sendEvent(action, params);
   };
 
   // *********************************************

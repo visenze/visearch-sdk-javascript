@@ -2,6 +2,7 @@ const visearch = require('./js/index');
 
 // TODO: insert your app key here
 visearch.set('app_key', 'YOUR_APP_KEY');
+visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
 visearch.set('timeout', 2000);
 
 // TODO: insert the image name here
