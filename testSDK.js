@@ -2,6 +2,7 @@ const visearch = require('./js/index');
 
 // TODO: insert your app key here
 visearch.set('app_key', 'YOUR_APP_KEY');
+// TODO: insert your tracker code here
 visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
 visearch.set('timeout', 2000);
 

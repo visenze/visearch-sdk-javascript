@@ -135,9 +135,12 @@
     tracker = getTracker();
 
     if (tracker) {
-      tracker.sendEvent(action, params, (err) => {
-        console.log("Failed to send events: ", err);
-      });
+      tracker.sendEvent(action, params,
+        success => {
+          console.log(`ViSenze Analytics ${action} event ${success}`);
+        }, err => {
+          console.error("Failed to send events: ", err);
+        });
     }
   };
 
