@@ -84,7 +84,7 @@
   // Use prototypes to define all internal methods
   const prototypes = {};
 
-  // tracker to send event 
+  // tracker to send event
   let tracker;
 
   // Config settings
@@ -110,18 +110,34 @@
   // Event tracking methods
   // *********************************************
 
+  function getTracker() {
+    if (!tracker && settings.tracker_code) {
+      tracker = va.init({ code: settings.tracker_code, uid: settings.uid })
+    }
+
+    return tracker;
+  }
+
+  function getDefaultTrackingParams() {
+    tracker = getTracker();
+
+    if (tracker) {
+      return tracker.getDefaultParams();
+    }
+
+    return null;
+  }
+
   /**
    * Sends event to tracking service.
    */
   const sendEvent = function (action, params) {
-    if (settings.tracker_code) {
-      if (!tracker) {
-        tracker = va.init({ code: settings.tracker_code, uid: settings.uid })
-      }
+    tracker = getTracker();
 
-      tracker.sendEvent(action, params, err => {
-        console.log("Failed to send events: ", err)
-      })
+    if (tracker) {
+      tracker.sendEvent(action, params, (err) => {
+        console.log("Failed to send events: ", err);
+      });
     }
   };
 
@@ -229,6 +245,14 @@
   const sendGetRequest = (path, params, options, callback, failure) => {
     const endpoint = settings.endpoint || END_POINT;
     params.access_key = settings.app_key;
+
+    // append analytics data
+    const vaParams = getDefaultTrackingParams();
+    if (vaParams) {
+      params.va_uid = vaParams.uid;
+      params.va_sid = vaParams.sid;
+    }
+
     const url = new URI(endpoint)
       .setPath(path)
       .addQueryParams(params)
@@ -274,6 +298,13 @@
           postData.append(param, values);
         }
       }
+    }
+
+    // append analytics data
+    const vaParams = getDefaultTrackingParams();
+    if (vaParams) {
+      postData.append('va_uid', vaParams.uid);
+      postData.append('va_sid', vaParams.sid);
     }
 
     const fetchObj = fetch(url, {
