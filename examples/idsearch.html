@@ -30,10 +30,9 @@
       });
 
       $(".similars").on("click", ".entry", function(){
-          visearch.send({
-            reqid:$(this).attr("req_id"),
-            im_name:$(this).attr("im_name"),
-            action: "click"
+          visearch.send("click", {
+            queryId:$(this).attr("req_id"),
+            pid:$(this).attr("im_name")
           })
       });
 

@@ -189,25 +189,17 @@
     return output;
   }
 
-  // Define default options
-  const DEFAULT_OPTIONS = {
-    track_enable: true,
-  };
-
   /**
    * Sends the request as configured in the fetch object.
    */
   const sendRequest = (fetchObj, path, optionsParam, callbackParam, failureParam) => {
-    let options;
     let callback;
     let failure;
     if (isFunction(optionsParam)) {
       // Not options parameter
-      options = extend({}, DEFAULT_OPTIONS);
       callback = optionsParam;
       failure = callbackParam;
     } else {
-      options = isObject(optionsParam) ? extend({}, DEFAULT_OPTIONS, optionsParam) : optionsParam;
       callback = callbackParam;
       failure = failureParam;
     }
@@ -224,13 +216,7 @@
       .then((json) => {
         const stop = new Date().getTime();
         console.log(`ViSearch ${path} finished in ${stop - start}ms`);
-        if (options.track_enable && json.status === 'OK') {
-          sendEvent("search", {
-            queryId: reqid,
-            name: path,
-            total_time: stop - start,
-          });
-        }
+
         json.reqid = reqid;
         callback(json);
       })

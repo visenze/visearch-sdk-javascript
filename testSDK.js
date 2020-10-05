@@ -16,3 +16,10 @@ visearch.search({
 }, (err) => {
   console.error(err);
 });
+
+
+// Test tracking function
+visearch.send('click', {
+  queryId: 'fake-query-id',
+  pid: IM_NAME,
+});

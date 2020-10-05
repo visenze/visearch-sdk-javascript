@@ -421,8 +421,8 @@ User action can be sent through an event handler. Register an event handler to t
 
 ```js
 visearch.send(action, {
-  queryId: 'xxxxxx',
-  im_name: 'xxxxxx',
+  queryId: 'your-reqid',
+  pid: 'your-im_name',
 });
 ```
 
@@ -445,8 +445,8 @@ The action type of this event. action type can be arbitrary string, Currently we
 
 ```js
 visearch.send("click", {
-  queryId: 'xxxxxx',
-  im_name: 'xxxxxx',
+  queryId: 'your-reqid',
+  pid: 'your-im_name',
 });
 ```
 
@@ -459,13 +459,13 @@ The `im_name` of the image which the user has clicked on. `im_name` is the uniqu
 The SDK provides another alternative to event tracking which is via URL. Append the following URL requests into the links where the user will interact.
 
 ```html
-?reqid={reqid}&im_name={im_name}
+?queryId={reqid}&pid={im_name}
 ```
 
 When the link is clicked, the system will detect the user interaction.
 
 ```html
-<a href="domain/path?reqid={reqid}&im_name={im_name}">text</a>
+<a href="domain/path?queryId={reqid}&pid={im_name}">text</a>
 ```
 
 ## 7. FAQ
