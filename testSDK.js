@@ -4,6 +4,7 @@ const visearch = require('./js/index');
 visearch.set('app_key', 'YOUR_APP_KEY');
 // TODO: insert your tracker code here
 visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
+visearch.set('is_cn', false); // flag to send request to CN endpoint
 visearch.set('timeout', 2000);
 
 // TODO: insert the image name here
@@ -22,4 +23,8 @@ visearch.search({
 visearch.send('click', {
   queryId: 'fake-query-id',
   pid: IM_NAME,
+}, (success) => {
+  console.log(success);
+}, (err) => {
+  console.error(err);
 });

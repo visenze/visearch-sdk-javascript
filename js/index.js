@@ -37,7 +37,4 @@ for (let i = 0; i < visearch.methods.length; i += 1) {
   visearch[key] = visearch.factory(key);
 }
 
-// Reset ViSearch endpoint; by default the endpoint will adjust protocol in browser
-visearch.set('endpoint', 'https://visearch.visenze.com/');
-
 module.exports = visearch;

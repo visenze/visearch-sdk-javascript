@@ -42,7 +42,8 @@
   const QUERY_ACTION = 'action';
   const VERSION = '@@version'; // Gulp will replace this with actual version number
   const USER_AGENT = `visearch-js-sdk/${VERSION}`;
-  const END_POINT = '//visearch.visenze.com/';
+  const END_POINT = 'https://visearch.visenze.com/';
+  const CN_END_POINT = 'https://visearch.visenze.com.cn/';
 
   /**
    * Adds a list of query parameters
@@ -112,7 +113,7 @@
 
   function getTracker() {
     if (!tracker && settings.tracker_code) {
-      tracker = va.init({ code: settings.tracker_code, uid: settings.uid })
+      tracker = va.init({ code: settings.tracker_code, uid: settings.uid, isCN: settings.is_cn });
     }
 
     return tracker;
@@ -131,15 +132,15 @@
   /**
    * Sends event to tracking service.
    */
-  const sendEvent = function (action, params) {
+  const sendEvent = function (action, params, callback = () => { }, failure = () => { }) {
     tracker = getTracker();
 
     if (tracker) {
       tracker.sendEvent(action, params,
         success => {
-          console.log(`ViSenze Analytics ${action} event ${success}`);
+          callback(`ViSenze Analytics ${action} event ${success}`);
         }, err => {
-          console.error("Failed to send events: ", err);
+          failure(err);
         });
     }
   };
@@ -147,8 +148,8 @@
   /**
    * Sends tracking event to server.
    */
-  prototypes.send = (action, params) => {
-    sendEvent(action, params);
+  prototypes.send = (action, params, callback, failure) => {
+    sendEvent(action, params, callback, failure);
   };
 
   // *********************************************
@@ -232,7 +233,7 @@
    * Sends a GET request.
    */
   const sendGetRequest = (path, params, options, callback, failure) => {
-    const endpoint = settings.endpoint || END_POINT;
+    const endpoint = settings.endpoint || (settings.is_cn === true ? CN_END_POINT : END_POINT);
     params.access_key = settings.app_key;
 
     // append analytics data
@@ -257,7 +258,7 @@
    * Sends a POST request.
    */
   const sendPostRequest = (path, params, options, callback, failure) => {
-    const endpoint = settings.endpoint || END_POINT;
+    const endpoint = settings.endpoint || (settings.is_cn === true ? CN_END_POINT : END_POINT);
     params.access_key = settings.app_key;
     const url = new URI(endpoint)
       .setPath(path)
