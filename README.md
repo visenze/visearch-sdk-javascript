@@ -26,8 +26,8 @@ JavaScript SDK for ViSearch
     - [5.3 Result Score](#53-result-score)
     - [5.4 Automatic Object Recognition Beta](#54-automatic-object-recognition-beta)
   - [6. Event Tracking](#6-event-tracking)
-    - [6.1 Event handler](#61-event-handler)
-    - [6.2 Tracking via URL](#62-tracking-via-url)
+    - [6.1 Setup Tracking](#61-setup-tracking)
+    - [6.2 Send Events](#62-send-events)
   - [7. FAQ](#7-faq)
 
 ----
@@ -411,62 +411,132 @@ The detected product types are listed in `product_types` together with the match
 
 ## 6. Event Tracking
 
-ViSearch Javascript SDK provides methods to understand how your customer interact with the search results.
+To improve search performance and gain useful data insights, it is recommended to send user interactions (actions) with the visual search results. 
 
-In addition, to improve subsequent search quality, it is recommended to send user actions when they interact with the results.
 
-### 6.1 Event handler
+### 6.1 Setup Tracking
 
-User action can be sent through an event handler. Register an event handler to the element in which the user will interact.
+To send the events, you will first need to initialize the event tracker with a tracking ID (found under ViSenze dashboard's Tracking Integration page). There are two different endpoints for tracker (1 for China and another for the rest of the world). If the SDK is intended to be used in China region, please set `is_cn` parameter to `true`.
+ 
+```
+// set tracking ID 
+visearch.set("tracker_code", 'YOUR_TRACKING_ID');
+
+// optional, send events to global or China server
+visearch.set("is_cn", false);
+
+```
+
+### 6.2 Send Events
+
+User action(s) can be sent through an event handler. Register an event handler to the element in which the user will interact.
 
 ```js
 visearch.send(action, {
-  queryId: 'your-reqid',
-  pid: 'your-im_name',
+  queryId: '<search request ID>',
+  pid: '<product ID> ',
+  pos: <product position in Search Results>,
+  imUrl: 'product image URL'
+  ...
+  ...
 });
 ```
 
-* `reqid`
-
-The request id of the search request. This `reqid` can be obtained from the all search responses.
+To send events, first retrieve the search query ID (the `reqid`) found in the search results response call back. 
 
 ```js
 visearch.search({
   // request parameters
 }, (res) => {
+  // get search query ID
   const { reqid } = res;
-  // process reqid
+  // send events
 });
 ```
 
-* `action`
+Currently, we support the following event actions: `click`, `view`, `product_click`, `product_view`, `add_to_cart`, and `transaction`. The `action` parameter can be an arbitrary string and custom events can be sent.
 
-The action type of this event. action type can be arbitrary string, Currently we support types: `click`, `search`, `view`, `product_click`, `product_view`, `add_to_cart`, and `transaction`.
 
 ```js
+
+// send product click
+visearch.send("product_click", {
+                queryId: "<search reqid>",
+                pid: "<your im_name>",
+                pos: 1, // product position in Search Results, start from 1
+                imUrl: "<product image URL e.g. im_url>"
+            });
+            
+// send product impression
+visearch.send("product_view", {
+                queryId: "<search reqid>",
+                pid: "<your im_name>",
+                pos: 1, // product position in Search Results, start from 1
+                imUrl: "<product image URL e.g. im_url>"
+            });
+            
+// send Transaction event e.g order purchase of $300
+visearch.send("transaction", {
+                name: "<optional event name>" // optional event name
+                queryId: "<search reqid>",
+                transId: "<your transaction ID>"
+                value: 300
+         });
+
+// send Add to Cart Event
+visearch.send("add_to_cart", {
+                queryId: "<search reqid>",
+                pid: "<your im_name>",
+                pos: 1, // product position in Search Results, start from 1
+                imUrl: "<product image URL e.g. im_url>"
+            });
+
+// send custom event
 visearch.send("click", {
-  queryId: 'your-reqid',
-  pid: 'your-im_name',
-});
+                queryId: "<search reqid>",
+                name: "click_on_camera_button",
+                cat: "visual_search"
+            });
+            
+
 ```
 
-* `im_name`
+Below are the brief description for various parameters. Please note that invalid events (such as missing required fields or exceed length limit) will not be captured by server.
 
-The `im_name` of the image which the user has clicked on. `im_name` is the unique identifier of the indexed image, in this case the searched result.
+Field | Description | Required
+--- | --- | ---
+queryId| The request id of the search. This reqid can be obtained from the search response callback:```res.reqid``` | Yes
+action | Event action. Currently we support the following event actions: `click`, `view`, `product_click`, `product_view`, `add_to_cart`, and `transaction`. | Yes
+pid | Product ID ( generally, this is the `im_name`) for this product. Can be retrieved via `im_name` in result. | Required for `product_view`, `product_click` and `add_to_cart` events
+imUrl | Image URL ( generally this is the `im_url`) for this product. | Required for `product_view`, `product_click` and `add_to_cart` events
+pos | Position of the product in Search Results e.g. click position/ view position. Note that this starts from 1 , not 0. | Required for `product_view`, `product_click` and `add_to_cart` events
+transId | Transaction ID | Required for transaction event.
+value | Transaction value e.g. numerical order value | Required for transaction event.
+uid | Unique user/device ID. If not provided, a random (non-personalizable) UUID will be generated to track the browser. | No
+cat | A generic string to categorize / group the events in related user flow. For example: `privacy_flow`, `videos`, `search_results`. Typically, categories are used to group related UI elements. Max length: 32 | No
+name | Event name e.g. `open_app` , `click_on_camera_btn`. Max length: 32. | No
+label | label for main interaction object such as product title, page title. This together with `action` can be used to decide whether an event is unique e.g. if user clicks on same product twice, only 1 unique click . Max length: 32. | No
+fromReqId | Generic request ID field to specify which request leads to this event e.g. click request ID that leads to the purchase. The chain can be like this queryId → clickId → purchase. Max length: 32. | No
+source | Segment the traffic by tagging them e.g. from camera, from desktop. Max length: 32. | No
+brand | Product brand. Max length: 64. | No
+price | Product price. Numeric field, if provided must be >=0 and is a valid number. | No
+currency | ISO 3 characters code e.g. “USD”. Will be validated if provided. | No
+productUrl| Product URL. Max length: 512 | No
+c | Advertising campaign. Max length : 64. | No
+cag | Ad group name (only relevant for campaign) | No
+cc | Creative name (only relevant for campaign) | No
+n1 | Custom numeric parameter. | No
+n2 | Custom numeric parameter. | No
+n3 | Custom numeric parameter. | No
+n4 | Custom numeric parameter. | No
+n5 | Custom numeric parameter. | No
+s1 | Custom string parameter. Max length: 64. | No
+s2 | Custom string parameter. Max length: 64. | No
+s3 | Custom string parameter. Max length: 64. | No
+s4 | Custom string parameter. Max length: 64. | No
+s5 | Custom string parameter. Max length: 64. | No
+json | Custom json parameter. Max length: 512. | No
 
-### 6.2 Tracking via URL
-
-The SDK provides another alternative to event tracking which is via URL. Append the following URL requests into the links where the user will interact.
-
-```html
-?queryId={reqid}&pid={im_name}
-```
-
-When the link is clicked, the system will detect the user interaction.
-
-```html
-<a href="domain/path?queryId={reqid}&pid={im_name}">text</a>
-```
 
 ## 7. FAQ
 
