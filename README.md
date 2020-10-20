@@ -491,6 +491,12 @@ visearch.send("add_to_cart", {
                 imUrl: "<product image URL e.g. im_url>"
             });
 
+// send custom event
+visearch.send("click", {
+                queryId: "<search reqid>",
+                name: "click_on_camera_button",
+                cat: "visual_search"
+            });
             
 
 ```
