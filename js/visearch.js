@@ -12,6 +12,7 @@
   } = require('lodash/core');
   const URI = require('jsuri');
   const FormData = require('form-data');
+  const va = require('visenze-tracking-javascript');
 
   if (typeof module === 'undefined' || !module.exports) {
     // For non-Node environments
@@ -22,16 +23,6 @@
   // *********************************************
   // Helper methods
   // *********************************************
-
-  function generateUUID() {
-    let d = new Date().getTime();
-    const uuid = 'xxxxxxxx.xxxx.4xxx.yxxx.xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = (d + Math.random() * 16) % 16 | 0;
-      d = Math.floor(d / 16);
-      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-    return uuid;
-  }
 
   function timeout(ms, promise) {
     return new Promise((resolve, reject) => {
@@ -51,8 +42,8 @@
   const QUERY_ACTION = 'action';
   const VERSION = '@@version'; // Gulp will replace this with actual version number
   const USER_AGENT = `visearch-js-sdk/${VERSION}`;
-  const END_POINT = '//visearch.visenze.com/';
-  const TRACK_END_POINT = '//track.visenze.com/';
+  const END_POINT = 'https://visearch.visenze.com/';
+  const CN_END_POINT = 'https://visearch.visenze.com.cn/';
 
   /**
    * Adds a list of query parameters
@@ -94,6 +85,9 @@
   // Use prototypes to define all internal methods
   const prototypes = {};
 
+  // tracker to send event
+  let tracker;
+
   // Config settings
   prototypes.set = function () {
     if (arguments.length === 2) {
@@ -117,47 +111,45 @@
   // Event tracking methods
   // *********************************************
 
-  const EVENTS = {
-    actions: '__aq.gif', // Used to capture action requests send from client side.
-  };
+  function getTracker() {
+    if (!tracker && settings.tracker_code) {
+      tracker = va.init({ code: settings.tracker_code, uid: settings.uid, isCN: settings.is_cn });
+    }
+
+    return tracker;
+  }
+
+  function getDefaultTrackingParams() {
+    tracker = getTracker();
+
+    if (tracker) {
+      return tracker.getDefaultParams();
+    }
+
+    return null;
+  }
 
   /**
    * Sends event to tracking service.
    */
-  const sendEvent = function (eventMethod, params) {
-    try {
-      params.v = generateUUID();
-      params.cid = settings.app_key;
-      const url = new URI(settings.track_end_point || TRACK_END_POINT)
-        .setPath(eventMethod)
-        .addQueryParams(params)
-        .toString();
-      if (typeof document !== 'undefined') {
-        const img = document.createElement('img');
-        img.src = url;
-        img.width = 1;
-        img.height = 1;
-        img.async = true;
-        if (document.body != null) {
-          document.body.appendChild(img);
-        }
-      } else {
-        fetch(url, {
-          method: 'GET',
-        }).catch((ex) => {
-          console.error('Failed to send event tracking', ex);
+  const sendEvent = function (action, params, callback = () => { }, failure = () => { }) {
+    tracker = getTracker();
+
+    if (tracker) {
+      tracker.sendEvent(action, params,
+        success => {
+          callback(`ViSenze Analytics ${action} event ${success}`);
+        }, err => {
+          failure(err);
         });
-      }
-    } catch (err) {
-      console.error(`Failed to send events: ${err}`);
     }
   };
 
   /**
    * Sends tracking event to server.
    */
-  prototypes.send = (params) => {
-    sendEvent(EVENTS.actions, params);
+  prototypes.send = (action, params, callback, failure) => {
+    sendEvent(action, params, callback, failure);
   };
 
   // *********************************************
@@ -198,25 +190,17 @@
     return output;
   }
 
-  // Define default options
-  const DEFAULT_OPTIONS = {
-    track_enable: true,
-  };
-
   /**
    * Sends the request as configured in the fetch object.
    */
   const sendRequest = (fetchObj, path, optionsParam, callbackParam, failureParam) => {
-    let options;
     let callback;
     let failure;
     if (isFunction(optionsParam)) {
       // Not options parameter
-      options = extend({}, DEFAULT_OPTIONS);
       callback = optionsParam;
       failure = callbackParam;
     } else {
-      options = isObject(optionsParam) ? extend({}, DEFAULT_OPTIONS, optionsParam) : optionsParam;
       callback = callbackParam;
       failure = failureParam;
     }
@@ -233,13 +217,7 @@
       .then((json) => {
         const stop = new Date().getTime();
         console.log(`ViSearch ${path} finished in ${stop - start}ms`);
-        if (options.track_enable && json.status === 'OK') {
-          sendEvent(EVENTS.actions, {
-            reqid,
-            action: path,
-            total_time: stop - start,
-          });
-        }
+
         json.reqid = reqid;
         callback(json);
       })
@@ -255,8 +233,16 @@
    * Sends a GET request.
    */
   const sendGetRequest = (path, params, options, callback, failure) => {
-    const endpoint = settings.endpoint || END_POINT;
+    const endpoint = settings.endpoint || (settings.is_cn === true ? CN_END_POINT : END_POINT);
     params.access_key = settings.app_key;
+
+    // append analytics data
+    const vaParams = getDefaultTrackingParams();
+    if (vaParams) {
+      params.va_uid = vaParams.uid;
+      params.va_sid = vaParams.sid;
+    }
+
     const url = new URI(endpoint)
       .setPath(path)
       .addQueryParams(params)
@@ -272,7 +258,7 @@
    * Sends a POST request.
    */
   const sendPostRequest = (path, params, options, callback, failure) => {
-    const endpoint = settings.endpoint || END_POINT;
+    const endpoint = settings.endpoint || (settings.is_cn === true ? CN_END_POINT : END_POINT);
     params.access_key = settings.app_key;
     const url = new URI(endpoint)
       .setPath(path)
@@ -302,6 +288,13 @@
           postData.append(param, values);
         }
       }
+    }
+
+    // append analytics data
+    const vaParams = getDefaultTrackingParams();
+    if (vaParams) {
+      postData.append('va_uid', vaParams.uid);
+      postData.append('va_sid', vaParams.sid);
     }
 
     const fetchObj = fetch(url, {
@@ -391,9 +384,8 @@
     if (reqid && imName) {
       // Get event 'action' for current page, will set it as 'click' action by default if not specified.
       const action = getQueryParamValue(curUri, QUERY_ACTION) || 'click';
-      sendEvent(EVENTS.actions, {
-        reqid: getQueryParamValue(curUri, QUERY_REQID),
-        action,
+      sendEvent(action, {
+        queryId: getQueryParamValue(curUri, QUERY_REQID),
         im_name: getQueryParamValue(curUri, QUERY_IMNAME),
       });
     }
