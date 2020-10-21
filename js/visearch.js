@@ -72,9 +72,6 @@
   const visearchObjName = context.__visearch_obj || 'visearch';
   const $visearch = context[visearchObjName] = context[visearchObjName] || {};
   $visearch.q = $visearch.q || [];
-  if ($visearch.loaded) {
-    return;
-  }
 
   // Start some inner vars and methods
   const settings = {};
