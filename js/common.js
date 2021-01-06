@@ -12,20 +12,20 @@ const USER_AGENT = `visearch-js-sdk/${VERSION}`;
  * @return {URI}     returns self for fluent chaining
  */
 URI.prototype.addQueryParams = function (params) {
-	for (const property in params) {
-		if (params.hasOwnProperty(property)) {
-			const param = params[property];
-			// do stuff
-			if (Array.isArray(param)) {
-				for (let i = 0; i < param.length; i += 1) {
-					this.addQueryParam(property, param[i]);
-				}
-			} else {
-				this.addQueryParam(property, param);
-			}
-		}
-	}
-	return this;
+  for (const property in params) {
+    if (params.hasOwnProperty(property)) {
+      const param = params[property];
+      // do stuff
+      if (Array.isArray(param)) {
+        for (let i = 0; i < param.length; i += 1) {
+          this.addQueryParam(property, param[i]);
+        }
+      } else {
+        this.addQueryParam(property, param);
+      }
+    }
+  }
+  return this;
 };
 
 // *********************************************
@@ -120,73 +120,73 @@ function sendRequest (t, fetchObj, path, optionsParam, callbackParam, failurePar
 
 module.exports = {
 
-	/**
-	 * Sends a GET request.
-	 */
-	sendGetRequest: (settings, endpoint, path, vaParams, params, options, callback, failure) => {
-		// append analytics data
-		if (vaParams) {
-			params.va_uid = vaParams.uid;
-			params.va_sid = vaParams.sid;
-		}
+  /**
+   * Sends a GET request.
+   */
+  sendGetRequest: (settings, endpoint, path, vaParams, params, options, callback, failure) => {
+    // append analytics data
+    if (vaParams) {
+      params.va_uid = vaParams.uid;
+      params.va_sid = vaParams.sid;
+    }
 
-		const url = new URI(endpoint)
-			.setPath(path)
-			.addQueryParams(params)
-			.toString();
-		const fetchObj = fetch(url, {
-			method: 'GET',
-			headers: getHeaders(settings),
-		});
-		return sendRequest(settings.timeout, fetchObj, path, options, callback, failure);
-	},
+    const url = new URI(endpoint)
+      .setPath(path)
+      .addQueryParams(params)
+      .toString();
+    const fetchObj = fetch(url, {
+      method: 'GET',
+      headers: getHeaders(settings),
+    });
+    return sendRequest(settings.timeout, fetchObj, path, options, callback, failure);
+  },
 
-	/**
-	 * Sends a POST request.
-	 */
-	sendPostRequest: (settings, endpoint, path, vaParams, params, options, callback, failure) => {
-		const url = new URI(endpoint)
-			.setPath(path)
-			.toString();
+  /**
+   * Sends a POST request.
+   */
+  sendPostRequest: (settings, endpoint, path, vaParams, params, options, callback, failure) => {
+    const url = new URI(endpoint)
+      .setPath(path)
+      .toString();
 
-		const postData = new FormData();
-		if (params.hasOwnProperty('image')) {
-			const img = params.image;
-			delete params.image;
-			// Main magic with files here
-			if (img instanceof Blob) {
-				postData.append('image', img);
-			} else {
-				postData.append('image', img.files[0]);
-			}
-		}
-		for (const param in params) {
-			if (params.hasOwnProperty(param)) {
-				const values = params[param];
-				if (Array.isArray(values)) {
-					for (const i in values) {
-						if (values.hasOwnProperty(i) && values[i] != null) {
-							postData.append(param, values[i]);
-						}
-					}
-				} else if (values != null) {
-					postData.append(param, values);
-				}
-			}
-		}
+    const postData = new FormData();
+    if (params.hasOwnProperty('image')) {
+      const img = params.image;
+      delete params.image;
+      // Main magic with files here
+      if (img instanceof Blob) {
+        postData.append('image', img);
+      } else {
+        postData.append('image', img.files[0]);
+      }
+    }
+    for (const param in params) {
+      if (params.hasOwnProperty(param)) {
+        const values = params[param];
+        if (Array.isArray(values)) {
+          for (const i in values) {
+            if (values.hasOwnProperty(i) && values[i] != null) {
+              postData.append(param, values[i]);
+            }
+          }
+        } else if (values != null) {
+          postData.append(param, values);
+        }
+      }
+    }
 
-		// append analytics data
-		if (vaParams) {
-			postData.append('va_uid', vaParams.uid);
-			postData.append('va_sid', vaParams.sid);
-		}
+    // append analytics data
+    if (vaParams) {
+      postData.append('va_uid', vaParams.uid);
+      postData.append('va_sid', vaParams.sid);
+    }
 
-		const fetchObj = fetch(url, {
-			method: 'POST',
-			headers: getHeaders(settings),
-			body: postData,
-		});
-		return sendRequest(settings.timeout, fetchObj, path, options, callback, failure);
+    const fetchObj = fetch(url, {
+      method: 'POST',
+      headers: getHeaders(settings),
+      body: postData,
+    });
+    return sendRequest(settings.timeout, fetchObj, path, options, callback, failure);
   }
   
 }
