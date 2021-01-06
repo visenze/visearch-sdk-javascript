@@ -25,11 +25,11 @@ class ProductSearch {
     return params;
   }
 
-  search(params, vaParams, options, callback, failure) {
+  searchbyimage(params, vaParams, options, callback, failure) {
     return sendPostRequest(this.settings, this.getEndPoint(), 'similar-products', vaParams, params, options, callback, failure);
   }
 
-  visuallysimilar(productId, params, vaParams, options, callback, failure) {
+  searchbyid(productId, params, vaParams, options, callback, failure) {
     return sendGetRequest(this.settings, this.getEndPoint(), `similar-products/${productId}`, vaParams, params, options, callback, failure);
   }
 

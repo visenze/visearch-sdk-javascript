@@ -80,8 +80,9 @@
   // *********************************************
 
   function getTracker() {
-    if (!tracker && settings.tracker_code) {
-      tracker = va.init({ code: settings.tracker_code, uid: settings.uid, isCN: settings.is_cn });
+    if (!tracker) {
+      const code = settings.tracker_code ? settings.tracker_code : `${settings.app_key}:${settings.placement_id}`;
+      tracker = va.init({ code: code, uid: settings.uid, isCN: settings.is_cn });
     }
 
     return tracker;
@@ -151,12 +152,12 @@
     return imagesearch.colorsearch(params, getDefaultTrackingParams(), options, callback, failure);
   };
 
-  prototypes.product_search = function (params, options, callback, failure) {
-    return productsearch.search(params, getDefaultTrackingParams(), options, callback, failure);
+  prototypes.product_search_by_image = function (params, options, callback, failure) {
+    return productsearch.searchbyimage(params, getDefaultTrackingParams(), options, callback, failure);
   };
 
-  prototypes.product_visuallysimilar = function (productId, params, options, callback, failure) {
-    return productsearch.visuallysimilar(productId, params, getDefaultTrackingParams(), options, callback, failure);
+  prototypes.product_search_by_id = function (productId, params, options, callback, failure) {
+    return productsearch.searchbyid(productId, params, getDefaultTrackingParams(), options, callback, failure);
   };
 
   // Monitor the push event from outside
