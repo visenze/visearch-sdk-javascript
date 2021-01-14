@@ -46,9 +46,10 @@ For usage within a web page, paste the following snippet into the header of your
 
 ```html
 <script type="text/javascript">
-!function(e,r,t,s,a){e.__visearch_obj=a;var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)}var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-1.6.0.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h)}(window,document,"script",0,"visearch");
+!function(e,r,t,s,a){e.__visearch_obj=a;var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)}var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-1.6.0.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h)}(window,document,"script",0,"visearch");
 visearch.set('app_key', 'YOUR_APP_KEY');
 visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
+visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
 </script>
 ```
 
@@ -56,6 +57,7 @@ This snippet will load `visearch.js` onto the page asynchronously, so it will no
 
 Replace `YOUR_APP_KEY` with your ViSearch Client-side App Key.
 Replace `YOUR_TRACKER_CODE` with your ViSenze Analytics tracking code.
+Replace `YOUR_PLACEMENT_ID` with your ViSenze Placement Id.
 It is recommended to initiate the client when the SDK is loaded into the page.
 
 Your credentials can be found in [ViSearch Dashboard](https://dashboard.visenze.com)
@@ -72,7 +74,8 @@ import visearch from 'visearch-javascript-sdk';
 
 // Set up keys
 visearch.set('app_key', 'YOUR_APP_KEY');
-visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
+visearch.set('tracker_code', 'YOUR_TRACKER_CODE'); // required for image based API, otherwise it will be `app_key:placement_id`
+visearch.set('placement_id', 'YOUR_PLACEMENT_ID'); // required for products based API
 visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS); // optional; default value is 15000
 visearch.set('endpoint', YOUR_ENDPOINT); // optional; default value is http://visearch.visenze.com
 ```
@@ -120,6 +123,8 @@ visearch.[API_METHOD](parameters, // parameter object
 Please refer to [ViSenze developers' documentation](https://developers.visenze.com/api/) to understand the format of `parameters` as well as the response format for different API methods.
 
 Note that for `parameters`, all values must be `string` or array of `string`, i.e. you will need pass `'true'` instead of `true` for boolean parameters.
+
+***Image Based API***
 
 ### 3.1 Visually Similar Recommendations
 
@@ -250,6 +255,41 @@ visearch.discoversearch({
 ```js
 visearch.colorsearch({
   color: 'fa4d4d',
+}, (res) => {
+  // TODO handle response
+}, (err) => {
+  // TODO handle error
+});
+```
+-----
+***Product Based API***
+
+The below solutions differ from those above in that aggregation of search results on a product level instead of image level.
+
+### 3.5 Search Products By Image
+**Search products by image** solution is to search similar products by uploading an image, providing an image URL or prodviding an indexed image's unique identifier (`im_id`) 
+
+* Using image unique identifier:
+
+```js
+visearch.product_search_by_image({
+  im_id: 'your-image-id',
+}, (res) => {
+  // TODO handle response
+}, (err) => {
+  // TODO handle error
+});
+```
+
+The sample code for seach using image upload, image URL and optimization for this solution is similar to solution [3.2](###-3.2-search-by-image).
+
+### 3.6 Search Products By Id
+
+**Search Products By Id** solution is to search for visually similar products in the pruduct database giving an indexed product’s unique identifier (`product_id`).
+
+```js
+visearch.product_search_by_id(product_id, {
+  // ... your params
 }, (res) => {
   // TODO handle response
 }, (err) => {

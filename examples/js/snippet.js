@@ -29,7 +29,9 @@
         'recommendation',
         'out_of_stock',
         'similarproducts',
-        'discoversearch'
+        'discoversearch',
+        'product_search_by_image',
+        'product_search_by_id'
     ];
     // For each of our methods, generate a queueing stub.
     for (var i = 0; i < __visearch_obj.methods.length; i++) {
