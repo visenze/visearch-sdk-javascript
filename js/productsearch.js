@@ -1,7 +1,7 @@
 const { sendGetRequest, sendPostRequest } = require('./common');
 
-const END_POINT = 'https://search.visenze.com/v1/';
-const CN_END_POINT = 'https://search.visenze.com.cn/v1/'
+const END_POINT = 'https://search-dev.visenze.com';
+const CN_END_POINT = 'https://search-dev.visenze.com.cn'
 
 class ProductSearch {
   constructor() {
@@ -26,11 +26,11 @@ class ProductSearch {
   }
 
   searchbyimage(params, vaParams, options, callback, failure) {
-    return sendPostRequest(this.settings, this.getEndPoint(), 'similar-products', vaParams, params, options, callback, failure);
+    return sendPostRequest(this.settings, this.getEndPoint(), 'v1/similar-products', vaParams, this.getAuthParams(params), options, callback, failure);
   }
 
   searchbyid(productId, params, vaParams, options, callback, failure) {
-    return sendGetRequest(this.settings, this.getEndPoint(), `similar-products/${productId}`, vaParams, params, options, callback, failure);
+    return sendGetRequest(this.settings, this.getEndPoint(), `v1/similar-products/${productId}`, vaParams, this.getAuthParams(params), options, callback, failure);
   }
 
 };
