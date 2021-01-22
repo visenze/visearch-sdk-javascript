@@ -147,7 +147,6 @@ module.exports = {
   sendPostRequest: (settings, endpoint, path, vaParams, params, options, callback, failure) => {
     const url = new URI(endpoint)
       .setPath(path)
-      .addQueryParams(params)
       .toString();
 
     const postData = new FormData();
