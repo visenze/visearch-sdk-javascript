@@ -12,6 +12,7 @@
     $(function() {
       // TODO: insert your app key here
       visearch.set("app_key", "YOUR_APP_KEY");
+      visearch.set("placement_id", "YOUR PLACEMENT ID");
 
       // TODO: insert your tracker code here
       visearch.set("is_cn", false);
@@ -34,7 +35,6 @@
           //start of the viserach api
           visearch.product_search_by_image({
             image: $("#image")[0],
-            fl: ["im_url","price"]
           }, function(res) {
             if(res.status == "OK"){
               $(".main .similars").html(response_template(res));
