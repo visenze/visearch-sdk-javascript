@@ -9,6 +9,7 @@
   const va = require('visenze-tracking-javascript');
   const ProductSearch = require('./productsearch');
   const ImageSearch = require('./imagesearch');
+  const URI = require('jsuri');
 
   if (typeof module === 'undefined' || !module.exports) {
     // For non-Node environments
