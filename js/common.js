@@ -106,8 +106,9 @@ function sendRequest (t, fetchObj, path, optionsParam, callbackParam, failurePar
     .then((json) => {
       const stop = new Date().getTime();
       console.log(`ViSearch ${path} finished in ${stop - start}ms`);
-
-      json.reqid = reqid;
+      if (reqid && !json.reqid) {
+        json.reqid = reqid;
+      }
       callback(json);
     })
     .catch((ex) => {
