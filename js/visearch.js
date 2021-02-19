@@ -108,7 +108,7 @@
     if (tracker) {
       tracker.sendEvent(action, params,
         success => {
-          callback(`ViSenze Analytics ${action} event ${success}`);
+          callback(action, params);
         }, err => {
           failure(err);
         });
@@ -164,6 +164,7 @@
   // Monitor the push event from outside
 
   $visearch.q = $visearch.q || [];
+  // eslint-disable-next-line func-names
   $visearch.q.push = function (command) {
     applyPrototypesCall(command);
   };
