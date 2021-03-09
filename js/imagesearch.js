@@ -9,14 +9,14 @@ class ImageSearch {
   }
 
   set(key, val) {
-    this.settings[key] = val; 
+    this.settings[key] = val;
   }
 
   getEndPoint() {
     if (this.settings.endpoint) {
       return this.settings.endpoint;
     }
-    return this.settings.is_CN ? CN_END_POINT : END_POINT;        
+    return this.settings.is_CN ? CN_END_POINT : END_POINT;
   }
 
   getAuthParams(params) {
@@ -36,6 +36,7 @@ class ImageSearch {
     return sendPostRequest(this.settings, this.getEndPoint(), 'similarproducts', vaParams, this.getAuthParams(params), options, callback, failure);
   }
 
+  // eslint-disable-next-line camelcase
   out_of_stock(params, vaParams, options, callback, failure) {
     return sendGetRequest(this.settings, this.getEndPoint(), 'out_of_stock', vaParams, this.getAuthParams(params), options, callback, failure);
   }
@@ -51,7 +52,6 @@ class ImageSearch {
   colorsearch(params, vaParams, options, callback, failure) {
     return sendGetRequest(this.settings, this.getEndPoint(), 'colorsearch', vaParams, this.getAuthParams(params), options, callback, failure);
   }
-
-};
+}
 
 module.exports = ImageSearch;

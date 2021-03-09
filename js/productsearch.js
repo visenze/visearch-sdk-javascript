@@ -1,7 +1,7 @@
 const { sendGetRequest, sendPostRequest } = require('./common');
 
 const END_POINT = 'https://search-dev.visenze.com';
-const CN_END_POINT = 'https://search-dev.visenze.com.cn'
+const CN_END_POINT = 'https://search-dev.visenze.com.cn';
 
 class ProductSearch {
   constructor() {
@@ -9,16 +9,16 @@ class ProductSearch {
   }
 
   set(key, val) {
-    this.settings[key] = val; 
+    this.settings[key] = val;
   }
 
   getEndPoint() {
     if (this.settings.endpoint) {
       return this.settings.endpoint;
     }
-    return this.settings.is_CN ? CN_END_POINT : END_POINT;        
+    return this.settings.is_CN ? CN_END_POINT : END_POINT;
   }
-  
+
   getAuthParams(params) {
     params.app_key = this.settings.app_key;
     params.placement_id = this.settings.placement_id;
@@ -26,13 +26,12 @@ class ProductSearch {
   }
 
   searchbyimage(params, vaParams, options, callback, failure) {
-    return sendPostRequest(this.settings, this.getEndPoint(), 'v1/similar-products', vaParams, this.getAuthParams(params), options, callback, failure);
+    return sendPostRequest(this.settings, this.getEndPoint(), 'v1/search_by_image', vaParams, this.getAuthParams(params), options, callback, failure);
   }
 
   searchbyid(productId, params, vaParams, options, callback, failure) {
-    return sendGetRequest(this.settings, this.getEndPoint(), `v1/similar-products/${productId}`, vaParams, this.getAuthParams(params), options, callback, failure);
+    return sendGetRequest(this.settings, this.getEndPoint(), `v1/similar/${productId}`, vaParams, this.getAuthParams(params), options, callback, failure);
   }
-
-};
+}
 
 module.exports = ProductSearch;
