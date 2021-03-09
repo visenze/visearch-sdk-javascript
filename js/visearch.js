@@ -1,3 +1,6 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable func-names */
 /* eslint-disable global-require */
 
 /**
@@ -27,8 +30,13 @@
 
   // Set up visearch_obj
 
-  const visearchObjName = context.__visearch_obj || 'visearch';
-  const $visearch = context[visearchObjName] = context[visearchObjName] || {};
+  /* Need to disable these 2 lines so that visearch is not a singleto
+   * needed if we want to run multiple instances of visearch
+   */
+  // const visearchObjName = context.__visearch_obj || 'visearch';
+  // const $visearch = context[visearchObjName] = context[visearchObjName] || {};
+
+  const $visearch = {};
   $visearch.q = $visearch.q || [];
   if ($visearch.loaded) {
     return;
@@ -53,14 +61,7 @@
   const productsearch = new ProductSearch();
 
   // Config settings
-  prototypes.set = function () {
-    let key = arguments[0];
-    let value;
-    if (arguments.length === 2) {
-      value = arguments[1]
-    } else if (arguments.length > 2) {
-      value = arguments.slice(1);
-    }
+  prototypes.set = function (key, value) {
     settings[key] = value;
     imagesearch.set(key, value);
     productsearch.set(key, value);
@@ -70,7 +71,7 @@
    * Apply calling on prototypes methods.
    */
   function applyPrototypesCall(command) {
-    if (prototypes.hasOwnProperty(command[0])) {
+    if (prototypes[command[0]]) {
       const args = command.slice(1);
       prototypes[command[0]](...args);
     }
@@ -83,7 +84,7 @@
   function getTracker() {
     if (!tracker) {
       const code = settings.tracker_code ? settings.tracker_code : `${settings.app_key}:${settings.placement_id}`;
-      tracker = va.init({ code: code, uid: settings.uid, isCN: settings.is_cn });
+      tracker = va.init({ code, uid: settings.uid, isCN: settings.is_cn });
     }
 
     return tracker;
@@ -107,9 +108,9 @@
 
     if (tracker) {
       tracker.sendEvent(action, params,
-        success => {
+        () => {
           callback(action, params);
-        }, err => {
+        }, (err) => {
           failure(err);
         });
     }
@@ -130,11 +131,13 @@
   prototypes.idsearch = prototypes.search;
 
   prototypes.recommendation = function (params, options, callback, failure) {
-    return imagesearch.recommendation(params, getDefaultTrackingParams(), options, callback, failure);
+    return imagesearch.recommendation(params, getDefaultTrackingParams(),
+      options, callback, failure);
   };
 
   prototypes.similarproducts = function (params, options, callback, failure) {
-    return imagesearch.similarproducts(params, getDefaultTrackingParams(), options, callback, failure);
+    return imagesearch.similarproducts(params, getDefaultTrackingParams(),
+      options, callback, failure);
   };
 
   prototypes.out_of_stock = function (params, options, callback, failure) {
@@ -146,7 +149,8 @@
   };
 
   prototypes.discoversearch = function (params, options, callback, failure) {
-    return imagesearch.discoversearch(params, getDefaultTrackingParams(), options, callback, failure);
+    return imagesearch.discoversearch(params, getDefaultTrackingParams(),
+      options, callback, failure);
   };
 
   prototypes.colorsearch = function (params, options, callback, failure) {
@@ -154,11 +158,13 @@
   };
 
   prototypes.product_search_by_image = function (params, options, callback, failure) {
-    return productsearch.searchbyimage(params, getDefaultTrackingParams(), options, callback, failure);
+    return productsearch.searchbyimage(params, getDefaultTrackingParams(),
+      options, callback, failure);
   };
 
   prototypes.product_search_by_id = function (productId, params, options, callback, failure) {
-    return productsearch.searchbyid(productId, params, getDefaultTrackingParams(), options, callback, failure);
+    return productsearch.searchbyid(productId, params, getDefaultTrackingParams(),
+      options, callback, failure);
   };
 
   // Monitor the push event from outside
@@ -173,7 +179,7 @@
   const methodExports = $visearch.methods || [];
   for (const i in methodExports) {
     const m = methodExports[i];
-    if (prototypes.hasOwnProperty(m)) {
+    if (prototypes[m]) {
       // export methods
       $visearch[m] = prototypes[m];
     }
@@ -208,7 +214,7 @@
     const imName = getQueryParamValue(curUri, QUERY_IMNAME);
     // If reqid, action and imName are found in current page content, send event tracking.
     if (reqid && imName) {
-      // Get event 'action' for current page, will set it as 'click' action by default if not specified.
+      // Get event 'action' for page will set it as 'click' action by default if not specified.
       const action = getQueryParamValue(curUri, QUERY_ACTION) || 'click';
       sendEvent(action, {
         queryId: getQueryParamValue(curUri, QUERY_REQID),
@@ -227,4 +233,5 @@
   if (typeof window !== 'undefined' && window._ && window._.noConflict) {
     window._.noConflict();
   }
+// eslint-disable-next-line no-restricted-globals
 }(typeof self !== 'undefined' ? self : this));
