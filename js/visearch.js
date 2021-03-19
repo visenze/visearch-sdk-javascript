@@ -46,7 +46,7 @@
   const settings = {};
 
   // Export setting for internal extends
-  context.visearch_settings = settings;
+  // context.visearch_settings = settings;
 
   // Use prototypes to define all internal methods
   const prototypes = {};
