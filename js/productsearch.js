@@ -1,7 +1,7 @@
 const { sendGetRequest, sendPostRequest } = require('./common');
 
-const END_POINT = 'https://search-dev.visenze.com';
-const CN_END_POINT = 'https://search-dev.visenze.com.cn';
+const END_POINT = 'https://search.visenze.com';
+const CN_END_POINT = 'https://search.visenze.com.cn';
 
 class ProductSearch {
   constructor() {
