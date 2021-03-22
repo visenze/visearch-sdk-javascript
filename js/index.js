@@ -18,6 +18,7 @@ visearch.factory = function (method) {
 };
 
 // A list of the methods in visearch.js to stub.
+// We need to maintain backward compatibility so the method names remain the same for image search 
 visearch.methods = [
   'idsearch',
   'uploadsearch',
@@ -29,6 +30,8 @@ visearch.methods = [
   'out_of_stock',
   'similarproducts',
   'discoversearch',
+  'product_search_by_image',
+  'product_search_by_id',
 ];
 
 // For each of our methods, generate a queueing stub.
