@@ -115,6 +115,24 @@ The demo is only applicable to those who work directly off the main [repo](https
   npm run gulp
   ```
 
+  After the above command, you should see that the server is running locally on your device. You can then access the different demo webpages in your browser by using this format `http://localhost:3000/examples/*.html`.
+
+  - E.g. Visually similar recommendations:
+
+    `http://localhost:3000/examples/idsearch.html`
+
+  - E.g. Color search:
+
+    `http://localhost:3000/examples/colorsearch.html`
+
+  - E.g. Search by Image:
+
+    `http://localhost:3000/examples/uploadsearch.html`
+
+  - E.g. Multiple Products Search:
+
+    `http://localhost:3000/examples/discoversearch.html`
+  
   > Update the `// TODO` in all `*.html` files within the `./examples` directory
 
 ## 2. ViSearch API
