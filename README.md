@@ -97,7 +97,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
   visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS);
   ```
 
-- If you wish to include the SDK directly onto your webpage instead, add this to the header of your site:
+- If you wish to include the SDK directly onto your webpage, add this to the header of your site:
 
   ```html
   <script type="text/javascript">
