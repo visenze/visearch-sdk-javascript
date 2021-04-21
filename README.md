@@ -97,6 +97,17 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
   visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS);
   ```
 
+- If you wish to include the SDK directly onto your webpage instead, add this to the header of your site:
+
+  ```html
+  <script type="text/javascript">
+  !function(e,r,t,s,a){e.__visearch_obj=a;var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)}var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-2.0.0.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h)}(window,document,"script",0,"visearch");
+  visearch.set('app_key', 'YOUR_APP_KEY');
+  visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
+  visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
+  </script>
+  ```
+
 ### 1.3 Demo
 
 The demo is only applicable to those who work directly off the main [repo](https://github.com/visenze/visearch-sdk-javascript). You are required to have a Node.js environment and remember to **fill up the relevant demo files**.
@@ -138,7 +149,7 @@ The demo is only applicable to those who work directly off the main [repo](https
 ## 2. ViSearch API
 
 Any ViSearch API request should follow this signature:
-`api_method(params, options, callback, failure)`.
+`visearch.[API_METHOD](params, options, callback, failure)`.
 
 For better understanding of the format and explanation on what the parameters mean, please refer to our [ViSearch developer docs](
 https://developers.visenze.com/api/#search-api).
@@ -317,7 +328,7 @@ visearch.colorsearch(parameters, onResponse, onError);
 
 ## 3. ProductSearch API
 
-This API differs from those of [ViSearch API](#2-visearch-api) in that the aggregation of search resultss is done on a product level instead of image level.
+This API differs from those of [ViSearch API](#2-visearch-api) in that the aggregation of search results is done on a product level instead of image level.
 
 ### 3.1 Search by Image
 
@@ -423,47 +434,43 @@ Javascript does not contain type definitions and the REST API response for all o
 
 | Name | Type | Description |
 |:---|:---|:---|
-| status | String | The request status, either `OK`, `warning`, or `fail` |
-| imId | String | Image ID. Can be used to search again without reuploading |
-| method | String |  |
-| error | [Object](#41-errordata) | Error message and code if the request was not successful i.e. when status is `warning` or `fail` |
-| productTypes | [Object](#42-producttype)[]| Detected products' types, score and their bounding box in (x1,y1,x2,y2) format |
-| products | [Object](#43-product)[] | The list of products in the search results. Important fields for first release. If missing, it will be set to blank. Note that we are displaying customer’s original catalog fields in “data” field |
-| objects | [Object](#44-productobject)[] | When the `searchAllObjects` parameter is set to `true` |
-| catalogFieldsMapping | Object | Original catalog’s fields mapping |
-| facets | [Object](#45-facet)[] | List of facet fields value and response for filtering |
-| page | int | The result page number |
-| limit | int | The number of results per page |
-| total | int | Total number of search result |
-| reqId | String | ID assigned to the request made |
+| status | string | The request status, either `OK`, `warning`, or `fail` |
+| imId | string | Image ID. Can be used to search again without reuploading |
+| im_id | string |  |
+| error | [object](#41-errordata) | Error message and code if the request was not successful i.e. when status is `warning` or `fail` |
+| product_types | [object](#42-producttype)[]| Detected products' types, score and their bounding box in (x1,y1,x2,y2) format |
+| result | [object](#43-product)[] | The list of products in the search results. Important fields for first release. If missing, it will be set to blank. Note that we are displaying customer’s original catalog fields in “data” field |
+| objects | [object](#44-productobject)[] | When the `searchAllObjects` parameter is set to `true` |
+| catalog_fields_mapping | object | Original catalog’s fields mapping |
+| facets | [object](#45-facet)[] | List of facet fields value and response for filtering |
+| page | number | The result page number |
+| limit | number | The number of results per page |
+| total | number | Total number of search result |
+| reqId | string | ID assigned to the request made |
 
 ### 4.1 ErrorData
 
 | Name | Type | Description |
 |:---|:---|:---|
-| code | int | Error code, e.g. 401, 404 etc... |
-| message | String | The server response message.  |
+| code | number | Error code, e.g. 401, 404 etc... |
+| message | string | The server response message.  |
 
 ### 4.2 ProductType
 
 | Name | Type | Description |
 |:---|:---|:---|
-| boxArray | int[] | The image-space coordinates of the detection box that represents the product. |
-| type | String | The detected type of the product. |
-| score | double | The detection's score of the product. |
+| box | number[] | The image-space coordinates of the detection box that represents the product. |
+| type | string | The detected type of the product. |
+| score | number | The detection's score of the product. |
 
 ### 4.3 Product
 
 | Name | Type | Description |
 |:---|:---|:---|
-| productId | String | The product's ID which can be used in [Search by ID](#32-search-by-id). |
-| imageUrl | String | Image URL. |
-| data | Object | This data field is slightly more complicated and deserves its own section over [here](#541-data). |
-| score | Float | The detection score of the product. |
-| s3Url | String | The product's image's S3 URL. |
-| detect | String |  |
-| keyword | String |  |
-| boxArray | int[] | The image space coordinates of the detected object. |
+| product_id | string | The product's ID which can be used in [Search by ID](#32-search-by-id). |
+| main_image_url | string | Image URL. |
+| data | object | This data field is slightly more complicated and deserves its own section over [here](#541-data). |
+| score | number | The detection score of the product. |
 
 #### 4.3.1 Data
 
@@ -490,8 +497,11 @@ When using the `searchAllObjects` is set to `true`, the search response will ret
 
 | Name | Type | Description |
 |:---|:---|:---|
-| result | [Object](#43-product)[] | The list of products belonging to this type. |
-| total | Integer | The total number of results in this type. |
+| result | [object](#43-product)[] | The list of products belonging to this type. |
+| total | number | The total number of results in this type. |
+| type | string | The detected type of the product. |
+| score | number | The detection's score of the product. |
+| box | number[] | The image-space coordinates of the detection box that represents the product. |
 
 ### 4.5 Facet
 
@@ -499,9 +509,9 @@ Facets are used to perform potential filtering of results.
 
 | Name | Type | Description |
 |:---|:---|:---|
-| key | String |  |
-| items | [Object](#46-facetitem)[] |  |
-| range | [Object](#47-facetrange) |  |
+| key | string |  |
+| items | [object](#46-facetitem)[] |  |
+| range | [object](#47-facetrange) |  |
 
 ### 4.6 FacetItem
 
@@ -509,8 +519,8 @@ Facet for distinct value filtering.
 
 | Name | Type | Description |
 |:---|:---|:---|
-| value | String |  |
-| count | Integer |  |
+| value | string |  |
+| count | number |  |
 
 ### 4.7 FacetRange
 
@@ -518,8 +528,8 @@ Facet for value range filtering.
 
 | Name | Type | Description |
 |:---|:---|:---|
-| min | Number |  |
-| max | Number |  |
+| min | string |  |
+| max | string |  |
 
 ## 5. Advanced Search Parameters
 
