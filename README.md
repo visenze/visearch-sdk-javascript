@@ -2,327 +2,542 @@
 
 [![npm version](https://img.shields.io/npm/v/visearch-javascript-sdk.svg?style=flat)](https://www.npmjs.com/package/visearch-javascript-sdk)
 
-JavaScript SDK for ViSearch
+ViSenze's Javascript SDK provides accurate, reliable and scalable image search APIs within our catalogs. It initially started with just the [ViSearch API](#2-visearch-api) but soon expanded to include the [ProductSearch API](#3-productsearch-api) after the release of the Catalog system (2021). Both APIs included in this SDK aims to provide developers with endpoints that executes image search efficiently while also making it easy to integrate into webapps.
+
+> Note: In order to use any of our SDKs, you are required to have a ViSenze developer account. You will gain access to your own dashboard to manage your appkeys and catalogs. Visit [here](https://developers.visenze.com) for more info.
 
 ----
 
 ## Table of Contents
 
-- [visearch-javascript-sdk](#visearch-javascript-sdk)
-  - [Table of Contents](#table-of-contents)
-  - [1. Overview](#1-overview)
-  - [2. Setup and initialization](#2-setup-and-initialization)
-    - [2.1 Run the Demo](#21-run-the-demo)
-  - [3. Searching Images](#3-searching-images)
-    - [3.1 Visually Similar Recommendations](#31-visually-similar-recommendations)
-    - [3.2 Search by Image](#32-search-by-image)
-      - [3.2.1 Selection Box](#321-selection-box)
-    - [3.3 Multiple Product Search](#33-multiple-product-search)
-    - [3.4 Color Search](#34-color-search)
-  - [4. Search Results](#4-search-results)
-  - [5. Advanced Search Parameters](#5-advanced-search-parameters)
-    - [5.1 Retrieving Metadata](#51-retrieving-metadata)
-    - [5.2 Filtering Results](#52-filtering-results)
-    - [5.3 Result Score](#53-result-score)
-    - [5.4 Automatic Object Recognition Beta](#54-automatic-object-recognition-beta)
-  - [6. Event Tracking](#6-event-tracking)
-    - [6.1 Setup Tracking](#61-setup-tracking)
-    - [6.2 Send Events](#62-send-events)
-  - [7. FAQ](#7-faq)
+- [1. Quickstart](#1-quickstart)
+  - [1.1 Installation](#11-installation)
+  - [1.2 Setup](#12-setup)
+  - [1.3 Demo](#13-demo)
+- [2. ViSearch API](#2-visearch-api)
+  - [2.1 Visually Similar Recommendations](#21-visually-similar-recommendations)
+  - [2.2 Search by Image](#22-search-by-image)
+    - [2.2.1 Selection Box](#221-selection-box)
+  - [2.3 Multiple Product Search](#23-multiple-product-search)
+  - [2.3 Search by Color](#24-search-by-color)
+- [3. ProductSearch API](#3-productsearch-api)
+  - [3.1 Search by Image](#31-search-by-image)  
+  - [3.2 Search by ID](#32-search-by-id)  
+- [4. Search Results](#4-search-results)
+  - [4.1 ErrorData](#41-errordata)
+  - [4.1 ProductType](#42-producttype)
+  - [4.1 Product](#43-product)
+  - [4.1 ProductObject](#44-productobject)
+  - [4.1 Facet](#45-facet)
+  - [4.1 FacetItem](#46-facetitem)
+  - [4.1 FacetRange](#47-facetrange)
+- [5. Advanced Search Parameters](#5-advanced-search-parameters)
+  - [5.1 Example - Retrieving Metadata](#51-example---retrieving-metadata)
+  - [5.2 Example - Filtering Results](#52-example---filtering-results)
+  - [5.3 Example - Result Score](#53-example---result-score)
+  - [5.4 Example - Automatic Object Recognition Beta](#54-example---automatic-object-recognition-beta)
+- [6. Event Tracking](#6-event-tracking)
+  - [6.1 Setup Tracking](#61-setup-tracking)
+  - [6.2 Send Events](#62-send-events))
 
 ----
 
-## 1. Overview
+## 1. Quickstart
 
-ViSearch is an API that provides accurate, reliable and scalable image search. ViSearch API provides endpoints that let developers index their images and perform image searches efficiently. ViSearch API can be easily integrated into your web and mobile applications. For more details, see [ViSearch API Documentation](http://developers.visenze.com/api/).
+Follow these simple steps to get familiarized with how the SDK can be integrated and how it actually works by exploring our demos included in the main [repo](https://github.com/visenze/visearch-sdk-javascript).
 
-The ViSearch JavaScript SDK is an open source software for easy integration of ViSearch Search API with your application server. For source code and references, visit the [GitHub repository](https://github.com/visenze/visearch-sdk-javascript).
+### 1.1 Installation
 
-- Latest stable version: ![npm version](https://img.shields.io/npm/v/visearch-javascript-sdk.svg?style=flat)
+If you are using the project provided directly from the main [repo](https://github.com/visenze/visearch-sdk-javascript), you can simply run the following command from the root directory of this project:
 
-## 2. Setup and initialization
-
-For usage within a web page, paste the following snippet into the header of your site:
-
-```html
-<script type="text/javascript">
-!function(e,r,t,s,a){e.__visearch_obj=a;var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)}var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-2.0.0.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h)}(window,document,"script",0,"visearch");
-visearch.set('app_key', 'YOUR_APP_KEY');
-visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
-visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
-</script>
+```linux
+npm install
 ```
 
-This snippet will load `visearch.js` onto the page asynchronously, so it will not affect your page load speed.
+If you are trying to include this SDK into your own project via npm, run the following command from the root directory of your project:
 
-Replace `YOUR_APP_KEY` with your ViSearch Client-side App Key.
-Replace `YOUR_TRACKER_CODE` with your ViSenze Analytics tracking code.
-Replace `YOUR_PLACEMENT_ID` with your ViSenze Placement Id.
-It is recommended to initiate the client when the SDK is loaded into the page.
-
-Your credentials can be found in [ViSearch Dashboard](https://dashboard.visenze.com)
-
-For usage with Node.js projects:
-
-```sh
+```linux
 npm install visearch-javascript-sdk
 ```
 
-```js
-// Import module
-import visearch from 'visearch-javascript-sdk';
+### 1.2 Setup
 
-// Set up keys
-visearch.set('app_key', 'YOUR_APP_KEY');
-visearch.set('tracker_code', 'YOUR_TRACKER_CODE'); // required for image based API, otherwise it will be `app_key:placement_id`
-visearch.set('placement_id', 'YOUR_PLACEMENT_ID'); // required for products based API
-visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS); // optional; default value is 15000
-visearch.set('endpoint', YOUR_ENDPOINT); // optional; default value is http://visearch.visenze.com
+Before you can start using the SDK, you will need to set up the SDK keys. Most of these keys can be found in your account's [dashboard](https://developers.visenze.com).
+
+Firstly, take a look at the table below to understand what each key represents:
+
+| Key | Importance | Description |
+|:---|:---|:---|
+| app_key | Compulsory | All SDK functions depends on a valid app_key being set. The app key also limits the API features you can use. |
+| tracker_code | Situational | Required if you are using [ViSearch API](#2-visearch-api). |
+| placement_id | Situational | Required if you are using [ProductSearch API](#3-productsearch-api). |
+| endpoint | Situational | Depending on which API you use, they both depend on different endpoints. </br> [ViSearch API](#2-visearch-api): `https://visearch.visenze.com/` </br> [ProductSearch API](#3-productsearch-api): `https://search.visenze.com/` |
+| timeout | Optional | Defaulted to 15000 |
+
+Next, depending on how you are using the SDK, set up the relevant SDK keys:
+
+- If you are using the project provided directly from the main [repo](https://github.com/visenze/visearch-sdk-javascript):
+  - Locate all `*.html` files within the `./examples` directory
+  - Look for all `// TODO: ` comments and fill them up:
+  ![todo_example](/readme_images/todo_example.png)
+  - Any additional keys to be set should also be placed in the same area:
+  ![more_keys_example](/readme_images/more_keys_example.png)
+
+- If you included this SDK into your own project via npm, add the following at the start of your app:
+  
+  ```javascript
+  // Import module
+  import visearch from 'visearch-javascript-sdk';
+
+  // Set up keys
+  visearch.set('app_key', 'YOUR_APP_KEY');
+  visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
+  visearch.set('placement_id', 'YOUR_PLACEMENT_ID'); 
+  visearch.set('endpoint', YOUR_ENDPOINT);
+  visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS);
+  ```
+
+- If you wish to include the SDK directly onto your webpage, add this to the header of your site:
+
+  ```html
+  <script type="text/javascript">
+  !function(e,r,t,s,a){e.__visearch_obj=a;var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)}var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-2.0.0.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h)}(window,document,"script",0,"visearch");
+  visearch.set('app_key', 'YOUR_APP_KEY');
+  visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
+  visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
+  </script>
+  ```
+
+### 1.3 Demo
+
+The demo is only applicable to those who work directly off the main [repo](https://github.com/visenze/visearch-sdk-javascript). You are required to have a Node.js environment and remember to **fill up the relevant demo files**.
+
+- To run the Node.js demo:
+  
+  ```javascript
+  node testSDK
+  ```
+
+  > Update the `// TODO` in [here](/testSDK.js).
+
+- To run the webpage demo:
+  
+  ```javascript
+  npm run gulp
+  ```
+
+  After the above command, you should see that the server is running locally on your device. You can then access the different demo webpages in your browser by using this format `http://localhost:3000/examples/*.html`.
+
+  - E.g. Visually similar recommendations:
+
+    `http://localhost:3000/examples/idsearch.html`
+
+  - E.g. Color search:
+
+    `http://localhost:3000/examples/colorsearch.html`
+
+  - E.g. Search by Image:
+
+    `http://localhost:3000/examples/uploadsearch.html`
+
+  - E.g. Multiple Products Search:
+
+    `http://localhost:3000/examples/discoversearch.html`
+  
+  > Update the `// TODO` in all `*.html` files within the `./examples` directory
+
+## 2. ViSearch API
+
+Any ViSearch API request should follow this signature:
+`visearch.[API_METHOD](params, options, callback, failure)`.
+
+For better understanding of the format and explanation on what the parameters mean, please refer to our [ViSearch developer docs](
+https://developers.visenze.com/api/#search-api).
+
+### 2.1 Visually Similar Recommendations
+
+GET /search
+
+Search for visually similar images in the image database given an indexed image’s unique identifier.
+
+```javascript
+const parameters = {
+  im_name: 'your-image-name'
+};
+
+const onResponse = (response)=> {
+  // TODO handle response
+}
+
+const onError = (error)=> {
+  // TODO handle error
+}
+
+visearch.search(parameters, onResponse, onError);
 ```
 
-### 2.1 Run the Demo
+> The request parameters for this API can be found [here](https://developers.visenze.com/api/#visually-similar-recommendations).
 
-This repository comes with an example of the SDK usage. In order to run the examples, a Node.js environment is required.
+### 2.2 Search by Image
 
-You will need to fill up your app keys in the relevant demo files.
+POST /uploadsearch
 
-To run the Node.js demo:
+Search for similar images by uploading an image or providing an image URL.
 
-```sh
-node testSDK
-```
+- Using image file:
 
-To run the web page demo:
+  ```html
+  <form>
+    Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
+    <input type="submit" value="Submit">
+  </form>
+  ```
 
-```sh
-npm run gulp
-```
+  ```javascript
+  const parameters = {
+    image: document.getElementById('fileUpload')
+  };
 
-After the above command, the demo pages will be accessible at `http://localhost:3000/examples/*.html`, e.g.:
-
-- `http://localhost:3000/examples/idsearch.html` for visually similar recommendations
-- `http://localhost:3000/examples/colorsearch.html` for color search
-- `http://localhost:3000/examples/uploadsearch.html` for search by image
-- `http://localhost:3000/examples/discoversearch.html` for multiple products search
-
-## 3. Searching Images
-
-Any search API request should follow the pattern below.
-
-```js
-visearch.[API_METHOD](parameters, // parameter object
-  function (resp) {
-    // The response handler, i.e. the callback function that will be invoked after receiving a successful HTTP response
-  },
-  function (err) {
-    // The error handler, i.e. the callback function that will be invoked after receiving a failure HTTP response
+  const onResponse = (response)=> {
+    // TODO handle response
   }
-);
-```
 
-Please refer to [ViSenze developers' documentation](https://developers.visenze.com/api/) to understand the format of `parameters` as well as the response format for different API methods.
+  const onError = (error)=> {
+    // TODO handle error
+  }
 
-Note that for `parameters`, all values must be `string` or array of `string`, i.e. you will need pass `'true'` instead of `true` for boolean parameters.
+  visearch.uploadsearch(parameters, onResponse, onError);
+  ```
 
-***Image Based API***
+- Using image url:
+  
+  ```javascript
+  const parameters = {
+    im_url: 'your-image-url'
+  };
 
-### 3.1 Visually Similar Recommendations
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
 
-**Visually Similar Recommendations** solution is to search for visually similar images in the image database giving an indexed image’s unique identifier (`im_name`).
+  const onError = (error)=> {
+    // TODO handle error
+  }
 
-```js
-visearch.search({
-  im_name: 'your-image-name',
-}, (res) => {
-  // TODO handle response
-}, (err) => {
-  // TODO handle error
-});
-```
+  visearch.uploadsearch(parameters, onResponse, onError);
+  ```
 
-### 3.2 Search by Image
+#### 2.2.1 Selection Box
 
-**Search by Image** solution is to search similar images by uploading an image or providing an image URL.
+If the object you wish to search for takes up only a small portion of your image, or if other irrelevant objects exists in the same image, chances are the search result could become inaccurate. Modify your parameters to include the box parameter to refine the search area of the image to improve accuracy. The box coordinates needs to be set with respect to the original size of the image passed:
 
-* Using an image from a local file path:
-
-Sample code for upload search with HTML form:
-
-```html
-<form>
-  Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
-  <input type="submit" value="Submit">
-</form>
-```
-
-```js
-let inputImageFile = document.getElementById('fileUpload');
-// Alternatively, you can use JQuery style
-inputImageFile = $('#fileUpload')[0];
-
-visearch.uploadsearch({
-  image: inputImageFile,
-}, (res) => {
-  // TODO handle response
-}, (err) => {
-  // TODO handle error
-});
-```
-
-> - For optimal results, we recommend images around `1024x1024` pixels. Low resolution images may result in unsatisfying search results.  
-> - If the image is larger, we recommended to resize the image to `1024x1024` pixels before sending to API. Too high resolution images may result in timeout.  
-> - The maximum file size of an image is 10MB. 
-
-* Using image URL:
-
-```js
-visearch.uploadsearch({
-  im_url: 'your-image-url',
-}, (res) => {
-  // TODO handle response
-}, (err) => {
-  // TODO handle error
-});
-```
-
-#### 3.2.1 Selection Box
-
-If the object you wish to search for takes up only a small portion of your image, or if other irrelevant objects exists in the same image, chances are the search result could become inaccurate. Use the `box` parameter to refine the search area of the image to improve accuracy. The box coordinates needs to be set with respect to the original size of the image passed.
-
-```js
-visearch.uploadsearch({
+```javascript
+const parameters = {
   im_url: 'your-image-url',
   // The box format is [x1, y1, x2, y2], where
   // - (0, 0) is the top-left corner of the image
   // - (x1, y1) is the top-left corner of the box
   // - (x2, y2) is the bottom-right corner of the box
   // IMPORTANT: Do not put space before/after any comma in the box coordinates
-  box: 'x1,y1,x2,y2',
-}, (res) => {
+  box: 'x1,y1,x2,y2'
+};
+```
+
+> The request parameters for this API can be found [here](https://developers.visenze.com/api/#search-by-image).
+>
+> - For optimal results, we recommend images around 1024x1024 pixels. Low resolution images may result in unsatisfying search results.
+>
+> - If the image is larger, we recommended to resize the image to 1024x1024 pixels before sending to API. Too high resolution images may result in timeout.
+>
+> - The maximum file size of an image is 10MB.
+
+### 2.3 Multiple Product Search
+
+POST /discoversearch
+
+Similar to [Search by Image](#22-search-by-image), Multiple Product Search allows you to be able to detect all objects in the image and return similar images for each at one time instead.
+
+- Using image file:
+
+  ```html
+  <form>
+    Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
+    <input type="submit" value="Submit">
+  </form>
+  ```
+
+  ```javascript
+  const parameters = {
+    image: document.getElementById('fileUpload')
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.discoversearch(parameters, onResponse, onError);
+  ```
+
+- Using image url:
+  
+  ```javascript
+  const parameters = {
+    im_url: 'your-image-url'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.discoversearch(parameters, onResponse, onError);
+  ```
+
+> The request parameters for this API can be found [here](https://developers.visenze.com/api/#multiple-product-search).
+
+### 2.4 Search by Color
+
+GET /colorsearch
+
+Search images with similar color by providing a color code. The color code should be in hexadecimal and passed to the colorsearch service.
+
+```javascript
+const parameters = {
+  color: 'fa4d4d'
+};
+
+const onResponse = (response)=> {
   // TODO handle response
-}, (err) => {
+}
+
+const onError = (error)=> {
   // TODO handle error
-});
+}
+
+visearch.colorsearch(parameters, onResponse, onError);
 ```
 
-Note: if the box coordinates are invalid (negative or exceeding the image boundary), they will be ignored and the search will be equivalent to the normal Upload Search.
+> The request parameters for this API can be found [here](https://developers.visenze.com/api/#search-by-color).
 
-### 3.3 Multiple Product Search
+## 3. ProductSearch API
 
-**Multiple Product Search** solution is to search similar images by uploading an image or providing an image url, similar to Search by Image. Multiple Product Search is able to detect all objects in the image and return similar images for each at one time.
+This API differs from those of [ViSearch API](#2-visearch-api) in that the aggregation of search results is done on a product level instead of image level.
 
-* Using an image from a local file path:
+### 3.1 Search by Image
 
-Sample code for multiple product search with HTML form:
+POST /product/search_by_image
 
-```html
-<form>
-  Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
-  <input type="submit" value="Submit">
-</form>
-```
+Searching by Image can happen in three different ways - by url, id or File.
 
-```js
-var inputImageFile = document.getElementById('fileUpload');
-// Alternatively, you can use JQuery style
-var inputImageFile = $('#fileUpload')[0];
+- Using image id:
 
-visearch.discoversearch({
-  image: inputImageFile,
-}, (res) => {
+  ```javascript
+  const parameters = {
+    im_id: 'your-image-id'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.product_search_by_image(parameters, onResponse, onError);
+  ```
+
+- Using image url:
+
+  ```javascript
+  const parameters = {
+    im_url: 'your-image-url'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.product_search_by_image(parameters, onResponse, onError);
+  ```
+
+- Using image file:
+
+  ```html
+  <form>
+    Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
+    <input type="submit" value="Submit">
+  </form>
+  ```
+
+  ```javascript
+  const parameters = {
+    image: document.getElementById('fileUpload')
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.product_search_by_image(parameters, onResponse, onError);
+  ```
+
+> The request parameters for this API can be found [// TODO: link to public documentation]().
+>
+> You will notice that this is the same as some of [ViSearch API](#2-visearch-api) methods. However, on the backend, the logic for search is done differently as mentioned in [ProductSearch API](#3-productsearch-api).
+
+### 3.2 Search by ID
+
+GET /product/search_by_id/{product_id}
+
+Search for visually similar products in the product database giving an indexed product’s unique identifier.
+
+```javascript
+const product_id = 'your-product-id';
+
+const parameters = {
+};
+
+const onResponse = (response)=> {
   // TODO handle response
-}, (err) => {
+}
+
+const onError = (error)=> {
   // TODO handle error
-});
+}
+
+visearch.product_search_by_id(product_id, parameters, onResponse, onError);
 ```
 
-* Using image URL:
-
-```js
-visearch.discoversearch({
-  im_url: 'your-image-url',
-}, (res) => {
-  // TODO handle response
-}, (err) => {
-  // TODO handle error
-});
-```
-
-### 3.4 Color Search
-
-**Search by Color** solution is to search images with similar color by providing a color code. The color code should be in hexadecimal and passed to the colorsearch service.
-
-```js
-visearch.colorsearch({
-  color: 'fa4d4d',
-}, (res) => {
-  // TODO handle response
-}, (err) => {
-  // TODO handle error
-});
-```
------
-***Product Based API***
-
-The below solutions differ from those above in that aggregation of search results on a product level instead of image level.
-
-### 3.5 Search Products By Image
-**Search products by image** solution is to search similar products by uploading an image, providing an image URL or prodviding an indexed image's unique identifier (`im_id`) 
-
-* Using image unique identifier:
-
-```js
-visearch.product_search_by_image({
-  im_id: 'your-image-id',
-}, (res) => {
-  // TODO handle response
-}, (err) => {
-  // TODO handle error
-});
-```
-
-The sample code for seach using image upload, image URL and optimization for this solution is similar to solution [3.2](###-3.2-search-by-image).
-
-### 3.6 Search Products By Id
-
-**Search Products By Id** solution is to search for visually similar products in the pruduct database giving an indexed product’s unique identifier (`product_id`).
-
-```js
-visearch.product_search_by_id(product_id, {
-  // ... your params
-}, (res) => {
-  // TODO handle response
-}, (err) => {
-  // TODO handle error
-});
-```
+> The request parameters for this API can be found [// TODO: link to public documentation]().
 
 ## 4. Search Results
 
-ViSearch returns a maximum number of 1000 most relevant image search results. You can provide pagination parameters to control the paging of the image search results.
+Javascript does not contain type definitions and the REST API response for all our APIs will instead just convert straight into javascript objects. Here are some of the [ProductSearch API](#3-productsearch-api)'s response object's keys to take note of:
 
-Pagination parameters:
+> For [ViSearch API](#2-visearch-api)'s response, you can find them in the [ViSearch developer doc](https://developers.visenze.com/api/#search-api).
 
 | Name | Type | Description |
-| ---- | ---- | ----------- |
-| page | Integer | Optional parameter to specify the page of results. The first page of result is 1. Defaults to 1. |
-| limit | Integer | Optional parameter to specify the result per page limit. Defaults to 10. |
+|:---|:---|:---|
+| status | string | The request status, either `OK`, `warning`, or `fail` |
+| imId | string | Image ID. Can be used to search again without reuploading |
+| im_id | string |  |
+| error | [object](#41-errordata) | Error message and code if the request was not successful i.e. when status is `warning` or `fail` |
+| product_types | [object](#42-producttype)[]| Detected products' types, score and their bounding box in (x1,y1,x2,y2) format |
+| result | [object](#43-product)[] | The list of products in the search results. Important fields for first release. If missing, it will be set to blank. Note that we are displaying customer’s original catalog fields in “data” field |
+| objects | [object](#44-productobject)[] | When the `searchAllObjects` parameter is set to `true` |
+| catalog_fields_mapping | object | Original catalog’s fields mapping |
+| facets | [object](#45-facet)[] | List of facet fields value and response for filtering |
+| page | number | The result page number |
+| limit | number | The number of results per page |
+| total | number | Total number of search result |
+| reqId | string | ID assigned to the request made |
 
-```js
-visearch.uploadsearch({
-  im_url: 'your-image-url',
-  page: 1,
-  limit: 25,
-}, (res) => {
-  // TODO handle response
-}, (err) => {
-  // TODO handle error
-});
-```
+### 4.1 ErrorData
+
+| Name | Type | Description |
+|:---|:---|:---|
+| code | number | Error code, e.g. 401, 404 etc... |
+| message | string | The server response message.  |
+
+### 4.2 ProductType
+
+| Name | Type | Description |
+|:---|:---|:---|
+| box | number[] | The image-space coordinates of the detection box that represents the product. |
+| type | string | The detected type of the product. |
+| score | number | The detection's score of the product. |
+
+### 4.3 Product
+
+| Name | Type | Description |
+|:---|:---|:---|
+| product_id | string | The product's ID which can be used in [Search by ID](#32-search-by-id). |
+| main_image_url | string | Image URL. |
+| data | object | This data field is slightly more complicated and deserves its own section over [here](#541-data). |
+| score | number | The detection score of the product. |
+
+#### 4.3.1 Data
+
+To better explain what the `data` field is, take a look at the table below (database field_names):
+
+|ViSenze pre-defined catalog fields|Client X's catalog original names|
+|:---|:---|
+|product_id|sku|
+|main_image_url|medium_image|
+|title|product_name|
+|product_url|link|
+|price|sale_price|
+|brand|brand|
+
+The table is a representation of how ViSenze's Catalog name its fields vs how Client X's database name its fields - both fields essentially mean the same thing just named differently.
+
+> i.e. visenze_database["product_id"] == client_x_database["sku"]
+
+You can find the schema mapping of ViSenze and the Client's in the `catalogFieldsMapping` variable found in [ProductResponse](#51-productresponse) - if the [ProductSearchByImageParams](#42-productsearchbyimageparams) have its `returnFieldsMapping` variable set to `true` when the search was called.
+
+### 4.4 ProductObject
+
+When using the `searchAllObjects` is set to `true`, the search response will return the results in a list of ProductObject instead of a list of Product directly. The difference is that ProductObject will split the products according to type.
+
+| Name | Type | Description |
+|:---|:---|:---|
+| result | [object](#43-product)[] | The list of products belonging to this type. |
+| total | number | The total number of results in this type. |
+| type | string | The detected type of the product. |
+| score | number | The detection's score of the product. |
+| box | number[] | The image-space coordinates of the detection box that represents the product. |
+
+### 4.5 Facet
+
+Facets are used to perform potential filtering of results.
+
+| Name | Type | Description |
+|:---|:---|:---|
+| key | string |  |
+| items | [object](#46-facetitem)[] |  |
+| range | [object](#47-facetrange) |  |
+
+### 4.6 FacetItem
+
+Facet for distinct value filtering.
+
+| Name | Type | Description |
+|:---|:---|:---|
+| value | string |  |
+| count | number |  |
+
+### 4.7 FacetRange
+
+Facet for value range filtering.
+
+| Name | Type | Description |
+|:---|:---|:---|
+| min | string |  |
+| max | string |  |
 
 ## 5. Advanced Search Parameters
 
-### 5.1 Retrieving Metadata
+There are many parameters that our API support and we will be showing you a few examples of how to use them in this section.
+
+> You can find all of the supported advance search parameters for ViSearch API [here](https://developers.visenze.com/api/#advanced-parameters) and for ProductSearch API [// TODO: link to public documentation]().
+
+### 5.1 Example - Retrieving Metadata
 
 To retrieve metadata of your image results, provide the list of metadata keys for the metadata value to be returned in the `fl` (field list) property:
 
@@ -352,7 +567,7 @@ visearch.uploadsearch({
 
 > Only metadata of type `string`, `int`, and `float` can be retrieved from ViSearch. Metadata of type `text` is not available for retrieval.
 
-### 5.2 Filtering Results
+### 5.2 Example - Filtering Results
 
 To filter search results based on metadata values, provide a string array of metadata key to filter value in the `fq` (filter query) property:
 
@@ -376,7 +591,7 @@ text | Metadata value will be indexed using full-text-search engine and supports
 int | Metadata value can be either: <ul><li>exactly matched with the query value</li><li>matched with a ranged query `minValue,maxValue`, e.g. int value `99` would match ranged query `0,199` but would not match ranged query `200,300`</li></ul>
 float | Metadata value can be either: <ul><li>exactly matched with the query value</li><li>matched with a ranged query `minValue,maxValue`, e.g. float value `99.99` would match ranged query `0.0,199.99` but would not match ranged query `200.0,300.0`</li></ul>
 
-### 5.3 Result Score
+### 5.3 Example - Result Score
 
 ViSearch image search results are ranked in descending order i.e. from the highest scores to the lowest, ranging from `1.0` to `0.0`. By default, the score for each image result is not returned. You can turn on the `score` property to retrieve the scores for each image result:
 
@@ -411,7 +626,7 @@ visearch.uploadsearch({
 });
 ```
 
-### 5.4 Automatic Object Recognition Beta
+### 5.4 Example - Automatic Object Recognition Beta
 
 With Automatic Object Recognition, ViSearch Search by Image API is smart to detect the objects present in the query image and suggest the best matched product type to run the search on.
 
@@ -451,27 +666,25 @@ The detected product types are listed in `product_types` together with the match
 
 ## 6. Event Tracking
 
-To improve search performance and gain useful data insights, it is recommended to send user interactions (actions) with the visual search results. 
-
+To improve search performance and gain useful data insights, it is recommended to send user interactions (actions) with the visual search results.
 
 ### 6.1 Setup Tracking
 
 To send the events, you will first need to initialize the event tracker with a tracking ID (found under ViSenze dashboard's Tracking Integration page). There are two different endpoints for tracker (1 for China and another for the rest of the world). If the SDK is intended to be used in China region, please set `is_cn` parameter to `true`.
- 
-```
+
+```javascript
 // set tracking ID 
 visearch.set("tracker_code", 'YOUR_TRACKING_ID');
 
 // optional, send events to global or China server
 visearch.set("is_cn", false);
-
 ```
 
 ### 6.2 Send Events
 
 User action(s) can be sent through an event handler. Register an event handler to the element in which the user will interact.
 
-```js
+```javascript
 visearch.send(action, {
   queryId: '<search request ID>',
   pid: '<product ID> ',
@@ -484,7 +697,7 @@ visearch.send(action, {
 
 To send events, first retrieve the search query ID (the `reqid`) found in the search results response call back. 
 
-```js
+```javascript
 visearch.search({
   // request parameters
 }, (res) => {
@@ -496,9 +709,7 @@ visearch.search({
 
 Currently, we support the following event actions: `click`, `view`, `product_click`, `product_view`, `add_to_cart`, and `transaction`. The `action` parameter can be an arbitrary string and custom events can be sent.
 
-
-```js
-
+```javascript
 // send product click
 visearch.send("product_click", {
                 queryId: "<search reqid>",
@@ -537,8 +748,6 @@ visearch.send("click", {
                 name: "click_on_camera_button",
                 cat: "visual_search"
             });
-            
-
 ```
 
 Below are the brief description for various parameters. Please note that invalid events (such as missing required fields or exceed length limit) will not be captured by server.
@@ -576,8 +785,3 @@ s3 | Custom string parameter. Max length: 64. | No
 s4 | Custom string parameter. Max length: 64. | No
 s5 | Custom string parameter. Max length: 64. | No
 json | Custom json parameter. Max length: 512. | No
-
-
-## 7. FAQ
-
-* When performing upload search, you may notice the increased search latency with increased image file size. This is due to the increased time spent in network transferring your images to the ViSearch server, and the increased time for processing larger image files in ViSearch.
