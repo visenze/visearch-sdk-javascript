@@ -32,6 +32,7 @@ visearch.methods = [
   'discoversearch',
   'product_search_by_image',
   'product_search_by_id',
+  'product_recommendations',
 ];
 
 // For each of our methods, generate a queueing stub.

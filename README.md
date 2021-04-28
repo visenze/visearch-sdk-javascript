@@ -22,7 +22,7 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
   - [2.3 Search by Color](#24-search-by-color)
 - [3. ProductSearch API](#3-productsearch-api)
   - [3.1 Search by Image](#31-search-by-image)  
-  - [3.2 Search by ID](#32-search-by-id)  
+  - [3.2 Recommendations](#32-recommendations)  
 - [4. Search Results](#4-search-results)
   - [4.1 ErrorData](#41-errordata)
   - [4.1 ProductType](#42-producttype)
@@ -101,7 +101,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   ```html
   <script type="text/javascript">
-  !function(e,r,t,s,a){e.__visearch_obj=a;var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)}var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-2.0.0.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h)}(window,document,"script",0,"visearch");
+  !function(e,r,t,s,a){e.__visearch_obj=a;var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id","product_recommendations"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)}var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-2.0.1.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h)}(window,document,"script",0,"visearch");
   visearch.set('app_key', 'YOUR_APP_KEY');
   visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
   visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
@@ -401,9 +401,9 @@ Searching by Image can happen in three different ways - by url, id or File.
 >
 > You will notice that this is the same as some of [ViSearch API](#2-visearch-api) methods. However, on the backend, the logic for search is done differently as mentioned in [ProductSearch API](#3-productsearch-api).
 
-### 3.2 Search by ID
+### 3.2 Recommendations
 
-GET /product/search_by_id/{product_id}
+GET /product/recommendations/{product_id}
 
 Search for visually similar products in the product database giving an indexed product’s unique identifier.
 
@@ -421,7 +421,7 @@ const onError = (error)=> {
   // TODO handle error
 }
 
-visearch.product_search_by_id(product_id, parameters, onResponse, onError);
+visearch.product_recommendations(product_id, parameters, onResponse, onError);
 ```
 
 > The request parameters for this API can be found [// TODO: link to public documentation]().
@@ -467,7 +467,7 @@ Javascript does not contain type definitions and the REST API response for all o
 
 | Name | Type | Description |
 |:---|:---|:---|
-| product_id | string | The product's ID which can be used in [Search by ID](#32-search-by-id). |
+| product_id | string | The product's ID which can be used in [Recommendations](#32-recommendations). |
 | main_image_url | string | Image URL. |
 | data | object | This data field is slightly more complicated and deserves its own section over [here](#541-data). |
 | score | number | The detection score of the product. |

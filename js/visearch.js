@@ -167,6 +167,11 @@
       options, callback, failure);
   };
 
+  prototypes.product_recommendations = function (productId, params, options, callback, failure) {
+    return productsearch.searchbyid(productId, params, getDefaultTrackingParams(),
+      options, callback, failure);
+  };
+
   // Monitor the push event from outside
 
   $visearch.q = $visearch.q || [];
