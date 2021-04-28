@@ -30,7 +30,7 @@ class ProductSearch {
   }
 
   searchbyid(productId, params, vaParams, options, callback, failure) {
-    return sendGetRequest(this.settings, this.getEndPoint(), `v1/product/search_by_id/${productId}`, vaParams, this.getAuthParams(params), options, callback, failure);
+    return sendGetRequest(this.settings, this.getEndPoint(), `v1/product/recommendations/${productId}`, vaParams, this.getAuthParams(params), options, callback, failure);
   }
 }
 
