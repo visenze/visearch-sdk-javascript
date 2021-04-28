@@ -31,7 +31,8 @@
         'similarproducts',
         'discoversearch',
         'product_search_by_image',
-        'product_search_by_id'
+        'product_search_by_id',
+        'product_recommendations'
     ];
     // For each of our methods, generate a queueing stub.
     for (var i = 0; i < __visearch_obj.methods.length; i++) {

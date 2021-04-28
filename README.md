@@ -101,7 +101,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   ```html
   <script type="text/javascript">
-  !function(e,r,t,s,a){e.__visearch_obj=a;var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)}var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-2.0.0.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h)}(window,document,"script",0,"visearch");
+  !function(e,r,t,s,a){e.__visearch_obj=a;var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id","product_recommendations"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)}var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-2.0.1.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h)}(window,document,"script",0,"visearch");
   visearch.set('app_key', 'YOUR_APP_KEY');
   visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
   visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
@@ -421,7 +421,7 @@ const onError = (error)=> {
   // TODO handle error
 }
 
-visearch.product_search_by_id(product_id, parameters, onResponse, onError);
+visearch.product_recommendations(product_id, parameters, onResponse, onError);
 ```
 
 > The request parameters for this API can be found [// TODO: link to public documentation]().
