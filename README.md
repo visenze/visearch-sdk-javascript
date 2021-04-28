@@ -22,7 +22,7 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
   - [2.3 Search by Color](#24-search-by-color)
 - [3. ProductSearch API](#3-productsearch-api)
   - [3.1 Search by Image](#31-search-by-image)  
-  - [3.2 Search by ID](#32-search-by-id)  
+  - [3.2 Recommendations](#32-recommendations)  
 - [4. Search Results](#4-search-results)
   - [4.1 ErrorData](#41-errordata)
   - [4.1 ProductType](#42-producttype)
@@ -401,9 +401,9 @@ Searching by Image can happen in three different ways - by url, id or File.
 >
 > You will notice that this is the same as some of [ViSearch API](#2-visearch-api) methods. However, on the backend, the logic for search is done differently as mentioned in [ProductSearch API](#3-productsearch-api).
 
-### 3.2 Search by ID
+### 3.2 Recommendations
 
-GET /product/search_by_id/{product_id}
+GET /product/recommendations/{product_id}
 
 Search for visually similar products in the product database giving an indexed product’s unique identifier.
 
@@ -467,7 +467,7 @@ Javascript does not contain type definitions and the REST API response for all o
 
 | Name | Type | Description |
 |:---|:---|:---|
-| product_id | string | The product's ID which can be used in [Search by ID](#32-search-by-id). |
+| product_id | string | The product's ID which can be used in [Recommendations](#32-recommendations). |
 | main_image_url | string | Image URL. |
 | data | object | This data field is slightly more complicated and deserves its own section over [here](#541-data). |
 | score | number | The detection score of the product. |
