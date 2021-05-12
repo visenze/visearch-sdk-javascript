@@ -2,7 +2,8 @@ const URI = require('jsuri');
 const FormData = require('form-data');
 const fetch = typeof window === 'undefined' ? require('node-fetch') : window.fetch;
 const { Base64 } = require('js-base64');
-const { isFunction, isArray } = require('lodash/core');
+const isFunction = require('lodash.isfunction');
+
 const VERSION = '@@version'; // Gulp will replace this with actual version number
 const USER_AGENT = `visearch-js-sdk/${VERSION}`;
 
@@ -11,20 +12,17 @@ const USER_AGENT = `visearch-js-sdk/${VERSION}`;
  * @param  {params}  params object
  * @return {URI}     returns self for fluent chaining
  */
-URI.prototype.addQueryParams = function (params) {
-  for (const property in params) {
-    if (params.hasOwnProperty(property)) {
-      const param = params[property];
-      // do stuff
-      if (Array.isArray(param)) {
-        for (let i = 0; i < param.length; i += 1) {
-          this.addQueryParam(property, param[i]);
-        }
-      } else {
-        this.addQueryParam(property, param);
+URI.prototype.addQueryParams = (params) => {
+  Object.entries(params).forEach(([property, param]) => {
+    // do stuff
+    if (Array.isArray(param)) {
+      for (let i = 0; i < param.length; i += 1) {
+        this.addQueryParam(property, param[i]);
       }
+    } else {
+      this.addQueryParam(property, param);
     }
-  }
+  });
   return this;
 };
 
@@ -32,7 +30,7 @@ URI.prototype.addQueryParams = function (params) {
 // Helper methods
 // *********************************************
 
-function timeout (ms, promise) {
+function timeout(ms, promise) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(`Timed out in ${ms} ms.`);
@@ -48,7 +46,7 @@ function timeout (ms, promise) {
 /**
  * Generates basic auth string.
  */
-function getBasicAuth (settings) {
+function getBasicAuth(settings) {
   try {
     const user = settings.access_key;
     const password = settings.secret_key;
@@ -61,14 +59,14 @@ function getBasicAuth (settings) {
   }
 }
 
-function hasBasicAuthorisation (settings) {
+function hasBasicAuthorisation(settings) {
   return settings.access_key !== undefined && settings.secret_key !== undefined;
 }
 
 /**
  * Generates HTTP headers.
  */
-function getHeaders (settings) {
+function getHeaders(settings) {
   const output = {
     Accept: 'application/json',
     'X-Requested-With': settings.user_agent || USER_AGENT,
@@ -82,7 +80,7 @@ function getHeaders (settings) {
 /**
  * Sends the request as configured in the fetch object.
  */
-function sendRequest (t, fetchObj, path, optionsParam, callbackParam, failureParam) {
+function sendRequest(t, fetchObj, path, optionsParam, callbackParam, failureParam) {
   let callback;
   let failure;
   if (isFunction(optionsParam)) {
@@ -151,7 +149,7 @@ module.exports = {
       .toString();
 
     const postData = new FormData();
-    if (params.hasOwnProperty('image')) {
+    if (params.image) {
       const img = params.image;
       delete params.image;
       // Main magic with files here
@@ -161,20 +159,17 @@ module.exports = {
         postData.append('image', img.files[0]);
       }
     }
-    for (const param in params) {
-      if (params.hasOwnProperty(param)) {
-        const values = params[param];
-        if (Array.isArray(values)) {
-          for (const i in values) {
-            if (values.hasOwnProperty(i) && values[i] != null) {
-              postData.append(param, values[i]);
-            }
+    Object.entries(params).forEach(([param, values]) => {
+      if (Array.isArray(values)) {
+        values.forEach((i) => {
+          if (i != null) {
+            postData.append(param, i);
           }
-        } else if (values != null) {
-          postData.append(param, values);
-        }
+        });
+      } else if (values != null) {
+        postData.append(param, values);
       }
-    }
+    });
 
     // append analytics data
     if (vaParams) {
@@ -188,6 +183,6 @@ module.exports = {
       body: postData,
     });
     return sendRequest(settings.timeout, fetchObj, path, options, callback, failure);
-  }
-  
-}
+  },
+
+};

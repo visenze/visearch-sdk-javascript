@@ -7,8 +7,9 @@
  * SDK for ViSearch of visenze.com
  * @author dejun@visenze.com
  */
+// eslint-disable-next-line no-unused-vars
 (function (context) {
-  const { find } = require('lodash/core');
+  const find = require('lodash.find');
   const va = require('visenze-tracking-javascript');
   const ProductSearch = require('./productsearch');
   const ImageSearch = require('./imagesearch');
