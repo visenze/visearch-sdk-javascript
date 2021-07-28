@@ -12,7 +12,7 @@ const USER_AGENT = `visearch-js-sdk/${VERSION}`;
  * @param  {params}  params object
  * @return {URI}     returns self for fluent chaining
  */
-URI.prototype.addQueryParams = (params) => {
+URI.prototype.addQueryParams = function (params) {
   Object.entries(params).forEach(([property, param]) => {
     // do stuff
     if (Array.isArray(param)) {
@@ -169,7 +169,7 @@ module.exports = {
       } else if (values != null) {
         postData.append(param, values);
       }
-    }, this);
+    });
 
     // append analytics data
     if (vaParams) {
