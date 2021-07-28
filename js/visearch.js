@@ -39,7 +39,7 @@
   // const visearchObjName = context.__visearch_obj || 'visearch';
   // const $visearch = context[visearchObjName] = context[visearchObjName] || {};
 
-  const $visearch = {};
+  let $visearch = {};
   $visearch.q = $visearch.q || [];
   if ($visearch.loaded) {
     return;
@@ -178,29 +178,6 @@
       options, callback, failure);
   };
 
-  // Monitor the push event from outside
-
-  $visearch.q = $visearch.q || [];
-  // eslint-disable-next-line func-names
-  $visearch.q.push = function (command) {
-    applyPrototypesCall(command);
-  };
-
-  // retrival previous method define.
-  const methodExports = $visearch.methods || [];
-  for (const i in methodExports) {
-    const m = methodExports[i];
-    if (prototypes[m]) {
-      // export methods
-      $visearch[m] = prototypes[m];
-    }
-  }
-
-  // Apply method call for previous function settings
-  for (const i in $visearch.q) {
-    applyPrototypesCall($visearch.q[i]);
-  }
-
   /**
    * Get query parameters from url [URI] object
    */
@@ -244,5 +221,41 @@
   if (typeof window !== 'undefined' && window._ && window._.noConflict) {
     window._.noConflict();
   }
+
+  $visearch.q = $visearch.q || [];
+
+  // eslint-disable-next-line func-names
+  $visearch.q.push = function (command) {
+    applyPrototypesCall(command);
+  };
+
+  context.initVisearchFactory = function (factory) {
+    $visearch = factory;
+    $visearch.q = $visearch.q || [];
+
+    // eslint-disable-next-line func-names
+    $visearch.q.push = function (command) {
+      applyPrototypesCall(command);
+    };
+
+    // retrival previous method define.
+    const methodExports = $visearch.methods || [];
+    for (const i in methodExports) {
+      const m = methodExports[i];
+      if (prototypes[m]) {
+        // export methods
+        $visearch[m] = prototypes[m];
+      }
+    }
+
+    // Apply method call for previous function settings
+    for (const i in $visearch.q) {
+      applyPrototypesCall($visearch.q[i]);
+    }
+
+    // Set the status to indicate loaded success
+    $visearch.loaded = true;
+  };
+
 // eslint-disable-next-line no-restricted-globals
 }(typeof self !== 'undefined' ? self : this));
