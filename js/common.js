@@ -22,7 +22,7 @@ URI.prototype.addQueryParams = (params) => {
     } else {
       this.addQueryParam(property, param);
     }
-  });
+  }, this);
   return this;
 };
 
@@ -169,7 +169,7 @@ module.exports = {
       } else if (values != null) {
         postData.append(param, values);
       }
-    });
+    }, this);
 
     // append analytics data
     if (vaParams) {
