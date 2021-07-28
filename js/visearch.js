@@ -7,12 +7,15 @@
  * SDK for ViSearch of visenze.com
  * @author dejun@visenze.com
  */
+// eslint-disable-next-line no-unused-vars
 (function (context) {
-  const { find } = require('lodash/core');
+  const find = require('lodash.find');
   const va = require('visenze-tracking-javascript');
   const ProductSearch = require('./productsearch');
   const ImageSearch = require('./imagesearch');
   const URI = require('jsuri');
+  const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
+  const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com';
 
   if (typeof module === 'undefined' || !module.exports) {
     // For non-Node environments
@@ -84,7 +87,10 @@
   function getTracker() {
     if (!tracker) {
       const code = settings.tracker_code ? settings.tracker_code : `${settings.app_key}:${settings.placement_id}`;
-      tracker = va.init({ code, uid: settings.uid, isCN: settings.is_cn });
+      const endpoint = settings.endpoint === STAGING_ENDPOINT ? ANALYTICS_STAGING_ENDPOINT : null;
+      tracker = va.init({
+        code, uid: settings.uid, isCN: settings.is_cn, endpoint,
+      });
     }
 
     return tracker;

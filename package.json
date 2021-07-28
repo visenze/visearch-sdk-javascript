@@ -1,6 +1,6 @@
 {
   "name": "visearch-javascript-sdk",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "JavaScript SDK for ViSearch of visenze.com",
   "main": "./js/index.js",
   "scripts": {
@@ -38,8 +38,9 @@
     "form-data": "^2.3.3",
     "js-base64": "^2.5.0",
     "jsuri": "^1.3.1",
-    "lodash": "^4.13.1",
+    "lodash.find": "^4.6.0",
+    "lodash.isfunction": "^3.0.9",
     "node-fetch": "^2.3.0",
-    "visenze-tracking-javascript": "^1.0.8"
+    "visenze-tracking-javascript": "^1.0.9"
   }
 }
