@@ -47,4 +47,7 @@
     el.src = src;
     var m = doc.getElementsByTagName(element)[0];
     m.parentNode.insertBefore(el, m);
+    window.addEventListener('load', () => {
+        initVisearchFactory(context.visearch);
+    })
 })(window, document, 'script', '../dist/js/visearch.js', 'visearch');
