@@ -109,6 +109,17 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
   </script>
   ```
 
+- If you want to include multiple instances of ViSearch onto the webpage but with different configurations and placements, copy the same code but change the keyword "visearch" into your desired instance name.
+
+  ```html
+  <script type="text/javascript">
+  ...(window,document,"script",0,"visearch2");
+
+  visearch2.set('app_key', 'YOUR_APP_KEY');
+  visearch2.set('placement_id', 'YOUR_PLACEMENT_ID');
+  </script>
+  ```
+
 ### 1.3 Demo
 
 The demo is only applicable to those who work directly off the main [repo](https://github.com/visenze/visearch-sdk-javascript). You are required to have a Node.js environment and remember to **fill up the relevant demo files**.
