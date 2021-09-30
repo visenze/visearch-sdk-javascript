@@ -1,7 +1,6 @@
 // This file is very similar to index.js used in Node environment
 
 (function(context, doc, element, src, obj_name) {
-    context['__visearch_obj'] = obj_name;
     // create stub object
     var __visearch_obj = context[obj_name] = context[obj_name] || {};
     __visearch_obj.q = __visearch_obj.q || [];
