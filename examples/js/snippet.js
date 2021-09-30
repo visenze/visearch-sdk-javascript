@@ -48,6 +48,6 @@
     var m = doc.getElementsByTagName(element)[0];
     m.parentNode.insertBefore(el, m);
     window.addEventListener('load', () => {
-        initVisearchFactory(context.visearch);
+        initVisearchFactory(context[obj_name]);
     })
 })(window, document, 'script', '../dist/js/visearch.js', 'visearch');
