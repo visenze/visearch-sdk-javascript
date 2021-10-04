@@ -32,13 +32,6 @@
   const QUERY_ACTION = 'action';
 
   // Set up visearch_obj
-
-  /* Need to disable these 2 lines so that visearch is not a singleto
-   * needed if we want to run multiple instances of visearch
-   */
-  // const visearchObjName = context.__visearch_obj || 'visearch';
-  // const $visearch = context[visearchObjName] = context[visearchObjName] || {};
-
   let $visearch = {};
   $visearch.q = $visearch.q || [];
   if ($visearch.loaded) {
@@ -229,7 +222,7 @@
     applyPrototypesCall(command);
   };
 
-  context.initVisearchFactory = function (factory) {
+  const initVisearchFactory = function (factory) {
     $visearch = factory;
     $visearch.q = $visearch.q || [];
 
@@ -256,6 +249,13 @@
     // Set the status to indicate loaded success
     $visearch.loaded = true;
   };
+
+  context.initVisearchFactory = initVisearchFactory;
+  if (context.initFactoryArray) {
+    context.initFactoryArray.push({ init: initVisearchFactory });
+  } else {
+    context.initFactoryArray = [{ init: initVisearchFactory }];
+  }
 
 // eslint-disable-next-line no-restricted-globals
 }(typeof self !== 'undefined' ? self : this));
