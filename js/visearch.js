@@ -30,6 +30,7 @@
   const QUERY_REQID = 'reqid';
   const QUERY_IMNAME = 'im_name';
   const QUERY_ACTION = 'action';
+  const RESULT_LOAD = 'result_load';
 
   // Set up visearch_obj
   let $visearch = {};
@@ -116,6 +117,43 @@
   };
 
   /**
+   * Get query parameters from url [URI] object
+   */
+  function getQueryParamValue(uri, name) {
+    return find([`__vi_${name}`, name], () => uri.getQueryParamValue(name));
+  }
+
+  /**
+   * Wrapper for callback function with additional send result_load event
+   */
+  function callbackWrap(callback, args) {
+    callback(args);
+
+    const curUri = new URI(window.location.href);
+    const reqid = getQueryParamValue(curUri, QUERY_REQID);
+    const imName = getQueryParamValue(curUri, QUERY_IMNAME);
+
+    // send out event if the pixel is in place
+    if (reqid && imName && context.vsPlacementLoaded[settings.placement_id]) {
+      sendEvent(RESULT_LOAD, {
+        queryId: getQueryParamValue(curUri, QUERY_REQID),
+        im_name: getQueryParamValue(curUri, QUERY_IMNAME),
+      });
+    }
+
+    // send out event if enable GTM data
+    if (settings.gtm_tracking) {
+      if (!window.dataLayer) {
+        window.dataLayer = [];
+      }
+      const data = {'event': 'vs_result_load'};
+      data[settings.placement_id] = {'queryId': getQueryParamValue(curUri, QUERY_REQID)};
+      window.dataLayer.push(data);
+    }
+  }
+
+
+  /**
    * Sends tracking event to server.
    */
   prototypes.send = (action, params, callback, failure) => {
@@ -158,25 +196,18 @@
 
   prototypes.product_search_by_image = function (params, options, callback, failure) {
     return productsearch.searchbyimage(params, getDefaultTrackingParams(),
-      options, callback, failure);
+      options, callbackWrap.bind(this, callback), failure);
   };
 
   prototypes.product_search_by_id = function (productId, params, options, callback, failure) {
     return productsearch.searchbyid(productId, params, getDefaultTrackingParams(),
-      options, callback, failure);
+      options, callbackWrap.bind(this, callback), failure);
   };
 
   prototypes.product_recommendations = function (productId, params, options, callback, failure) {
     return productsearch.searchbyid(productId, params, getDefaultTrackingParams(),
-      options, callback, failure);
+      options, callbackWrap.bind(this, callback), failure);
   };
-
-  /**
-   * Get query parameters from url [URI] object
-   */
-  function getQueryParamValue(uri, name) {
-    return find([`__vi_${name}`, name], () => uri.getQueryParamValue(name));
-  }
 
   // Set the status to indicate loaded success
   $visearch.loaded = true;
