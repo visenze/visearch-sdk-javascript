@@ -127,16 +127,16 @@
   /**
    * Wrapper for callback function with additional send result_load event
    */
-  function callbackWrap(callback, args) {
+  function callbackWrap(productId, callback, args) {
     callback(args);
 
-    if (args.status === 'OK' && args.results.length > 0) {
+    if (args.status === 'OK' && args.result.length > 0) {
       // send out event if the pixel is in place
       const metadata = { queryId: args.reqid };
-      if (args.product_info) {
-        metadata.pid = args.product_info.product_id;
+      if (productId) {
+        metadata.pid = productId;
       }
-      if (args.reqid && context.vsPlacementLoaded[settings.placement_id]) {
+      if (args.reqid && context.vsPlacementLoaded && context.vsPlacementLoaded[settings.placement_id]) {
         sendEvent(RESULT_LOAD, metadata);
       }
 
@@ -147,8 +147,8 @@
         }
         const data = {'event': 'vs_result_load'};
         data[settings.placement_id] = {'queryId': args.reqid};
-        if (args.product_info) {
-          data[settings.placement_id].pid = metadata.pid;
+        if (productId) {
+          data[settings.placement_id].pid = productId;
         }
         window.dataLayer.push(data);
       }
@@ -201,11 +201,11 @@
     let altOptions;
     let altCallback;
     if (isFunction(options)) {
-      altOptions = callbackWrap.bind(this, options);
+      altOptions = callbackWrap.bind(this, null, options);
       altCallback = callback;
     } else {
       altOptions = options;
-      altCallback = callbackWrap.bind(this, callback);
+      altCallback = callbackWrap.bind(this, null, callback);
     }
 
     return productsearch.searchbyimage(params, getDefaultTrackingParams(),
@@ -216,11 +216,11 @@
     let altOptions;
     let altCallback;
     if (isFunction(options)) {
-      altOptions = callbackWrap.bind(this, options);
+      altOptions = callbackWrap.bind(this, productId, options);
       altCallback = callback;
     } else {
       altOptions = options;
-      altCallback = callbackWrap.bind(this, callback);
+      altCallback = callbackWrap.bind(this, productId, callback);
     }
 
     return productsearch.searchbyid(productId, params, getDefaultTrackingParams(),
@@ -228,18 +228,7 @@
   };
 
   prototypes.product_recommendations = function (productId, params, options, callback, failure) {
-    let altOptions;
-    let altCallback;
-    if (isFunction(options)) {
-      altOptions = callbackWrap.bind(this, options);
-      altCallback = callback;
-    } else {
-      altOptions = options;
-      altCallback = callbackWrap.bind(this, callback);
-    }
-
-    return productsearch.searchbyid(productId, params, getDefaultTrackingParams(),
-      altOptions, altCallback, failure);
+    return this.product_search_by_id(productId, params, options, callback, failure);
   };
 
   // Set the status to indicate loaded success
