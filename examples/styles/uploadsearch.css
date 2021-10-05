@@ -17,6 +17,20 @@ body{
   max-height: 100px;
   max-width: 100px;
 }
+
+.similars2 {}
+.similars2 .entry {
+  float: left;
+  width: 100px;
+  height: 100px;
+  margin: 10px 5px;
+  border: 1px solid #ECEBEB;
+}
+.similars2 .entry img {
+  max-height: 100px;
+  max-width: 100px;
+}
+
 #thumbnil {
   max-width: 200px;
   max-height: 200px;

@@ -1,0 +1,155 @@
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/uploadsearch.css" />
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script type="text/javascript" src="http://opoloo.github.io/jquery_upload_preview/assets/js/jquery.uploadPreview.min.js"></script>
+  <script type="text/javascript" src="js/snippet.js"></script>
+  <script type="text/javascript">
+    window.vsPlacementLoaded = {}
+    $(function() {
+      // TODO: insert your app key here
+      visearch.set("app_key", "APP_KEY");
+      visearch.set("placement_id", "PLACEMENT_ID");
+      window.vsPlacementLoaded["PLACEMENT_ID"] = true;
+
+      // TODO: insert your tracker code here
+      visearch.set("is_cn", false);
+
+      //setup image preview box
+      $.uploadPreview({
+        input_field: "#image",   // Default: .image-upload
+        preview_box: "#image-preview",  // Default: .image-preview
+        label_field: "#image-label",    // Default: .image-label
+      });
+      // setup display template
+      var response_template = Handlebars.compile($("#response-template").html());
+
+      //setup visearch client.
+      $("form .submit").click(function() {
+        if ($("#image").val() != "") {
+          event.preventDefault();
+          $(".submit .glyphicon").show();
+          //*************************
+          //start of the viserach api
+          visearch.product_search_by_image({
+            image: $("#image")[0],
+          }, function(res) {
+            if(res.status == "OK"){
+                console.log(res);
+              $(".main .similars").html(response_template(res));
+            }else{
+              $(".main .similars").html(res.error);
+            }
+            $(".submit .glyphicon").hide();
+          }, function(err){
+            /**
+             *{message:"Failed to fetch"}
+             **/
+            alert(err);
+          });
+          // end of the viserach api
+
+          //*************************
+        } else {
+          alert("please select a image.")
+        }
+        return false;
+      });
+    });
+
+    $(function() {
+        // TODO: insert your app key here
+        visearch2.set("app_key", "APP_KEY");
+
+        // TODO: insert your tracker code here
+        visearch2.set("tracker_code", "YOUR_TRACKER_CODE");
+        visearch2.set('is_cn', false);
+        visearch2.set('placement_id', "PLACEMENT_ID");
+        window.vsPlacementLoaded["PLACEMENT_ID"] = true;
+
+        var response_template = Handlebars.compile($("#response-template2").html());
+        // TODO: insert the product id here
+        var product_id = "PRODUCT_ID";
+        visearch2.product_recommendations(product_id, {}, {}, function (res) {
+            console.log(res);
+            $(".main .similars2").html(response_template(res));
+        }, function (err) {
+            /**
+             *{message:"Failed to fetch"}
+            **/
+            console.log(err);
+        });
+
+        $(".similars").on("click", ".entry", function () {
+            visearch.send("click", {
+                queryId: $(this).attr("req_id"),
+                pid: $(this).attr("im_name")
+            }, success => {
+                console.log(success);
+            }, err => {
+                console.error(err);
+            })
+        });
+    })
+  </script>
+</head>
+
+<body>
+  <div class="main container-fluid">
+    <div class="content">
+      <h2>Example for product_search_by_image with uploaded image file</h2>
+      <form action="" method="">
+        <div class="row">
+          <div id="image-preview" class="col-xs-10 col-sm-10 col-md-4">
+            <label for="image" id="image-label">Choose File</label>
+            <input type="file" name="image" id="image" accept="image/*;capture=camera"/>
+          </div>
+        </div>
+        <div class="row">
+          <button class="submit" class="prefix">
+            Search
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ></span>
+          </button>
+        </div>
+      </form>
+    </div>
+    <div>
+      <div class="similars">
+      </div>
+    </div>
+  </div>
+
+  <script id="response-template" type="text/x-handlebars-template">
+    <h4>Find Similars Result</h4>
+    {{#each result}}
+    <div class="entry">
+      <img src="{{ main_image_url}}"></img>
+    </div>
+    {{/each}}
+  </script>
+
+  <div class="main">
+    <div class="content">
+      <h2>HOLMES & YANG</h2>
+      <img style="padding: 10px; border: 1px solid #FFF;" src="http://images.yoox.com/items/38/38377218hh_12_f.jpg" />
+    </div>
+    <div>
+      <h4>YOU MAY ALSO LIKE</h4>
+      <div class="similars2">
+      </div>
+    </div>
+  </div>
+
+  <script id="response-template2" type="text/x-handlebars-template">
+    <h4>Find Similars Result</h4>
+    {{#each result}}
+        <div class="entry">
+        <img src="{{ main_image_url }}"></img>
+        </div>
+    {{/each}}
+  </script>
+</body>
+</html>
