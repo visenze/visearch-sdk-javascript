@@ -16,6 +16,7 @@
   const URI = require('jsuri');
   const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
   const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com';
+  const isFunction = require('lodash.isfunction');
 
   if (typeof module === 'undefined' || !module.exports) {
     // For non-Node environments
@@ -129,26 +130,28 @@
   function callbackWrap(callback, args) {
     callback(args);
 
-    const curUri = new URI(window.location.href);
-    const reqid = getQueryParamValue(curUri, QUERY_REQID);
-    const imName = getQueryParamValue(curUri, QUERY_IMNAME);
-
-    // send out event if the pixel is in place
-    if (reqid && imName && context.vsPlacementLoaded[settings.placement_id]) {
-      sendEvent(RESULT_LOAD, {
-        queryId: getQueryParamValue(curUri, QUERY_REQID),
-        im_name: getQueryParamValue(curUri, QUERY_IMNAME),
-      });
-    }
-
-    // send out event if enable GTM data
-    if (settings.gtm_tracking) {
-      if (!window.dataLayer) {
-        window.dataLayer = [];
+    if (args.status === 'OK' && args.results.length > 0) {
+      // send out event if the pixel is in place
+      const metadata = { queryId: args.reqid };
+      if (args.product_info) {
+        metadata.pid = args.product_info.product_id;
       }
-      const data = {'event': 'vs_result_load'};
-      data[settings.placement_id] = {'queryId': getQueryParamValue(curUri, QUERY_REQID)};
-      window.dataLayer.push(data);
+      if (args.reqid && context.vsPlacementLoaded[settings.placement_id]) {
+        sendEvent(RESULT_LOAD, metadata);
+      }
+
+      // send out event if enable GTM data
+      if (settings.gtm_tracking) {
+        if (!window.dataLayer) {
+          window.dataLayer = [];
+        }
+        const data = {'event': 'vs_result_load'};
+        data[settings.placement_id] = {'queryId': args.reqid};
+        if (args.product_info) {
+          data[settings.placement_id].pid = metadata.pid;
+        }
+        window.dataLayer.push(data);
+      }
     }
   }
 
@@ -195,18 +198,48 @@
   };
 
   prototypes.product_search_by_image = function (params, options, callback, failure) {
+    let altOptions;
+    let altCallback;
+    if (isFunction(options)) {
+      altOptions = callbackWrap.bind(this, options);
+      altCallback = callback;
+    } else {
+      altOptions = options;
+      altCallback = callbackWrap.bind(this, callback);
+    }
+
     return productsearch.searchbyimage(params, getDefaultTrackingParams(),
-      options, callbackWrap.bind(this, callback), failure);
+      altOptions, altCallback, failure);
   };
 
   prototypes.product_search_by_id = function (productId, params, options, callback, failure) {
+    let altOptions;
+    let altCallback;
+    if (isFunction(options)) {
+      altOptions = callbackWrap.bind(this, options);
+      altCallback = callback;
+    } else {
+      altOptions = options;
+      altCallback = callbackWrap.bind(this, callback);
+    }
+
     return productsearch.searchbyid(productId, params, getDefaultTrackingParams(),
-      options, callbackWrap.bind(this, callback), failure);
+      altOptions, altCallback, failure);
   };
 
   prototypes.product_recommendations = function (productId, params, options, callback, failure) {
+    let altOptions;
+    let altCallback;
+    if (isFunction(options)) {
+      altOptions = callbackWrap.bind(this, options);
+      altCallback = callback;
+    } else {
+      altOptions = options;
+      altCallback = callbackWrap.bind(this, callback);
+    }
+
     return productsearch.searchbyid(productId, params, getDefaultTrackingParams(),
-      options, callbackWrap.bind(this, callback), failure);
+      altOptions, altCallback, failure);
   };
 
   // Set the status to indicate loaded success
