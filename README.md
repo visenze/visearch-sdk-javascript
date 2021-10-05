@@ -101,7 +101,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   ```html
   <script type="text/javascript">
-  !function(e,r,t,s,a){var c=e[a]=e[a]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id","product_recommendations"];for(var o=0;o<c.methods.length;o++){var n=c.methods[o];c[n]=c.factory(n)} var i=r.createElement(t);i.type="text/javascript",i.async=!0,i.src="//cdn.visenze.com/visearch/dist/js/visearch-2.0.4.min.js";var h=r.getElementsByTagName(t)[0];h.parentNode.insertBefore(i,h);e.addEventListener("load",()=>{initVisearchFactory(e[a])})}(window,document,"script",0,"visearch");
+  !function(r,e,t,a,o){var c=r[o]=r[o]||{};c.q=c.q||[],c.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),c.q.push(e),c}},c.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id","product_recommendations"];for(var n=0;n<c.methods.length;n++){var s=c.methods[n];c[s]=c.factory(s)}var i=e.createElement(t);i.type="text/javascript",i.async=!0,i.src=a;var d=e.getElementsByTagName(t)[0];d.parentNode.insertBefore(i,d),r.addEventListener("load",function(){for(var e=0;e<initFactoryArray.length;e++){var t=initFactoryArray[e];if(!t.obj_name){t.obj_name=o,t.init(r[o]);break}}})}(window,document,"script","//cdn.visenze.com/visearch/dist/js/visearch-2.0.5.min.js","visearch");
 
   visearch.set('app_key', 'YOUR_APP_KEY');
   visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
@@ -113,10 +113,17 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   ```html
   <script type="text/javascript">
+  ...(window,document,"script",0,"visearch");
+
+  visearch.set('app_key', 'YOUR_APP_KEY_1');
+  visearch.set('placement_id', 'YOUR_PLACEMENT_ID_1');
+  </script>
+
+  <script type="text/javascript">
   ...(window,document,"script",0,"visearch2");
 
-  visearch2.set('app_key', 'YOUR_APP_KEY');
-  visearch2.set('placement_id', 'YOUR_PLACEMENT_ID');
+  visearch2.set('app_key', 'YOUR_APP_KEY_2');
+  visearch2.set('placement_id', 'YOUR_PLACEMENT_ID_2');
   </script>
   ```
 

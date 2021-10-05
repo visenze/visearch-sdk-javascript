@@ -16,6 +16,7 @@
   const URI = require('jsuri');
   const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
   const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com';
+  const isFunction = require('lodash.isfunction');
 
   if (typeof module === 'undefined' || !module.exports) {
     // For non-Node environments
@@ -30,15 +31,9 @@
   const QUERY_REQID = 'reqid';
   const QUERY_IMNAME = 'im_name';
   const QUERY_ACTION = 'action';
+  const RESULT_LOAD = 'result_load';
 
   // Set up visearch_obj
-
-  /* Need to disable these 2 lines so that visearch is not a singleto
-   * needed if we want to run multiple instances of visearch
-   */
-  // const visearchObjName = context.__visearch_obj || 'visearch';
-  // const $visearch = context[visearchObjName] = context[visearchObjName] || {};
-
   let $visearch = {};
   $visearch.q = $visearch.q || [];
   if ($visearch.loaded) {
@@ -123,6 +118,45 @@
   };
 
   /**
+   * Get query parameters from url [URI] object
+   */
+  function getQueryParamValue(uri, name) {
+    return find([`__vi_${name}`, name], () => uri.getQueryParamValue(name));
+  }
+
+  /**
+   * Wrapper for callback function with additional send result_load event
+   */
+  function callbackWrap(productId, callback, args) {
+    callback(args);
+
+    if (args.status === 'OK' && args.result.length > 0) {
+      // send out event if the pixel is in place
+      const metadata = { queryId: args.reqid };
+      if (productId) {
+        metadata.pid = productId;
+      }
+      if (args.reqid && context.vsPlacementLoaded && context.vsPlacementLoaded[settings.placement_id]) {
+        sendEvent(RESULT_LOAD, metadata);
+      }
+
+      // send out event if enable GTM data
+      if (settings.gtm_tracking) {
+        if (!window.dataLayer) {
+          window.dataLayer = [];
+        }
+        const data = {'event': 'vs_result_load'};
+        data[settings.placement_id] = {'queryId': args.reqid};
+        if (productId) {
+          data[settings.placement_id].pid = productId;
+        }
+        window.dataLayer.push(data);
+      }
+    }
+  }
+
+
+  /**
    * Sends tracking event to server.
    */
   prototypes.send = (action, params, callback, failure) => {
@@ -164,26 +198,38 @@
   };
 
   prototypes.product_search_by_image = function (params, options, callback, failure) {
+    let altOptions;
+    let altCallback;
+    if (isFunction(options)) {
+      altOptions = callbackWrap.bind(this, null, options);
+      altCallback = callback;
+    } else {
+      altOptions = options;
+      altCallback = callbackWrap.bind(this, null, callback);
+    }
+
     return productsearch.searchbyimage(params, getDefaultTrackingParams(),
-      options, callback, failure);
+      altOptions, altCallback, failure);
   };
 
   prototypes.product_search_by_id = function (productId, params, options, callback, failure) {
+    let altOptions;
+    let altCallback;
+    if (isFunction(options)) {
+      altOptions = callbackWrap.bind(this, productId, options);
+      altCallback = callback;
+    } else {
+      altOptions = options;
+      altCallback = callbackWrap.bind(this, productId, callback);
+    }
+
     return productsearch.searchbyid(productId, params, getDefaultTrackingParams(),
-      options, callback, failure);
+      altOptions, altCallback, failure);
   };
 
   prototypes.product_recommendations = function (productId, params, options, callback, failure) {
-    return productsearch.searchbyid(productId, params, getDefaultTrackingParams(),
-      options, callback, failure);
+    return this.product_search_by_id(productId, params, options, callback, failure);
   };
-
-  /**
-   * Get query parameters from url [URI] object
-   */
-  function getQueryParamValue(uri, name) {
-    return find([`__vi_${name}`, name], () => uri.getQueryParamValue(name));
-  }
 
   // Set the status to indicate loaded success
   $visearch.loaded = true;
@@ -229,7 +275,7 @@
     applyPrototypesCall(command);
   };
 
-  context.initVisearchFactory = function (factory) {
+  const initVisearchFactory = function (factory) {
     $visearch = factory;
     $visearch.q = $visearch.q || [];
 
@@ -256,6 +302,13 @@
     // Set the status to indicate loaded success
     $visearch.loaded = true;
   };
+
+  context.initVisearchFactory = initVisearchFactory;
+  if (context.initFactoryArray) {
+    context.initFactoryArray.push({ init: initVisearchFactory });
+  } else {
+    context.initFactoryArray = [{ init: initVisearchFactory }];
+  }
 
 // eslint-disable-next-line no-restricted-globals
 }(typeof self !== 'undefined' ? self : this));
