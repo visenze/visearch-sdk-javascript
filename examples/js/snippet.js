@@ -60,7 +60,7 @@
 })(window, document, 'script', '../dist/js/visearch.js', 'visearch');
 
 
-/* Uncomment if you want to test multiple visearch instantiations
+// Uncomment if you want to test multiple visearch instantiations
 (function (context, doc, element, src, obj_name) {
     // create stub object
     const __visearch_obj = context[obj_name] = context[obj_name] || {};
@@ -80,8 +80,19 @@
     };
     // A list of the methods in visearch.js to stub.
     __visearch_obj.methods = [
-      'idsearch',
-      'set',
+        'idsearch',
+        'uploadsearch',
+        'colorsearch',
+        'set',
+        'send',
+        'search',
+        'recommendation',
+        'out_of_stock',
+        'similarproducts',
+        'discoversearch',
+        'product_search_by_image',
+        'product_search_by_id',
+        'product_recommendations'
     ];
     // For each of our methods, generate a queueing stub.
     for (let i = 0; i < __visearch_obj.methods.length; i++) {
@@ -106,4 +117,4 @@
       }
     });
   })(window, document, 'script', '../dist/js/visearch.js', 'visearch2');
-*/
+
