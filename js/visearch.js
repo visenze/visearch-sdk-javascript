@@ -15,7 +15,7 @@
   const ImageSearch = require('./imagesearch');
   const URI = require('jsuri');
   const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
-  const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com';
+  const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';
   const isFunction = require('lodash.isfunction');
 
   if (typeof module === 'undefined' || !module.exports) {
@@ -82,7 +82,7 @@
   function getTracker() {
     if (!tracker) {
       const code = settings.tracker_code ? settings.tracker_code : `${settings.app_key}:${settings.placement_id}`;
-      const endpoint = settings.endpoint === STAGING_ENDPOINT ? ANALYTICS_STAGING_ENDPOINT : null;
+      const endpoint = settings.analytics_endpoint || (settings.endpoint === STAGING_ENDPOINT ? ANALYTICS_STAGING_ENDPOINT : null);
       tracker = va.init({
         code, uid: settings.uid, isCN: settings.is_cn, endpoint,
       });
