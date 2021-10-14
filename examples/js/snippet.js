@@ -46,8 +46,7 @@
 	el.src = src;
 	var m = doc.getElementsByTagName(element)[0];
 	m.parentNode.insertBefore(el, m);
-	
-	context.addEventListener('load', function() {
+	el.onload = function() {
 		for (var i = 0; i < initFactoryArray.length; i++) {
 			var initGroup = initFactoryArray[i];
 			if (!initGroup.obj_name) {
@@ -56,7 +55,10 @@
 				break;
 			}
 		}
-	});
+	};
+	el.onerror = function() {
+		console.log('Unable to initialize ViSearch SDK');
+	};
 })(window, document, 'script', '../dist/js/visearch.js', 'visearch');
 
 
@@ -107,14 +109,17 @@
     el.src = src;
     const m = doc.getElementsByTagName(element)[0];
     m.parentNode.insertBefore(el, m);
-    context.addEventListener('load', () => {
-      for (let initGroup of initFactoryArray) {
+		el.onload = function() {
+			for (var i = 0; i < initFactoryArray.length; i++) {
+				var initGroup = initFactoryArray[i];
 				if (!initGroup.obj_name) {
 					initGroup.obj_name = obj_name;
 					initGroup.init(context[obj_name]);
 					break;
 				}
-      }
-    });
+			}
+		};
+		el.onerror = function() {
+			console.log('Unable to initialize ViSearch SDK');
+		};
   })(window, document, 'script', '../dist/js/visearch.js', 'visearch2');
-
