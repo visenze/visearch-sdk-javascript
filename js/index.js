@@ -33,6 +33,10 @@ visearch.methods = [
   'product_search_by_image',
   'product_search_by_id',
   'product_recommendations',
+  'get_uid',
+  'get_sid',
+  'get_session_time_remaining',
+  'reset_session',
 ];
 
 // For each of our methods, generate a queueing stub.

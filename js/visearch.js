@@ -145,8 +145,8 @@
         if (!window.dataLayer) {
           window.dataLayer = [];
         }
-        const data = {'event': 'vs_result_load'};
-        data[settings.placement_id] = {'queryId': args.reqid};
+        const data = { 'event': 'vs_result_load' };
+        data[settings.placement_id] = { 'queryId': args.reqid };
         if (productId) {
           data[settings.placement_id].pid = productId;
         }
@@ -154,6 +154,53 @@
       }
     }
   }
+
+  /**
+   * Manage tracker UID & SID
+   */
+  prototypes.set_uid = function (uid) {
+    tracker = getTracker();
+    if (tracker) {
+      tracker.setUID(uid);
+    }
+  };
+
+  prototypes.get_uid = function () {
+    tracker = getTracker();
+    if (tracker) {
+      return tracker.getUID();
+    }
+
+    return null;
+  };
+
+  prototypes.get_sid = function () {
+    tracker = getTracker();
+    if (tracker) {
+      return tracker.getSID();
+    }
+
+    return null;
+  };
+
+  prototypes.get_session_time_remaining = function () {
+    tracker = getTracker();
+    if (tracker) {
+      return tracker.getSessionTimeRemaining();
+    }
+
+    return null;
+  };
+
+  prototypes.reset_session = function () {
+    tracker = getTracker();
+    if (tracker) {
+      tracker.resetSession();
+      return true;
+    }
+
+    return false;
+  };
 
 
   /**
@@ -310,5 +357,5 @@
     context.initFactoryArray = [{ init: initVisearchFactory }];
   }
 
-// eslint-disable-next-line no-restricted-globals
+  // eslint-disable-next-line no-restricted-globals
 }(typeof self !== 'undefined' ? self : this));

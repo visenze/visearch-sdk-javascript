@@ -17,6 +17,35 @@
       // TODO: insert your tracker code here
       visearch.set("is_cn", false);
 
+
+      // display uid & sid
+      setInterval(() => {
+        if (typeof (visearch.get_uid()) === "string") {
+          $("#uid").text(visearch.get_uid());
+          $("#sid").text(visearch.get_sid());
+          $("#sessionTimeRemaining").text(visearch.get_session_time_remaining());
+        } else {
+          $("#uid").text("loading...");
+          $("#sid").text("loading...");
+          $("#sessionTimeRemaining").text("loading...");
+        }
+      }, 1000);
+
+      // reset session
+      $("#resetSessionBtn").click(function() {
+          visearch.reset_session();
+          $("#sid").text(visearch.get_sid());
+          $("#sessionTimeRemaining").text(visearch.get_session_time_remaining());
+      });
+
+      $("#newUidBtn").click(function(){
+        const newUid = $("#newUidTxt").val();
+        $("#newUidTxt").val("");
+        visearch.set_uid(newUid);
+
+        $("#uid").text(visearch.get_uid());
+      });
+
       //setup image preview box
       $.uploadPreview({
         input_field: "#image",   // Default: .image-upload
@@ -78,6 +107,26 @@
           </button>
         </div>
       </form>
+
+      
+      <h3>Tracking info</h3>
+      <div>
+        <div>
+          <p>
+            uid: <span id="uid"></span>
+            <br />
+            sid: <span id="sid"></span>
+            <br />
+            session time remaining: <span id="sessionTimeRemaining"></span>
+          </p>
+        </div>
+      
+        <div>
+          <button id="resetSessionBtn">reset session</button>
+          <br />
+          <input id="newUidTxt" /> <button id="newUidBtn">set new uid</button>
+        </div>
+      </div>
     </div>
     <div>
       <div class="similars">
@@ -89,7 +138,7 @@
     <h4>Find Similars Result</h4>
     {{#each result}}
     <div class="entry">
-      <img src="{{value_map.im_url}}"></img>
+      <img src="{{main_image_url}}"></img>
     </div>
     {{/each}}
   </script>
