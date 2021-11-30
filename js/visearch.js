@@ -158,48 +158,53 @@
   /**
    * Manage tracker UID & SID
    */
-  prototypes.set_uid = function (uid) {
+  prototypes.set_uid = function (uid, callback = () => { }, failure = () => { }) {
     tracker = getTracker();
     if (tracker) {
       tracker.setUID(uid);
+
+      callback('success');
+    } else {
+      failure(Error('Tracker is not found'));
     }
   };
 
-  prototypes.get_uid = function () {
+  prototypes.get_uid = function (callback = () => { }, failure = () => { }) {
     tracker = getTracker();
     if (tracker) {
-      return tracker.getUID();
+      callback(tracker.getUID());
+    } else {
+      failure(Error('Tracker is not found'));
     }
-
-    return null;
   };
 
-  prototypes.get_sid = function () {
+  prototypes.get_sid = function (callback = () => { }, failure = () => { }) {
     tracker = getTracker();
     if (tracker) {
-      return tracker.getSID();
+      callback(tracker.getSID());
+    } else {
+      failure(Error('Tracker is not found'));
     }
-
-    return null;
   };
 
-  prototypes.get_session_time_remaining = function () {
+  prototypes.get_session_time_remaining = function (callback = () => { }, failure = () => { }) {
     tracker = getTracker();
     if (tracker) {
-      return tracker.getSessionTimeRemaining();
+      callback(tracker.getSessionTimeRemaining());
+    } else {
+      failure(Error('Tracker is not found'));
     }
-
-    return null;
   };
 
-  prototypes.reset_session = function () {
+  prototypes.reset_session = function (callback = () => { }, failure = () => { }) {
     tracker = getTracker();
     if (tracker) {
       tracker.resetSession();
-      return true;
-    }
 
-    return false;
+      callback('success');
+    } else {
+      failure(Error('Tracker is not found'));
+    }
   };
 
 

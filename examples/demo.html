@@ -94,32 +94,39 @@
             })
         });
 
+        
+      const refreshTrackingInfo = () => {
         // display uid & sid
+        visearch.get_uid((uid) => {
+          $("#uid").text(uid);
+        });
+
+        visearch.get_sid((sid) => {
+          $("#sid").text(sid);
+        });
+
+        visearch.get_session_time_remaining((time) => {
+          $("#sessionTimeRemaining").text(time);
+        });
+      };
+
       setInterval(() => {
-        if (typeof (visearch.get_uid()) === "string") {
-          $("#uid").text(visearch.get_uid());
-          $("#sid").text(visearch.get_sid());
-          $("#sessionTimeRemaining").text(visearch.get_session_time_remaining());
-        } else {
-          $("#uid").text("loading...");
-          $("#sid").text("loading...");
-          $("#sessionTimeRemaining").text("loading...");
-        }
+        refreshTrackingInfo();
       }, 1000);
 
       // reset session
-      $("#resetSessionBtn").click(function() {
-          visearch.reset_session();
-          $("#sid").text(visearch.get_sid());
-          $("#sessionTimeRemaining").text(visearch.get_session_time_remaining());
+      $("#resetSessionBtn").click(function () {
+        visearch.reset_session();
+        refreshTrackingInfo();
       });
 
-      $("#newUidBtn").click(function(){
+      // change uid
+      $("#newUidBtn").click(function () {
         const newUid = $("#newUidTxt").val();
         $("#newUidTxt").val("");
         visearch.set_uid(newUid);
 
-        $("#uid").text(visearch.get_uid());
+        refreshTrackingInfo();
       });
     });
   </script>
