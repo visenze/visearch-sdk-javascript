@@ -17,6 +17,9 @@
   const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
   const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';
   const isFunction = require('lodash.isfunction');
+  const pjson = require('../package.json');
+  const SDK = 'visearch js sdk';
+  const SDK_VERSION = pjson.version;
 
   if (typeof module === 'undefined' || !module.exports) {
     // For non-Node environments
@@ -95,7 +98,10 @@
     tracker = getTracker();
 
     if (tracker) {
-      return tracker.getDefaultParams();
+      const params = tracker.getDefaultParams();
+      params.v = SDK_VERSION;
+      params.sdk = SDK;
+      return params;
     }
 
     return null;
