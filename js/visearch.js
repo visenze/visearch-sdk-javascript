@@ -17,6 +17,9 @@
   const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
   const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';
   const isFunction = require('lodash.isfunction');
+  const pjson = require('../package.json');
+  const SDK = 'visearch js sdk';
+  const SDK_VERSION = pjson.version;
 
   if (typeof module === 'undefined' || !module.exports) {
     // For non-Node environments
@@ -95,7 +98,10 @@
     tracker = getTracker();
 
     if (tracker) {
-      return tracker.getDefaultParams();
+      const params = tracker.getDefaultParams();
+      params.v = SDK_VERSION;
+      params.sdk = SDK;
+      return params;
     }
 
     return null;
@@ -145,8 +151,8 @@
         if (!window.dataLayer) {
           window.dataLayer = [];
         }
-        const data = {'event': 'vs_result_load'};
-        data[settings.placement_id] = {'queryId': args.reqid};
+        const data = { 'event': 'vs_result_load' };
+        data[settings.placement_id] = { 'queryId': args.reqid };
         if (productId) {
           data[settings.placement_id].pid = productId;
         }
@@ -154,6 +160,58 @@
       }
     }
   }
+
+  /**
+   * Manage tracker UID & SID
+   */
+  prototypes.set_uid = function (uid, callback = () => { }, failure = () => { }) {
+    tracker = getTracker();
+    if (tracker) {
+      tracker.setUID(uid);
+
+      callback('success');
+    } else {
+      failure(Error('Tracker is not found'));
+    }
+  };
+
+  prototypes.get_uid = function (callback = () => { }, failure = () => { }) {
+    tracker = getTracker();
+    if (tracker) {
+      callback(tracker.getUID());
+    } else {
+      failure(Error('Tracker is not found'));
+    }
+  };
+
+  prototypes.get_sid = function (callback = () => { }, failure = () => { }) {
+    tracker = getTracker();
+    if (tracker) {
+      callback(tracker.getSID());
+    } else {
+      failure(Error('Tracker is not found'));
+    }
+  };
+
+  prototypes.get_session_time_remaining = function (callback = () => { }, failure = () => { }) {
+    tracker = getTracker();
+    if (tracker) {
+      callback(tracker.getSessionTimeRemaining());
+    } else {
+      failure(Error('Tracker is not found'));
+    }
+  };
+
+  prototypes.reset_session = function (callback = () => { }, failure = () => { }) {
+    tracker = getTracker();
+    if (tracker) {
+      tracker.resetSession();
+
+      callback('success');
+    } else {
+      failure(Error('Tracker is not found'));
+    }
+  };
 
 
   /**
@@ -310,5 +368,5 @@
     context.initFactoryArray = [{ init: initVisearchFactory }];
   }
 
-// eslint-disable-next-line no-restricted-globals
+  // eslint-disable-next-line no-restricted-globals
 }(typeof self !== 'undefined' ? self : this));

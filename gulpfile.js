@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const uglify = require('gulp-uglify');
+const terser = require('gulp-terser');
 const sourcemaps = require('gulp-sourcemaps');
 const stream = require('webpack-stream');
 const rename = require('gulp-rename');
@@ -27,13 +27,13 @@ gulp.task('webpack', () => gulp.src(['./js/visearch.js']) // gulp looks for all 
 gulp.task('webpack-production', () => gulp.src('./js/visearch.js') // gulp looks for all source files under specified SETTINGS
   .pipe(stream(webpackConfig)) // blend in the webpack config into the source files
   .pipe(replace({ patterns: [{ match: 'version', replacement: version }] })) // replace some variables in source
-  .pipe(uglify()) // minifies the code for better compression
+  .pipe(terser()) // minifies the code for better compression
   .pipe(rename({ suffix: `-${version}`, extname: '.min.js' }))
   .pipe(gulp.dest(SETTINGS.DEST_BUILD)));
 
 // build for snippet
 gulp.task('webpack-snippet', () => gulp.src('./examples/js/snippet.js') // gulp looks for all source files under specified SETTINGS
-  .pipe(uglify()) // minifies the code for better compression
+  .pipe(terser()) // minifies the code for better compression
   .pipe(gulp.dest(SETTINGS.DEST_BUILD)));
 
 if (awsProfile && awsProfile.params && awsProfile.params.Bucket) {

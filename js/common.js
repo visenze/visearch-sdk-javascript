@@ -127,6 +127,8 @@ module.exports = {
     if (vaParams) {
       params.va_uid = vaParams.uid;
       params.va_sid = vaParams.sid;
+      params.va_sdk = vaParams.sdk;
+      params.va_sdk_version = vaParams.v;
     }
 
     const url = new URI(endpoint)
@@ -175,6 +177,8 @@ module.exports = {
     if (vaParams) {
       postData.append('va_uid', vaParams.uid);
       postData.append('va_sid', vaParams.sid);
+      postData.append('va_sdk', vaParams.sdk);
+      postData.append('va_sdk_version', vaParams.v);
     }
 
     const fetchObj = fetch(url, {

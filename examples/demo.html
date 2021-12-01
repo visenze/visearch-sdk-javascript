@@ -93,7 +93,42 @@
                 console.error(err);
             })
         });
-    })
+
+        
+      const refreshTrackingInfo = () => {
+        // display uid & sid
+        visearch.get_uid((uid) => {
+          $("#uid").text(uid);
+        });
+
+        visearch.get_sid((sid) => {
+          $("#sid").text(sid);
+        });
+
+        visearch.get_session_time_remaining((time) => {
+          $("#sessionTimeRemaining").text(time);
+        });
+      };
+
+      setInterval(() => {
+        refreshTrackingInfo();
+      }, 1000);
+
+      // reset session
+      $("#resetSessionBtn").click(function () {
+        visearch.reset_session();
+        refreshTrackingInfo();
+      });
+
+      // change uid
+      $("#newUidBtn").click(function () {
+        const newUid = $("#newUidTxt").val();
+        $("#newUidTxt").val("");
+        visearch.set_uid(newUid);
+
+        refreshTrackingInfo();
+      });
+    });
   </script>
 </head>
 
@@ -115,6 +150,25 @@
           </button>
         </div>
       </form>
+
+      <h3>Tracking info</h3>
+      <div>
+        <div>
+          <p>
+            uid: <span id="uid"></span>
+            <br />
+            sid: <span id="sid"></span>
+            <br />
+            session time remaining: <span id="sessionTimeRemaining"></span>
+          </p>
+        </div>
+      
+        <div>
+          <button id="resetSessionBtn">reset session</button>
+          <br />
+          <input id="newUidTxt" /> <button id="newUidBtn">set new uid</button>
+        </div>
+      </div>
     </div>
     <div>
       <div class="similars">

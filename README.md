@@ -10,35 +10,38 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
 
 ## Table of Contents
 
-- [1. Quickstart](#1-quickstart)
-  - [1.1 Installation](#11-installation)
-  - [1.2 Setup](#12-setup)
-  - [1.3 Demo](#13-demo)
-- [2. ViSearch API](#2-visearch-api)
-  - [2.1 Visually Similar Recommendations](#21-visually-similar-recommendations)
-  - [2.2 Search by Image](#22-search-by-image)
-    - [2.2.1 Selection Box](#221-selection-box)
-  - [2.3 Multiple Product Search](#23-multiple-product-search)
-  - [2.3 Search by Color](#24-search-by-color)
-- [3. ProductSearch API](#3-productsearch-api)
-  - [3.1 Search by Image](#31-search-by-image)  
-  - [3.2 Recommendations](#32-recommendations)  
-- [4. Search Results](#4-search-results)
-  - [4.1 ErrorData](#41-errordata)
-  - [4.1 ProductType](#42-producttype)
-  - [4.1 Product](#43-product)
-  - [4.1 ProductObject](#44-productobject)
-  - [4.1 Facet](#45-facet)
-  - [4.1 FacetItem](#46-facetitem)
-  - [4.1 FacetRange](#47-facetrange)
-- [5. Advanced Search Parameters](#5-advanced-search-parameters)
-  - [5.1 Example - Retrieving Metadata](#51-example---retrieving-metadata)
-  - [5.2 Example - Filtering Results](#52-example---filtering-results)
-  - [5.3 Example - Result Score](#53-example---result-score)
-  - [5.4 Example - Automatic Object Recognition Beta](#54-example---automatic-object-recognition-beta)
-- [6. Event Tracking](#6-event-tracking)
-  - [6.1 Setup Tracking](#61-setup-tracking)
-  - [6.2 Send Events](#62-send-events))
+- [visearch-javascript-sdk](#visearch-javascript-sdk)
+  - [Table of Contents](#table-of-contents)
+  - [1. Quickstart](#1-quickstart)
+    - [1.1 Installation](#11-installation)
+    - [1.2 Setup](#12-setup)
+    - [1.3 Demo](#13-demo)
+  - [2. ViSearch API](#2-visearch-api)
+    - [2.1 Visually Similar Recommendations](#21-visually-similar-recommendations)
+    - [2.2 Search by Image](#22-search-by-image)
+      - [2.2.1 Selection Box](#221-selection-box)
+    - [2.3 Multiple Product Search](#23-multiple-product-search)
+    - [2.4 Search by Color](#24-search-by-color)
+  - [3. ProductSearch API](#3-productsearch-api)
+    - [3.1 Search by Image](#31-search-by-image)
+    - [3.2 Recommendations](#32-recommendations)
+  - [4. Search Results](#4-search-results)
+    - [4.1 ErrorData](#41-errordata)
+    - [4.2 ProductType](#42-producttype)
+    - [4.3 Product](#43-product)
+      - [4.3.1 Data](#431-data)
+    - [4.4 ProductObject](#44-productobject)
+    - [4.5 Facet](#45-facet)
+    - [4.6 FacetItem](#46-facetitem)
+    - [4.7 FacetRange](#47-facetrange)
+  - [5. Advanced Search Parameters](#5-advanced-search-parameters)
+    - [5.1 Example - Retrieving Metadata](#51-example---retrieving-metadata)
+    - [5.2 Example - Filtering Results](#52-example---filtering-results)
+    - [5.3 Example - Result Score](#53-example---result-score)
+    - [5.4 Example - Automatic Object Recognition Beta](#54-example---automatic-object-recognition-beta)
+  - [6. Event Tracking](#6-event-tracking)
+    - [6.1 Setup Tracking](#61-setup-tracking)
+    - [6.2 Send Events](#62-send-events)
 
 ----
 
@@ -101,7 +104,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   ```html
   <script type="text/javascript">
-  !function(b,h,e,a,g){var j=b[g]=b[g]||{};j.q=j.q||[];j.factory=function(i){return function(){var l=Array.prototype.slice.call(arguments);l.unshift(i);j.q.push(l);return j}};j.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id","product_recommendations"];for(var f=0;f<j.methods.length;f++){var k=j.methods[f];j[k]=j.factory(k)}var c=h.createElement(e);c.type="text/javascript";c.async=true;c.src=a;var d=h.getElementsByTagName(e)[0];d.parentNode.insertBefore(c,d);c.onload=function(){for(var l=0;l<initFactoryArray.length;l++){var m=initFactoryArray[l];if(!m.obj_name){m.obj_name=g;m.init(b[g]);break}}};c.onerror=function(){console.log("Unable to initialize ViSearch SDK")}}(window,document,"script","//cdn.visenze.com/visearch/dist/js/visearch-2.0.6.min.js","visearch");
+  (function(e,r,t,a,o){var i=e.visearch=e.visearch||{};i.q=i.q||[],i.factory=function(e){return function(){var r=Array.prototype.slice.call(arguments);return r.unshift(e),i.q.push(r),i}},i.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id","product_recommendations","set_uid","get_uid","get_sid","get_session_time_remaining","reset_session"];for(var s=0;s<i.methods.length;s++){var n=i.methods[s];i[n]=i.factory(n)}var c=r.createElement(t);c.type="text/javascript",c.async=!0,c.src=a;var d=r.getElementsByTagName(t)[0];d.parentNode.insertBefore(c,d),c.onload=function(){for(var r=0;r<initFactoryArray.length;r++){var t=initFactoryArray[r];if(!t.obj_name){t.obj_name=o,t.init(e.visearch);break}}},c.onerror=function(){console.log("Unable to initialize ViSearch SDK")}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-2.1.0.min.js","visearch"));
 
   visearch.set('app_key', 'YOUR_APP_KEY');
   visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
