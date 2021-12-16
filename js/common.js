@@ -186,7 +186,7 @@ module.exports = {
     }
 
     // search sid will take prority over analytics sid
-    if (params.sid) {
+    if (params.va_sid) {
       postData.set('va_sid', params.va_sid);
     }
 
