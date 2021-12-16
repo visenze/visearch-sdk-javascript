@@ -126,9 +126,13 @@ module.exports = {
     // append analytics data
     if (vaParams) {
       params.va_uid = vaParams.uid;
-      params.va_sid = vaParams.sid;
       params.va_sdk = vaParams.sdk;
       params.va_sdk_version = vaParams.v;
+
+      // search sid will take prority over analytics sid
+      if (!params.va_sid) {
+        params.va_sid = vaParams.sid;
+      }
     }
 
     const url = new URI(endpoint)
@@ -179,6 +183,11 @@ module.exports = {
       postData.append('va_sid', vaParams.sid);
       postData.append('va_sdk', vaParams.sdk);
       postData.append('va_sdk_version', vaParams.v);
+    }
+
+    // search sid will take prority over analytics sid
+    if (params.sid) {
+      postData.set('va_sid', params.va_sid);
     }
 
     const fetchObj = fetch(url, {
