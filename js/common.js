@@ -133,6 +133,11 @@ module.exports = {
       if (!params.va_sid) {
         params.va_sid = vaParams.sid;
       }
+
+      // search uid will take prority over analytics uid
+      if (!params.va_uid) {
+        params.va_uid = vaParams.uid;
+      }
     }
 
     const url = new URI(endpoint)
@@ -188,6 +193,11 @@ module.exports = {
     // search sid will take prority over analytics sid
     if (params.va_sid) {
       postData.set('va_sid', params.va_sid);
+    }
+
+    // search uid will take prority over analytics uid
+    if (params.va_uid) {
+      postData.set('va_uid', params.va_uid);
     }
 
     const fetchObj = fetch(url, {
