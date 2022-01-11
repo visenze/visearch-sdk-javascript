@@ -1,11 +1,13 @@
-const visearch = require('./js/index');
+const ViSearch = require('./js/index');
 
 // TODO: insert your app key here
+const { visearch } = new ViSearch();
 visearch.set('app_key', 'YOUR_APP_KEY');
 // TODO: insert your tracker code here
 visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
 visearch.set('is_cn', false); // flag to send request to CN endpoint
 visearch.set('timeout', 2000);
+
 
 // TODO: insert the image name here
 const IM_NAME = 'im_name';

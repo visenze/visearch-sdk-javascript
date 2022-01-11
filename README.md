@@ -90,7 +90,10 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
   
   ```javascript
   // Import module
-  import visearch from 'visearch-javascript-sdk';
+  import ViSearch from 'visearch-javascript-sdk';
+
+  // Initialize visearch instance
+  const { visearch } = new ViSearch();
 
   // Set up keys
   visearch.set('app_key', 'YOUR_APP_KEY');
