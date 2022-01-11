@@ -103,6 +103,21 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
   visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS);
   ```
 
+  - If you want to create multiple instances of ViSearch, you can instantiate ViSearch multiple times.
+
+  ```javascript
+  // Import module
+  import ViSearch from 'visearch-javascript-sdk';
+
+  // Initialize visearch instance
+  const visearch = new ViSearch().visearch;
+  const visearch2 = new ViSearch().visearch;
+
+  // Set up keys
+  visearch.set('app_key', 'YOUR_APP_KEY');
+  visearch2.set('app_key', 'YOUR_APP_KEY');
+  ```
+
 - If you wish to include the SDK directly onto your webpage, add this to the header of your site:
 
   ```html
@@ -115,7 +130,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
   </script>
   ```
 
-- If you want to include multiple instances of ViSearch onto the webpage but with different configurations and placements, copy the same code but change the keyword "visearch" into your desired instance name.
+  - If you want to include multiple instances of ViSearch onto the webpage but with different configurations and placements, copy the same code but change the keyword "visearch" into your desired instance name.
 
   ```html
   <script type="text/javascript">
