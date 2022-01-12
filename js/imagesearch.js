@@ -1,57 +1,49 @@
+/* eslint-disable max-len */
 const { sendGetRequest, sendPostRequest } = require('./common');
 
 const END_POINT = 'https://visearch.visenze.com/';
 const CN_END_POINT = 'https://visearch.visenze.com.cn/';
 
-class ImageSearch {
-  constructor() {
-    this.settings = {};
+function getEndPoint(settings) {
+  if (settings.endpoint) {
+    return settings.endpoint;
   }
-
-  set(key, val) {
-    this.settings[key] = val;
-  }
-
-  getEndPoint() {
-    if (this.settings.endpoint) {
-      return this.settings.endpoint;
-    }
-    return this.settings.is_CN ? CN_END_POINT : END_POINT;
-  }
-
-  getAuthParams(params) {
-    params.access_key = this.settings.app_key;
-    return params;
-  }
-
-  search(params, vaParams, options, callback, failure) {
-    return sendGetRequest(this.settings, this.getEndPoint(), 'search', vaParams, this.getAuthParams(params), options, callback, failure);
-  }
-
-  recommendation(params, vaParams, options, callback, failure) {
-    return sendGetRequest(this.settings, this.getEndPoint(), 'recommendation', vaParams, this.getAuthParams(params), options, callback, failure);
-  }
-
-  similarproducts(params, vaParams, options, callback, failure) {
-    return sendPostRequest(this.settings, this.getEndPoint(), 'similarproducts', vaParams, this.getAuthParams(params), options, callback, failure);
-  }
-
-  // eslint-disable-next-line camelcase
-  out_of_stock(params, vaParams, options, callback, failure) {
-    return sendGetRequest(this.settings, this.getEndPoint(), 'out_of_stock', vaParams, this.getAuthParams(params), options, callback, failure);
-  }
-
-  uploadsearch(params, vaParams, options, callback, failure) {
-    return sendPostRequest(this.settings, this.getEndPoint(), 'uploadsearch', vaParams, this.getAuthParams(params), options, callback, failure);
-  }
-
-  discoversearch(params, vaParams, options, callback, failure) {
-    return sendPostRequest(this.settings, this.getEndPoint(), 'discoversearch', vaParams, this.getAuthParams(params), options, callback, failure);
-  }
-
-  colorsearch(params, vaParams, options, callback, failure) {
-    return sendGetRequest(this.settings, this.getEndPoint(), 'colorsearch', vaParams, this.getAuthParams(params), options, callback, failure);
-  }
+  return settings.is_CN ? CN_END_POINT : END_POINT;
 }
 
-module.exports = ImageSearch;
+function getAuthParams(settings, params) {
+  params.access_key = settings.app_key;
+  return params;
+}
+
+function search(settings, params, vaParams, options, callback, failure) {
+  return sendGetRequest(settings, getEndPoint(settings), 'search', vaParams, getAuthParams(settings, params), options, callback, failure);
+}
+
+function recommendation(settings, params, vaParams, options, callback, failure) {
+  return sendGetRequest(settings, getEndPoint(settings), 'recommendation', vaParams, getAuthParams(settings, params), options, callback, failure);
+}
+
+function similarproducts(settings, params, vaParams, options, callback, failure) {
+  return sendPostRequest(settings, getEndPoint(settings), 'similarproducts', vaParams, getAuthParams(settings, params), options, callback, failure);
+}
+
+function outofstock(settings, params, vaParams, options, callback, failure) {
+  return sendGetRequest(settings, getEndPoint(settings), 'out_of_stock', vaParams, getAuthParams(settings, params), options, callback, failure);
+}
+
+function uploadsearch(settings, params, vaParams, options, callback, failure) {
+  return sendPostRequest(settings, getEndPoint(settings), 'uploadsearch', vaParams, getAuthParams(settings, params), options, callback, failure);
+}
+
+function discoversearch(settings, params, vaParams, options, callback, failure) {
+  return sendPostRequest(settings, getEndPoint(settings), 'discoversearch', vaParams, getAuthParams(settings, params), options, callback, failure);
+}
+
+function colorsearch(settings, params, vaParams, options, callback, failure) {
+  return sendGetRequest(settings, getEndPoint(settings), 'colorsearch', vaParams, getAuthParams(settings, params), options, callback, failure);
+}
+
+module.exports = {
+  search, recommendation, similarproducts, outofstock, uploadsearch, discoversearch, colorsearch,
+};
