@@ -263,7 +263,7 @@
       tracker = getTracker();
       if (tracker) {
         tracker.resetSession();
-        callback('success');
+        callback(tracker.getSID());
       } else {
         failure(Error('Tracker is not found'));
       }
