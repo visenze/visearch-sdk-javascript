@@ -116,7 +116,9 @@
 
       // reset session
       $("#resetSessionBtn").click(function () {
-        visearch.reset_session();
+        visearch.reset_session((res) => {
+          console.log(`New session id: ${res}`);
+        });
         refreshTrackingInfo();
       });
 

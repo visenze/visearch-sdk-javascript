@@ -252,7 +252,7 @@
 
     prototypes.get_session_time_remaining = function (callback = () => { }, failure = () => { }) {
       tracker = getTracker();
-      if (this.racker) {
+      if (tracker) {
         callback(tracker.getSessionTimeRemaining());
       } else {
         failure(Error('Tracker is not found'));
@@ -262,8 +262,7 @@
     prototypes.reset_session = function (callback = () => { }, failure = () => { }) {
       tracker = getTracker();
       if (tracker) {
-        tracker.resetSession();
-        callback('success');
+        callback(tracker.resetSession());
       } else {
         failure(Error('Tracker is not found'));
       }
