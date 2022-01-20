@@ -52,10 +52,9 @@
   // visearch Declaration
   // *********************************************
 
-  // tracker to send event
-  let tracker;
-
   function visearch() {
+    // tracker to send event
+    let tracker;
     const settings = {};
     const prototypes = {};
     this.loaded = false;
