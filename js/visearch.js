@@ -317,13 +317,17 @@
       $visearch.loaded = true;
     };
 
-    context.initVisearchFactory = initVisearchFactory;
+    if (!context.initVisearchFactory) {
+      context.initVisearchFactory = initVisearchFactory;
+    }
     if (context.initFactoryArray) {
       context.initFactoryArray.push({ init: initVisearchFactory });
     } else {
       context.initFactoryArray = [{ init: initVisearchFactory }];
     }
   }
+
+  const globalInit = new visearch();
 
   // Export for Node module
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
