@@ -35,6 +35,8 @@ function visearch() {
     'product_search_by_image',
     'product_search_by_id',
     'product_recommendations',
+    'product_search_by_id_by_post',
+    'product_recommendations_by_post',
     'set_uid',
     'get_uid',
     'get_sid',
