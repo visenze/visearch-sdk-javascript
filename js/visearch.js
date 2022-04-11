@@ -18,7 +18,7 @@
   const {
     search, recommendation, similarproducts, outofstock, uploadsearch, discoversearch, colorsearch,
   } = require('./imagesearch');
-  const { searchbyid, searchbyimage } = require('./productsearch');
+  const { searchbyid, searchbyimage, searchbyidbypost } = require('./productsearch');
   const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
   const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';
 
@@ -216,6 +216,24 @@
     };
 
     prototypes.product_recommendations = prototypes.product_search_by_id;
+
+    // temp work around, should be removed later
+    prototypes.product_search_by_id_by_post = function (productId, params, options, callback, failure) {
+      let altOptions;
+      let altCallback;
+      if (isFunction(options)) {
+        altOptions = callbackWrap.bind(this, productId, options);
+        altCallback = callback;
+      } else {
+        altOptions = options;
+        altCallback = callbackWrap.bind(this, productId, callback);
+      }
+
+      return searchbyidbypost(settings, productId, params, getDefaultTrackingParams(),
+        altOptions, altCallback, failure);
+    };
+
+    prototypes.product_recommendations_by_post = prototypes.product_search_by_id_by_post;
 
     /**
      * Manage tracker UID & SID

@@ -24,6 +24,10 @@ function searchbyid(settings, productId, params, vaParams, options, callback, fa
   return sendGetRequest(settings, getEndPoint(settings), `v1/product/recommendations/${productId}`, vaParams, getAuthParams(settings, params), options, callback, failure);
 }
 
+function searchbyidbypost(settings, productId, params, vaParams, options, callback, failure) {
+  return sendPostRequest(settings, getEndPoint(settings), `v1/product/recommendations/${productId}`, vaParams, getAuthParams(settings, params), options, callback, failure);
+}
+
 module.exports = {
-  searchbyid, searchbyimage,
+  searchbyid, searchbyimage, searchbyidbypost,
 };
