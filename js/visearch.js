@@ -113,11 +113,26 @@
     }
 
     /**
-     * Wrapper for callback function with additional send result_load event
+     * Wrapping response with addition method for abtesting tracking
+     */
+    function experimentRespWrap(args) {
+      function experimentNoRecommendation() {
+        if (this.experiment && this.experiment.experiment_no_recommendation) {
+          return true;
+        }
+        return false;
+      }
+      if (args.status === 'OK') {
+        args.experimentNoRecommendation = experimentNoRecommendation;
+      }
+    }
+
+    /**
+     * Wrapper for callback function with additional send result_load event and new method to track ab-test
      */
     function callbackWrap(productId, callback, args) {
+      experimentRespWrap(args);
       callback(args);
-
       if (args.status === 'OK' && args.result.length > 0) {
         // send out event if the pixel is in place
         const metadata = { queryId: args.reqid };
