@@ -122,7 +122,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   ```html
   <script type="text/javascript">
-  (function(e,r,t,a,o){var i=e.visearch=e.visearch||{};i.q=i.q||[],i.factory=function(e){return function(){var r=Array.prototype.slice.call(arguments);return r.unshift(e),i.q.push(r),i}},i.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id","product_recommendations","set_uid","get_uid","get_sid","get_session_time_remaining","reset_session"];for(var s=0;s<i.methods.length;s++){var n=i.methods[s];i[n]=i.factory(n)}var c=r.createElement(t);c.type="text/javascript",c.async=!0,c.src=a;var d=r.getElementsByTagName(t)[0];d.parentNode.insertBefore(c,d),c.onload=function(){for(var r=0;r<initFactoryArray.length;r++){var t=initFactoryArray[r];if(!t.obj_name){t.obj_name=o,t.init(e.visearch);break}}},c.onerror=function(){console.log("Unable to initialize ViSearch SDK")}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-2.2.2.min.js","visearch"));
+  (function(r,e,t,a,o){if(Array.isArray(o))for(var i=0;i<o.length;i++)s(r,e,"script",a,o[i]);else s(r,e,"script",a,o);function s(r,e,t,a,o){var i=r[o]=r[o]||{};i.q=i.q||[],i.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),i.q.push(e),i}},i.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id","product_recommendations","set_uid","get_uid","get_sid","get_session_time_remaining","reset_session"];for(var s=0;s<i.methods.length;s++){var n=i.methods[s];i[n]=i.factory(n)}var c=e.createElement(t);c.type="text/javascript",c.async=!0,c.src=a;var d=e.getElementsByTagName(t)[0];d.parentNode.insertBefore(c,d),c.onload=function(){for(var e=0;e<initFactoryArray.length;e++){var t=initFactoryArray[e];if(!t.obj_name){t.obj_name=o,t.init(r[o]);break}}},c.onerror=function(){console.log("Unable to initialize ViSearch SDK")}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-2.3.0.min.js","visearch"));
 
   visearch.set('app_key', 'YOUR_APP_KEY');
   visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
@@ -130,19 +130,14 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
   </script>
   ```
 
-  - If you want to include multiple instances of ViSearch onto the webpage but with different configurations and placements, copy the same code but change the keyword "visearch" into your desired instance name.
+  - If you want to include multiple instances of ViSearch onto the webpage but with different configurations and placements, copy the same code but change the keyword "visearch" into an array of your desired instances names and initialize all the instances in a similar manner
 
   ```html
   <script type="text/javascript">
-  ...(window,document,"script",0,"visearch");
+  ...(window,document,"script",0,["visearch", "visearch2"]);
 
   visearch.set('app_key', 'YOUR_APP_KEY_1');
   visearch.set('placement_id', 'YOUR_PLACEMENT_ID_1');
-  </script>
-
-  <script type="text/javascript">
-  ...(window,document,"script",0,"visearch2");
-
   visearch2.set('app_key', 'YOUR_APP_KEY_2');
   visearch2.set('placement_id', 'YOUR_PLACEMENT_ID_2');
   </script>
