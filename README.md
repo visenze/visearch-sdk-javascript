@@ -94,13 +94,24 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   // Initialize visearch instance
   const { visearch } = new ViSearch();
-
   // Set up keys
   visearch.set('app_key', 'YOUR_APP_KEY');
   visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
   visearch.set('placement_id', 'YOUR_PLACEMENT_ID'); 
-  visearch.set('endpoint', YOUR_ENDPOINT);
+  visearch.set('endpoint', 'YOUR_ENDPOINT');
   visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS);
+  ```
+
+  or you can initialize visearch with the configs directly
+
+  ```javascript
+  const { visearch } = new ViSearch({
+    app_key: 'YOUR_APP_KEY',
+    tracker_code: 'YOUR_TRACKER_CODE',
+    placement_id: 'YOUR_PLACEMENT_ID', 
+    endpoint: 'YOUR_ENDPOINT',
+    timeout: TIMEOUT_INTERVAL_IN_MS
+  });
   ```
 
   - If you want to create multiple instances of ViSearch, you can instantiate ViSearch multiple times.
@@ -122,8 +133,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   ```html
   <script type="text/javascript">
-  (function(r,e,t,a,o){if(Array.isArray(o))for(var i=0;i<o.length;i++)s(r,e,"script",a,o[i]);else s(r,e,"script",a,o);function s(r,e,t,a,o){var i=r[o]=r[o]||{};i.q=i.q||[],i.factory=function(r){return function(){var e=Array.prototype.slice.call(arguments);return e.unshift(r),i.q.push(e),i}},i.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id","product_recommendations","set_uid","get_uid","get_sid","get_session_time_remaining","reset_session"];for(var s=0;s<i.methods.length;s++){var n=i.methods[s];i[n]=i.factory(n)}var c=e.createElement(t);c.type="text/javascript",c.async=!0,c.src=a;var d=e.getElementsByTagName(t)[0];d.parentNode.insertBefore(c,d),c.onload=function(){for(var e=0;e<initFactoryArray.length;e++){var t=initFactoryArray[e];if(!t.obj_name){t.obj_name=o,t.init(r[o]);break}}},c.onerror=function(){console.log("Unable to initialize ViSearch SDK")}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-2.3.0.min.js","visearch"));
-
+  !function(c,d,e,f,a){if(Array.isArray(a))for(var b=0;b<a.length;b++)g(c,d,e,f,a[b]);else g(c,d,e,f,a);function g(c,l,m,n,d){var a=c[d]=c[d]||{};a.q=a.q||[],a.factory=function(b){return function(){var c=Array.prototype.slice.call(arguments);return c.unshift(b),a.q.push(c),a}},a.methods=["idsearch","uploadsearch","colorsearch","set","send","search","recommendation","out_of_stock","similarproducts","discoversearch","product_search_by_image","product_search_by_id","product_recommendations","set_uid","get_uid","get_sid","get_session_time_remaining","get_default_tracking_params","reset_session",];for(var e=0;e<a.methods.length;e++){var h=a.methods[e];a[h]=a.factory(h)}if(c.initVisearchFactory)initVisearchFactory(c[d]);else{var f,g,i,b,j,k=(f=l,g=m,i=n,(b=f.createElement(g)).type="text/javascript",b.async=!0,b.src=i,(j=f.getElementsByTagName(g)[0]).parentNode.insertBefore(b,j),b);k.onload=function(){initVisearchFactory(c[d])},k.onerror=function(){console.log("Unable to load ViSearch Javascript SDK")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-2.3.1.min.js","visearch");
   visearch.set('app_key', 'YOUR_APP_KEY');
   visearch.set('tracker_code', 'YOUR_TRACKER_CODE');
   visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
