@@ -10,6 +10,18 @@
 	} else {
 		initVisearch(context, doc, element, src, objs);
 	}
+
+	function insertScript(doc, element, src) {
+		// create element to load javascript async
+		var el = doc.createElement(element);
+		el.type = 'text/javascript';
+		el.async = true;
+		el.src = src;
+		var m = doc.getElementsByTagName(element)[0];
+		m.parentNode.insertBefore(el, m);
+		return el;
+	}
+
 	function initVisearch(context, doc, element, src, obj_name) {
 		var __visearch_obj = context[obj_name] = context[obj_name] || {};
 		__visearch_obj.q = __visearch_obj.q || [];
@@ -45,6 +57,7 @@
 				'get_uid',
 				'get_sid',
 				'get_session_time_remaining',
+				'get_default_tracking_params',
 				'reset_session',
 		];
 		// For each of our methods, generate a queueing stub.
@@ -53,25 +66,17 @@
 				__visearch_obj[key] = __visearch_obj.factory(key);
 		}
 	
-		// create element to load javascript async
-		var el = doc.createElement(element);
-		el.type = 'text/javascript';
-		el.async = true;
-		el.src = src;
-		var m = doc.getElementsByTagName(element)[0];
-		m.parentNode.insertBefore(el, m);
-		el.onload = function() {
-			for (var i = 0; i < initFactoryArray.length; i++) {
-				var initGroup = initFactoryArray[i];
-				if (!initGroup.obj_name) {
-					initGroup.obj_name = obj_name;
-					initGroup.init(context[obj_name]);
-					break;
-				}
-			}
-		};
-		el.onerror = function() {
-			console.log('Unable to initialize ViSearch SDK');
-		};
+		if (context.initVisearchFactory) {
+			initVisearchFactory(context[obj_name])
+		} else {
+			var el = insertScript(doc, element, src);
+			el.onload = function() {
+				initVisearchFactory(context[obj_name])
+			};
+			el.onerror = function() {
+				console.log('Unable to load ViSearch Javascript SDK');
+			};
+		}
+
 	}
 })(window, document, 'script', '../dist/js/visearch.js', 'visearch');

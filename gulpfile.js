@@ -7,7 +7,7 @@ const awspublish = require('gulp-awspublish');
 const replace = require('gulp-replace-task');
 const { exec } = require('child_process');
 const { version } = require('./package.json');
-const webpackConfig = require('./webpack.config.js');
+const webpackConfig = require('./webpack.config');
 const awsProfile = require('./aws-profile.json');
 
 const SETTINGS = {
@@ -18,8 +18,7 @@ const SETTINGS = {
 gulp.task('webpack', () => gulp.src(['./js/visearch.js']) // gulp looks for all source files under specified SETTINGS
   .pipe(stream(webpackConfig)) // blend in the webpack config into the source files
   .pipe(replace({ patterns: [{ match: 'version', replacement: version }] })) // replace some variables in source
-  // creates a source map which would be very helpful for debugging by maintaining the actual source code structure
-  .pipe(sourcemaps.init({ loadMaps: true }))
+  .pipe(sourcemaps.init({ loadMaps: true })) // creates source map for debugging by maintaining the source code structure
   .pipe(sourcemaps.write())
   .pipe(gulp.dest(SETTINGS.DEST_BUILD)));
 
@@ -37,7 +36,6 @@ gulp.task('webpack-snippet', () => gulp.src('./examples/js/snippet.js') // gulp 
   .pipe(gulp.dest(SETTINGS.DEST_BUILD)));
 
 if (awsProfile && awsProfile.params && awsProfile.params.Bucket) {
-
   // create a new publisher
   const publisher = awspublish.create(awsProfile);
 
@@ -54,7 +52,6 @@ if (awsProfile && awsProfile.params && awsProfile.params.Bucket) {
     .pipe(awspublish.gzip({ ext: '' }))
     .pipe(publisher.publish(headers, { force: true }))
     .pipe(awspublish.reporter()));
-
 }
 
 gulp.task('watch', () => {

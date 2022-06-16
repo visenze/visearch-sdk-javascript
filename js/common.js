@@ -12,7 +12,7 @@ const USER_AGENT = `visearch-js-sdk/${VERSION}`;
  * @param  {params}  params object
  * @return {URI}     returns self for fluent chaining
  */
-URI.prototype.addQueryParams = function (params) {
+URI.prototype.addQueryParams = function addQueryParams(params) {
   Object.entries(params).forEach(([property, param]) => {
     // do stuff
     if (Array.isArray(param)) {
@@ -107,42 +107,43 @@ function sendRequest(t, fetchObj, path, optionsParam, callbackParam, failurePara
       if (reqid && !json.reqid) {
         json.reqid = reqid;
       }
-      callback(json);
+      if (isFunction(callback)) {
+        callback(json);
+      }
     })
     .catch((ex) => {
-      console.error(`Failed to process ${path}`, ex);
-      if (failure) {
+      console.error(`Failed to process api: ${path}.`, ex);
+      if (isFunction(failure)) {
         failure(ex);
       }
     });
 }
 
+/**
+ * Append analytics data
+ * @param {*} params
+ * @param {*} vaParams
+ */
+function appendAnalyticsData(params, vaParams) {
+  if (vaParams) {
+    params.va_uid = vaParams.uid;
+    params.va_sdk = vaParams.sdk;
+    params.va_sdk_version = vaParams.v;
+    // search sid will take prority over analytics sid
+    params.va_sid = params.va_sid || vaParams.sid;
+    // search uid will take prority over analytics uid
+    params.va_uid = params.va_uid || vaParams.uid;
+  }
+  return params;
+}
+
 module.exports = {
-
-  /**
-   * Sends a GET request.
-   */
   sendGetRequest: (settings, endpoint, path, vaParams, params, options, callback, failure) => {
-    // append analytics data
-    if (vaParams) {
-      params.va_uid = vaParams.uid;
-      params.va_sdk = vaParams.sdk;
-      params.va_sdk_version = vaParams.v;
-
-      // search sid will take prority over analytics sid
-      if (!params.va_sid) {
-        params.va_sid = vaParams.sid;
-      }
-
-      // search uid will take prority over analytics uid
-      if (!params.va_uid) {
-        params.va_uid = vaParams.uid;
-      }
-    }
+    const queryParams = appendAnalyticsData(params, vaParams);
 
     const url = new URI(endpoint)
       .setPath(path)
-      .addQueryParams(params)
+      .addQueryParams(queryParams)
       .toString();
     const fetchObj = fetch(url, {
       method: 'GET',
@@ -150,19 +151,17 @@ module.exports = {
     });
     return sendRequest(settings.timeout, fetchObj, path, options, callback, failure);
   },
-
-  /**
-   * Sends a POST request.
-   */
   sendPostRequest: (settings, endpoint, path, vaParams, params, options, callback, failure) => {
     const url = new URI(endpoint)
       .setPath(path)
       .toString();
 
     const postData = new FormData();
-    if (params.image) {
-      const img = params.image;
-      delete params.image;
+    const queryParams = appendAnalyticsData(params, vaParams);
+
+    if (queryParams.image) {
+      const img = queryParams.image;
+      delete queryParams.image;
       // Main magic with files here
       if (img instanceof Blob) {
         postData.append('image', img);
@@ -170,7 +169,7 @@ module.exports = {
         postData.append('image', img.files[0]);
       }
     }
-    Object.entries(params).forEach(([param, values]) => {
+    Object.entries(queryParams).forEach(([param, values]) => {
       if (Array.isArray(values)) {
         values.forEach((i) => {
           if (i != null) {
@@ -182,24 +181,6 @@ module.exports = {
       }
     });
 
-    // append analytics data
-    if (vaParams) {
-      postData.append('va_uid', vaParams.uid);
-      postData.append('va_sid', vaParams.sid);
-      postData.append('va_sdk', vaParams.sdk);
-      postData.append('va_sdk_version', vaParams.v);
-    }
-
-    // search sid will take prority over analytics sid
-    if (params.va_sid) {
-      postData.set('va_sid', params.va_sid);
-    }
-
-    // search uid will take prority over analytics uid
-    if (params.va_uid) {
-      postData.set('va_uid', params.va_uid);
-    }
-
     const fetchObj = fetch(url, {
       method: 'POST',
       headers: getHeaders(settings),
@@ -207,5 +188,4 @@ module.exports = {
     });
     return sendRequest(settings.timeout, fetchObj, path, options, callback, failure);
   },
-
 };
