@@ -132,7 +132,7 @@ function appendAnalyticsData(params, vaParams) {
     // search sid will take prority over analytics sid
     params.va_sid = params.va_sid || vaParams.sid;
     // search uid will take prority over analytics uid
-    params.va_uid = params.va_sid || vaParams.uid;
+    params.va_uid = params.va_uid || vaParams.uid;
   }
   return params;
 }
