@@ -16,10 +16,10 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
     - [1.1 Installation](#11-installation)
     - [1.2 Setup](#12-setup)
     - [1.3 Demo](#13-demo)
-  - [2. API](#3-productsearch-api)
-    - [2.1 Search by Image](#31-search-by-image)
-    - [2.2 Recommendations](#32-recommendations)
-  - [3. Search Results](#4-search-results)
+  - [2. API](#2-productsearch-api)
+    - [2.1 Search by Image](#21-search-by-image)
+    - [2.2 Recommendations](#22-recommendations)
+  - [3. Search Results](#3-search-results)
     - [3.1 ErrorData](#31-errordata)
     - [3.2 ProductType](#32-producttype)
     - [3.3 Product](#33-product)
@@ -408,7 +408,7 @@ For more details, check out [Filters and Text Filters](https://ref-docs.visenze.
 
 With Automatic Object Recognition, ViSearch Search by Image API is smart to detect the objects present in the query image and suggest the best matched product type to run the search on.
 
-You can turn on the feature in upload search by setting the API parameter `detection=all`. We are now able to detect various types of fashion items, including `Top`, `Dress`, `Bottom`, `Shoe`, `Bag`, `Watch` and `Indian Ethnic Wear`. The list is ever-expanding as we explore this feature for other categories.
+You can turn on the feature in upload search by setting the API parameter `detection=all`. We are now able to detect various types of fashion items, including `top`, `dress`, `bottom`, `shoe`, `bag`, `watch`. The list is ever-expanding as we explore this feature for other categories.
 
 ```js
 visearch.product_search_by_image({
@@ -423,12 +423,12 @@ visearch.product_search_by_image({
 
 You could also recognize objects from a paticular type on the uploaded query image through configuring the detection parameter to a specific product type as `detection={type}`. Our API will run the search within that product type.
 
-Sample request to detect `Bag` in an uploaded image:
+Sample request to detect `bag` in an uploaded image:
 
 ```js
 visearch.product_search_by_image({
   im_url: 'your-image-url',
-  detection: 'Bag',
+  detection: 'bag',
 }, (res) => {
   // TODO handle response
 }, (err) => {
