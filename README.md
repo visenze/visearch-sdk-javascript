@@ -4,7 +4,7 @@
 
 ViSenze's Javascript SDK provides accurate, reliable and scalable image search APIs within our catalogs. The APIs included in this SDK aims to provide developers with endpoints that executes image search efficiently while also making it easy to integrate into webapps.
 
-> Note: In order to use any of our SDKs, you are required to have a ViSenze developer account. You will gain access to your own dashboard to manage your appkeys and catalogs. Visit [here](https://developers.visenze.com) for more info.
+> Note: In order to use any of our SDKs, you are required to have a ViSenze developer account. You will gain access to your own dashboard to manage your appkeys and catalogs. Visit [here](https://console.visenze.com) for more info.
 
 ----
 
@@ -20,22 +20,21 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
     - [2.1 Search by Image](#31-search-by-image)
     - [2.2 Recommendations](#32-recommendations)
   - [3. Search Results](#4-search-results)
-    - [3.1 ErrorData](#41-errordata)
-    - [3.2 ProductType](#42-producttype)
-    - [3.3 Product](#43-product)
-      - [3.3.1 Data](#431-data)
-    - [3.4 ProductObject](#44-productobject)
-    - [3.5 Facet](#45-facet)
-    - [3.6 FacetItem](#46-facetitem)
-    - [3.7 FacetRange](#47-facetrange)
-  - [4. Advanced Search Parameters](#5-advanced-search-parameters)
-    - [4.1 Example - Retrieving Metadata](#51-example---retrieving-metadata)
-    - [4.2 Example - Filtering Results](#52-example---filtering-results)
-    - [4.3 Example - Result Score](#53-example---result-score)
-    - [4.4 Example - Automatic Object Recognition Beta](#54-example---automatic-object-recognition-beta)
-  - [5. Event Tracking](#6-event-tracking)
-    - [5.1 Setup Tracking](#61-setup-tracking)
-    - [5.2 Send Events](#62-send-events)
+    - [3.1 ErrorData](#31-errordata)
+    - [3.2 ProductType](#32-producttype)
+    - [3.3 Product](#33-product)
+      - [3.3.1 Data](#331-data)
+    - [3.4 ProductObject](#34-productobject)
+    - [3.5 Facet](#35-facet)
+    - [3.6 FacetItem](#36-facetitem)
+    - [3.7 FacetRange](#37-facetrange)
+  - [4. Advanced Search Parameters](#4-advanced-search-parameters)
+    - [4.1 Example - Retrieving Metadata](#41-example---retrieving-metadata)
+    - [4.2 Example - Filtering Results](#42-example---filtering-results)
+    - [4.3 Example - Automatic Object Recognition Beta](#43-example---automatic-object-recognition-beta)
+  - [5. Event Tracking](#5-event-tracking)
+    - [5.1 Setup Tracking](#51-setup-tracking)
+    - [5.2 Send Events](#52-send-events)
 
 ----
 
@@ -59,7 +58,7 @@ npm install visearch-javascript-sdk
 
 ### 1.2 Setup
 
-Before you can start using the SDK, you will need to set up the SDK keys. Most of these keys can be found in your account's [dashboard](https://developers.visenze.com).
+Before you can start using the SDK, you will need to set up the SDK keys. Most of these keys can be found in your account's [dashboard](https://console.visenze.com).
 
 Firstly, take a look at the table below to understand what each key represents:
 
@@ -276,12 +275,12 @@ Javascript does not contain type definitions and the REST API response for all o
 | status | string | The request status, either `OK`, `warning`, or `fail` |
 | imId | string | Image ID. Can be used to search again without reuploading |
 | im_id | string |  |
-| error | [object](#41-errordata) | Error message and code if the request was not successful i.e. when status is `warning` or `fail` |
-| product_types | [object](#42-producttype)[]| Detected products' types, score and their bounding box in (x1,y1,x2,y2) format |
-| result | [object](#43-product)[] | The list of products in the search results. Important fields for first release. If missing, it will be set to blank. Note that we are displaying customer’s original catalog fields in “data” field |
-| objects | [object](#44-productobject)[] | When the `searchAllObjects` parameter is set to `true` |
+| error | [object](#31-errordata) | Error message and code if the request was not successful i.e. when status is `warning` or `fail` |
+| product_types | [object](#32-producttype)[]| Detected products' types, score and their bounding box in (x1,y1,x2,y2) format |
+| result | [object](#33-product)[] | The list of products in the search results. Important fields for first release. If missing, it will be set to blank. Note that we are displaying customer’s original catalog fields in “data” field |
+| objects | [object](#34-productobject)[] | When the `search_all_objects` parameter is set to `true` |
 | catalog_fields_mapping | object | Original catalog’s fields mapping |
-| facets | [object](#45-facet)[] | List of facet fields value and response for filtering |
+| facets | [object](#35-facet)[] | List of facet fields value and response for filtering |
 | page | number | The result page number |
 | limit | number | The number of results per page |
 | total | number | Total number of search result |
@@ -307,35 +306,28 @@ Javascript does not contain type definitions and the REST API response for all o
 |:---|:---|:---|
 | product_id | string | The product's ID which can be used in [Recommendations](#2.2-recommendations). |
 | main_image_url | string | Image URL. |
-| data | object | This data field is dependent on the metadata requested by user under (#4.1-example-\--retrieving-metadata). |
+| data | object | This data field is dependent on the metadata requested by user under (#41-example---retrieving-metadata). |
 
 #### 3.3.1 Data
 
-To better explain what the `data` field is, take a look at the table below (database field_names):
+The fields returned under here are dependent on the product metadata requested through the `attrs_to_get` params and the fields indexed in your catalog.
+
+Other than that, we return 2 default fields.
 
 |ViSenze pre-defined catalog fields|Client X's catalog original names|
 |:---|:---|
 |product_id|sku|
 |main_image_url|medium_image|
-|title|product_name|
-|product_url|link|
-|price|sale_price|
-|brand|brand|
-
-The table is a representation of how ViSenze's Catalog name its fields vs how Client X's database name its fields - both fields essentially mean the same thing just named differently.
-
-> i.e. visenze_database["product_id"] == client_x_database["sku"]
 
 ### 3.4 ProductObject
 
-When using the `searchAllObjects` is set to `true`, the search response will return the results in a list of ProductObject instead of a list of Product directly. The difference is that ProductObject will split the products according to type.
+When using the `search_all_objects` is set to `true`, the search response will return the results in a list of ProductObject instead of a list of Product directly. The difference is that ProductObject will split the products according to type.
 
 | Name | Type | Description |
 |:---|:---|:---|
 | result | [object](#43-product)[] | The list of products belonging to this type. |
 | total | number | The total number of results in this type. |
 | type | string | The detected type of the product. |
-| score | number | The detection's score of the product. |
 | box | number[] | The image-space coordinates of the detection box that represents the product. |
 
 ### 3.5 Facet
@@ -345,8 +337,10 @@ Facets are used to perform potential filtering of results.
 | Name | Type | Description |
 |:---|:---|:---|
 | key | string |  |
-| items | [object](#46-facetitem)[] |  |
-| range | [object](#47-facetrange) |  |
+| items | [object](#36-facetitem)[] |  |
+| range | [object](#37-facetrange) |  |
+
+To check usage guideline, please refer [here](https://ref-docs.visenze.com/reference/facets)
 
 ### 3.6 FacetItem
 
