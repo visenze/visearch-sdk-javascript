@@ -3,6 +3,7 @@ const FormData = require('form-data');
 const fetch = typeof window === 'undefined' ? require('node-fetch') : window.fetch;
 const { Base64 } = require('js-base64');
 const isFunction = require('lodash.isfunction');
+const { resizeImage } = require('./resizer');
 
 const VERSION = '@@version'; // Gulp will replace this with actual version number
 const USER_AGENT = `visearch-js-sdk/${VERSION}`;
@@ -151,7 +152,7 @@ module.exports = {
     });
     return sendRequest(settings.timeout, fetchObj, path, options, callback, failure);
   },
-  sendPostRequest: (settings, endpoint, path, vaParams, params, options, callback, failure) => {
+  sendPostRequest: async (settings, endpoint, path, vaParams, params, options, callback, failure) => {
     const url = new URI(endpoint)
       .setPath(path)
       .toString();
@@ -162,12 +163,13 @@ module.exports = {
     if (queryParams.image) {
       const img = queryParams.image;
       delete queryParams.image;
-      // Main magic with files here
+      let resizedImage;
       if (img instanceof Blob) {
-        postData.append('image', img);
+        resizedImage = await resizeImage(img, settings.resize_settings);
       } else {
-        postData.append('image', img.files[0]);
+        resizedImage = await resizeImage(img.files[0], settings.resize_settings);
       }
+      postData.append('image', resizedImage);
     }
     Object.entries(queryParams).forEach(([param, values]) => {
       if (Array.isArray(values)) {

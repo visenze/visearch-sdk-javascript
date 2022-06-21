@@ -35,6 +35,7 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
   - [5. Event Tracking](#5-event-tracking)
     - [5.1 Setup Tracking](#51-setup-tracking)
     - [5.2 Send Events](#52-send-events)
+  - [6. Resize Settings](#6-resize-settings)
 
 ----
 
@@ -556,3 +557,15 @@ s3 | Custom string parameter. Max length: 64. | No
 s4 | Custom string parameter. Max length: 64. | No
 s5 | Custom string parameter. Max length: 64. | No
 json | Custom json parameter. Max length: 512. | No
+
+## 6. Resize settings
+
+When performing upload search, you may notice the increased search latency with increased image file size. This is due to the increased time spent in network transferring your images to the ViSearch server, and the increased time for processing larger image files in ViSearch.
+
+To reduce upload search latency, by default the product search by image method makes a copy of your image file and resizes the copy to 512x512 pixels if both of the original dimensions exceed 512 pixels. This is the optimized size to lower search latency while not sacrificing search accuracy for general use cases
+
+If your image contains fine details such as textile patterns and textures, you can set a different default maximum dimension to get better search results:
+
+```javascript
+visearch.set('resize_settings', {maxHeight: 1024, maxWidth: 1024});
+```
