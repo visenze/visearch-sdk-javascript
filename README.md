@@ -306,7 +306,7 @@ Javascript does not contain type definitions and the REST API response for all o
 |:---|:---|:---|
 | product_id | string | The product's ID which can be used in [Recommendations](#2.2-recommendations). |
 | main_image_url | string | Image URL. |
-| data | object | This data field is dependent on the metadata requested by user under (#41-example---retrieving-metadata). |
+| data | object | This data field is dependent on the metadata requested by user under [here](#41-example---retrieving-metadata). |
 
 #### 3.3.1 Data
 
@@ -325,7 +325,7 @@ When using the `search_all_objects` is set to `true`, the search response will r
 
 | Name | Type | Description |
 |:---|:---|:---|
-| result | [object](#43-product)[] | The list of products belonging to this type. |
+| result | [object](#33-product)[] | The list of products belonging to this type. |
 | total | number | The total number of results in this type. |
 | type | string | The detected type of the product. |
 | box | number[] | The image-space coordinates of the detection box that represents the product. |
