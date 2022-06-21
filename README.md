@@ -300,16 +300,14 @@ Javascript does not contain type definitions and the REST API response for all o
 |:---|:---|:---|
 | box | number[] | The image-space coordinates of the detection box that represents the product. |
 | type | string | The detected type of the product. |
-| score | number | The detection's score of the product. |
 
 ### 3.3 Product
 
 | Name | Type | Description |
 |:---|:---|:---|
-| product_id | string | The product's ID which can be used in [Recommendations](#32-recommendations). |
+| product_id | string | The product's ID which can be used in [Recommendations](#2.2-recommendations). |
 | main_image_url | string | Image URL. |
-| data | object | This data field is slightly more complicated and deserves its own section over [here](#541-data). |
-| score | number | The detection score of the product. |
+| data | object | This data field is dependent on the metadata requested by user under (#4.1-example-\--retrieving-metadata). |
 
 #### 3.3.1 Data
 
@@ -327,8 +325,6 @@ To better explain what the `data` field is, take a look at the table below (data
 The table is a representation of how ViSenze's Catalog name its fields vs how Client X's database name its fields - both fields essentially mean the same thing just named differently.
 
 > i.e. visenze_database["product_id"] == client_x_database["sku"]
-
-You can find the schema mapping of ViSenze and the Client's in the `catalogFieldsMapping` variable found in [ProductResponse](#51-productresponse) - if the [ProductSearchByImageParams](#42-productsearchbyimageparams) have its `returnFieldsMapping` variable set to `true` when the search was called.
 
 ### 3.4 ProductObject
 
@@ -374,11 +370,11 @@ Facet for value range filtering.
 
 There are many parameters that our API support and we will be showing you a few examples of how to use them in this section.
 
-> You can find all of the supported advance search parameters for ViSearch API [here](https://developers.visenze.com/api/#advanced-parameters) and for ProductSearch API [// TODO: link to public documentation]().
+> You can find all of the supported advance search parameters for ProductSearch API [here](https://ref-docs.visenze.com/reference/search-by-image-api-1).
 
 ### 4.1 Example - Retrieving Metadata
 
-To retrieve metadata of your image results, provide the list of metadata keys for the metadata value to be returned in the `fl` (field list) property:
+To retrieve metadata of your image results, provide the list of metadata keys for the metadata value to be returned in the `attrs_to_get` property:
 
 ```js
 visearch.product_search_by_image({
@@ -395,10 +391,10 @@ visearch.product_search_by_image({
 
 ### 4.2 Example - Filtering Results
 
-To filter search results based on metadata values, provide a string array of metadata key to filter value in the `filters` property. Only price, category, brand, original_price support filter parameter. For more details, check out [Filters and Text Filters](https://ref-docs.visenze.com/reference/filters-and-text-filters) section in the ViSenze Documentation Hub.
+To filter search results based on metadata values, provide a string array of metadata key to filter value in the `filters` property. Only price, category, brand, original_price support filter parameter.
 
 ```js
-visearch.uploadsearch({
+visearch.product_search_by_image({
   im_url: 'your-image-url',
   filters: ['brand:my_brand'],
 }, (res) => {
@@ -408,14 +404,11 @@ visearch.uploadsearch({
 });
 ```
 
-Querying syntax for each metadata type is listed in the following table:
+Params | Filter Query Behaviour | Example
+--- | --- | ---
+string | The filter queries are treated as exact match conditions. Applies to String, Integer and Float type fields. | `filters=brand:my_brand` means the brand (String) value of the search results must be strictly equal to “my_brand”. `filters=price:10,199` means the price (Integer) value of the search results must be strictly within the range between 10 to 199 inclusive.
 
-Type | FQ
---- | ---
-string | Metadata value must be exactly matched with the query value, e.g. "Vintage Wingtips" would not match "vintage wingtips" or "vintage"
-text | Metadata value will be indexed using full-text-search engine and supports fuzzy text matching, e.g. "A pair of high quality leather wingtips" would match any word in the phrase
-int | Metadata value can be either: <ul><li>exactly matched with the query value</li><li>matched with a ranged query `minValue,maxValue`, e.g. int value `99` would match ranged query `0,199` but would not match ranged query `200,300`</li></ul>
-float | Metadata value can be either: <ul><li>exactly matched with the query value</li><li>matched with a ranged query `minValue,maxValue`, e.g. float value `99.99` would match ranged query `0.0,199.99` but would not match ranged query `200.0,300.0`</li></ul>
+For more details, check out [Filters and Text Filters](https://ref-docs.visenze.com/reference/filters-and-text-filters) section in the ViSenze Documentation Hub.
 
 ### 4.3 Example - Automatic Object Recognition
 
