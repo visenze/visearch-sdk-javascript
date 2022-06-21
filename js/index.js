@@ -18,17 +18,9 @@ function visearch(settings) {
   // A list of the methods in visearch.js to stub.
   // We need to maintain backward compatibility so the method names remain the same for imagesearch
   this.visearch.methods = [
-    'idsearch',
-    'uploadsearch',
-    'colorsearch',
     'set',
     'setKeys',
     'send',
-    'search',
-    'recommendation',
-    'out_of_stock',
-    'similarproducts',
-    'discoversearch',
     'product_search_by_image',
     'product_search_by_id',
     'product_recommendations',
