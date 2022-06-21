@@ -444,7 +444,7 @@ To improve search performance and gain useful data insights, it is recommended t
 
 ### 5.1 Setup Tracking
 
-To send the events, you will first need to initialize the event tracker with a tracking ID (found under ViSenze dashboard's Tracking Integration page). There are two different endpoints for tracker (1 for China and another for the rest of the world). If the SDK is intended to be used in China region, please set `is_cn` parameter to `true`.
+To send the events, we will initialize the event tracker with a tracking ID generated from your app key and placement ID for you. There are two different endpoints for tracker (1 for China and another for the rest of the world). If the SDK is intended to be used in China region, please set `is_cn` parameter to `true`.
 
 ```javascript
 // optional, send events to global or China server
