@@ -1,6 +1,6 @@
 const MAX_WIDTH = 512;
 const MAX_HEIGHT = 512;
-const ENCODING = 'image/jpg';
+const ENCODING = 'image/jpeg';
 
 function dataURItoBlob(dataURI) {
   // convert base64 to raw binary data held in a string
@@ -31,7 +31,7 @@ function loadFile(reader, img, imgBlob) {
   }));
 }
 
-async function resizeImage(imgBlob) {
+async function resizeImage(imgBlob, resizeSettings = {}) {
   if (!(imgBlob instanceof Blob)) {
     return null;
   }
@@ -43,14 +43,18 @@ async function resizeImage(imgBlob) {
   const ctx = canvas.getContext('2d');
   ctx.drawImage(img, 0, 0);
   let { width, height } = img;
-  if (width > height) {
-    if (width > MAX_WIDTH) {
-      height *= MAX_WIDTH / width;
-      width = MAX_WIDTH;
-    }
-  } else if (height > MAX_HEIGHT) {
-    width *= MAX_HEIGHT / height;
-    height = MAX_HEIGHT;
+
+  const maxWidth = resizeSettings.maxWidth || MAX_WIDTH;
+  const maxHeight = resizeSettings.maxHeight || MAX_HEIGHT;
+
+  if (width > height && width > maxWidth) {
+    height *= maxWidth / width;
+    width = maxWidth;
+  } else if (height > width && height > maxHeight) {
+    width *= maxHeight / height;
+    height = maxHeight;
+  } else {
+    return new Promise(resolve => resolve(imgBlob));
   }
   canvas.width = width;
   canvas.height = height;

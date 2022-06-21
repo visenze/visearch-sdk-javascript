@@ -165,9 +165,9 @@ module.exports = {
       delete queryParams.image;
       let resizedImage;
       if (img instanceof Blob) {
-        resizedImage = await resizeImage(img);
+        resizedImage = await resizeImage(img, settings.resize_settings);
       } else {
-        resizedImage = await resizeImage(img.files[0]);
+        resizedImage = await resizeImage(img.files[0], settings.resize_settings);
       }
       postData.append('image', resizedImage);
     }
