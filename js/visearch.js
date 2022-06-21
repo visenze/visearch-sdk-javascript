@@ -8,9 +8,6 @@ const isFunction = require('lodash.isfunction');
 const va = require('visenze-tracking-javascript');
 const URI = require('jsuri');
 const pjson = require('../package.json');
-const {
-  search, recommendation, similarproducts, outofstock, uploadsearch, discoversearch, colorsearch,
-} = require('./imagesearch');
 const { searchbyid, searchbyimage, searchbyidbypost } = require('./productsearch');
 
 const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
@@ -44,7 +41,7 @@ const RESULT_LOAD = 'result_load';
 
     function getTracker() {
       if (!tracker) {
-        const code = settings.tracker_code ? settings.tracker_code : `${settings.app_key}:${settings.placement_id}`;
+        const code = `${settings.app_key}:${settings.placement_id}`;
         const endpoint = settings.analytics_endpoint
           || (settings.endpoint === STAGING_ENDPOINT ? ANALYTICS_STAGING_ENDPOINT : null);
         tracker = va.init({
@@ -156,39 +153,6 @@ const RESULT_LOAD = 'result_load';
 
     prototypes.send = (action, params, callback, failure) => {
       sendEvent(action, params, callback, failure);
-    };
-
-    prototypes.search = (params, options, callback, failure) => {
-      search(settings, params, getDefaultTrackingParams(), options, callback, failure);
-    };
-
-    // Make idsearch an alias of search
-    prototypes.idsearch = prototypes.search;
-
-    prototypes.recommendation = (params, options, callback, failure) => {
-      recommendation(settings, params, getDefaultTrackingParams(), options, callback, failure);
-    };
-
-    prototypes.similarproducts = (params, options, callback, failure) => {
-      return similarproducts(settings, params, getDefaultTrackingParams(),
-        options, callback, failure);
-    };
-
-    prototypes.out_of_stock = (params, options, callback, failure) => {
-      return outofstock(settings, params, getDefaultTrackingParams(), options, callback, failure);
-    };
-
-    prototypes.uploadsearch = (params, options, callback, failure) => {
-      return uploadsearch(settings, params, getDefaultTrackingParams(), options, callback, failure);
-    };
-
-    prototypes.discoversearch = (params, options, callback, failure) => {
-      return discoversearch(settings, params, getDefaultTrackingParams(),
-        options, callback, failure);
-    };
-
-    prototypes.colorsearch = (params, options, callback, failure) => {
-      return colorsearch(settings, params, getDefaultTrackingParams(), options, callback, failure);
     };
 
     prototypes.product_search_by_image = (params, options, callback, failure) => {

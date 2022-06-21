@@ -1,15 +1,6 @@
 const assert = require('assert');
 const ViSearch = require('./js/index');
 
-// insert your app key to test visearch API here;
-const visearchConfigs = {
-  app_key: 'YOUR_APP_KEY_1',
-  tracker_code: 'YOUR_TRACKER_CODE',
-  is_cn: false, // flag to send request to CN endpoint
-  timeOut: 2000,
-  endpoint: '',
-};
-
 // insert your app key to test productsearch API here;
 const searchConfigs = {
   app_key: 'YOUR_APP_KEY_S',
@@ -41,7 +32,6 @@ const QUERY_ID = 'fake-query-id';
 const PID = 'pid';
 const EVENT = 'event';
 
-const visearch1 = new ViSearch(visearchConfigs).visearch;
 const visearchSearch = new ViSearch(searchConfigs).visearch;
 const visearchRec = new ViSearch(recConfigs).visearch;
 const visearchEmpty = new ViSearch(emptyConfigs).visearch;
@@ -54,19 +44,6 @@ const log = (message, response) => {
 };
 
 function testAPISuccess() {
-  visearch1.search({
-    im_name: IM_NAME,
-    fl: ['im_url'],
-  }, (res) => {
-    try {
-      assert.strictEqual(res.status, 'OK');
-    } catch (err) {
-      log('FAIL: Visearch API search should give result', res);
-    }
-  }, (err) => {
-    log('FAIL: Visearch API search should give result', err);
-  });
-
   visearchSearch.product_search_by_image({
     im_url: IM_URL,
     attrs_to_get: ['product_id'],
