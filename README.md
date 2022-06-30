@@ -122,7 +122,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   ```html
   <script type="text/javascript">
-  !function(c,d,e,f,a){if(Array.isArray(a))for(var b=0;b<a.length;b++)g(c,d,e,f,a[b]);else g(c,d,e,f,a);function g(c,l,m,n,d){var a=c[d]=c[d]||{};a.q=a.q||[],a.factory=function(b){return function(){var c=Array.prototype.slice.call(arguments);return c.unshift(b),a.q.push(c),a}},a.methods=["product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_session_time_remaining","get_default_tracking_params","reset_session",];for(var e=0;e<a.methods.length;e++){var h=a.methods[e];a[h]=a.factory(h)}if(c.initVisearchFactory)initVisearchFactory(c[d]);else{var f,g,i,b,j,k=(f=l,g=m,i=n,(b=f.createElement(g)).type="text/javascript",b.async=!0,b.src=i,(j=f.getElementsByTagName(g)[0]).parentNode.insertBefore(b,j),b);k.onload=function(){initVisearchFactory(c[d])},k.onerror=function(){console.log("Unable to load ViSearch Javascript SDK")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-3.0.0.min.js","visearch");
+  !function(c,d,e,f,a){if(Array.isArray(a))for(var b=0;b<a.length;b++)g(c,d,e,f,a[b]);else g(c,d,e,f,a);function g(c,l,m,n,d){var a=c[d]=c[d]||{};a.q=a.q||[],a.factory=function(b){return function(){var c=Array.prototype.slice.call(arguments);return c.unshift(b),a.q.push(c),a}},a.methods=["product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_query_id","get_session_time_remaining","get_default_tracking_params","reset_session",];for(var e=0;e<a.methods.length;e++){var h=a.methods[e];a[h]=a.factory(h)}if(c.initVisearchFactory)initVisearchFactory(c[d]);else{var f,g,i,b,j,k=(f=l,g=m,i=n,(b=f.createElement(g)).type="text/javascript",b.async=!0,b.src=i,(j=f.getElementsByTagName(g)[0]).parentNode.insertBefore(b,j),b);k.onload=function(){initVisearchFactory(c[d])},k.onerror=function(){console.log("Unable to load ViSearch Javascript SDK")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-3.0.0.min.js","visearch");
   visearch.set('app_key', 'YOUR_APP_KEY');
   visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
   </script>
@@ -533,6 +533,7 @@ imUrl | Image URL ( generally this is the `im_url`) for this product. | Required
 pos | Position of the product in Search Results e.g. click position/ view position. Note that this starts from 1 , not 0. | Required for `product_view`, `product_click` and `add_to_cart` events
 transId | Transaction ID | Required for transaction event.
 value | Transaction value e.g. numerical order value | Required for transaction event.
+sid | User session ID.
 uid | Unique user/device ID. If not provided, a random (non-personalizable) UUID will be generated to track the browser. | No
 cat | A generic string to categorize / group the events in related user flow. For example: `privacy_flow`, `videos`, `search_results`. Typically, categories are used to group related UI elements. Max length: 32 | No
 name | Event name e.g. `open_app` , `click_on_camera_btn`. Max length: 32. | No
@@ -557,6 +558,19 @@ s3 | Custom string parameter. Max length: 64. | No
 s4 | Custom string parameter. Max length: 64. | No
 s5 | Custom string parameter. Max length: 64. | No
 json | Custom json parameter. Max length: 512. | No
+
+#### 5.2.1 Getting session Id
+
+```javascript
+var sessionId = visearch.get_sid();
+```
+
+#### 5.2.2 Getting query Id
+
+```javascript
+var queryId = visearch.get_query_id();
+```
+This will fetch the last query Id from any request made by replacement, and if none is found retrieved from the last value saved in local storage.
 
 ## 6. Resize settings
 
