@@ -28,6 +28,7 @@ const RESULT_LOAD = 'result_load';
     this.q = this.q || [];
     // tracker to send event
     let tracker;
+    let queryId;
 
     /**
      * Apply calling on prototypes methods.
@@ -133,12 +134,23 @@ const RESULT_LOAD = 'result_load';
     }
 
     /**
-     * Wrapper for callback with additional send result_load event and new method to track a/b test
+     * Save the query Id of the last request to local storage
+     * @param {*} resp response from ProductSearch API
      */
-    function wrapCallback(productId, callback, args) {
-      wrapExperimentResponse(args);
-      callback(args);
-      sendResultLoadEvent(productId, args);
+    function saveQueryId(resp) {
+      queryId = resp.reqid;
+      localStorage.setItem(`visenze_query_id_${settings.placement_id}`, queryId);
+    }
+
+    /**
+     * Wrapper for callback with additional send result_load event and new method to track a/b test
+     * @param {*} resp response from ProductSearch API
+     */
+    function wrapCallback(productId, callback, resp) {
+      wrapExperimentResponse(resp);
+      callback(resp);
+      saveQueryId();
+      sendResultLoadEvent(productId, resp);
     }
 
     prototypes.set = (key, value) => {
@@ -235,6 +247,8 @@ const RESULT_LOAD = 'result_load';
         failure(Error('Tracker is not found'));
       }
     };
+
+    prototypes.get_query_id = () => queryId || localStorage.get(`visenze_query_id_${settings.placement_id}`);
 
     prototypes.get_session_time_remaining = (callback = () => {}, failure = () => {}) => {
       tracker = getTracker();
