@@ -149,7 +149,7 @@ const RESULT_LOAD = 'result_load';
     function wrapCallback(productId, callback, resp) {
       wrapExperimentResponse(resp);
       callback(resp);
-      saveQueryId();
+      saveQueryId(resp);
       sendResultLoadEvent(productId, resp);
     }
 
