@@ -112,12 +112,12 @@ const RESULT_LOAD = 'result_load';
         return;
       }
       const metadata = { queryId: args.reqid };
-      if (context && context.vsPlacementLoaded && context.vsPlacementLoaded[settings.placement_id]) {
-        sendEvent(RESULT_LOAD, metadata);
-      }
-      // send out event if the pixel is in place
       if (productId) {
         metadata.pid = productId;
+      }
+      // send out event if the pixel is in place
+      if (context && context.vsPlacementLoaded && context.vsPlacementLoaded[settings.placement_id]) {
+        sendEvent(RESULT_LOAD, metadata);
       }
       // push result_load event to GTM datalayer if user enable GTM tracking
       if (settings.gtm_tracking) {
