@@ -113,12 +113,12 @@ const RESULT_LOAD = 'result_load';
         return;
       }
       const metadata = { queryId: args.reqid };
-      if (context && context.vsPlacementLoaded && context.vsPlacementLoaded[settings.placement_id]) {
-        sendEvent(RESULT_LOAD, metadata);
-      }
-      // send out event if the pixel is in place
       if (productId) {
         metadata.pid = productId;
+      }
+      // send out event if the pixel is in place
+      if (context && context.vsPlacementLoaded && context.vsPlacementLoaded[settings.placement_id]) {
+        sendEvent(RESULT_LOAD, metadata);
       }
       // push result_load event to GTM datalayer if user enable GTM tracking
       if (settings.gtm_tracking) {
@@ -135,10 +135,13 @@ const RESULT_LOAD = 'result_load';
     }
 
     /**
-     * Save the query Id of the last request to local storage
+     * Save the query Id of the last request to local storage if the request is successfull
      * @param {*} resp response from ProductSearch API
      */
     function saveQueryId(resp) {
+      if (resp.status !== 'OK' || resp.result.length === 0) {
+        return;
+      }
       queryId = resp.reqid;
       localStorage.setItem(`visenze_query_id_${settings.placement_id}`, queryId);
     }
