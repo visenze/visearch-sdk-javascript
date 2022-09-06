@@ -31,15 +31,8 @@ function loadFile(reader, img, imgBlob) {
   }));
 }
 
-async function resizeImage(imgBlob, resizeSettings = {}) {
-  if (!(imgBlob instanceof Blob)) {
-    return null;
-  }
-
+function drawAndResize(img, resizeSettings) {
   const canvas = document.createElement('canvas');
-  const img = new Image();
-  const reader = new FileReader();
-  await loadFile(reader, img, imgBlob);
   const ctx = canvas.getContext('2d');
   ctx.drawImage(img, 0, 0);
   let { width, height } = img;
@@ -54,15 +47,35 @@ async function resizeImage(imgBlob, resizeSettings = {}) {
     width *= maxHeight / height;
     height = maxHeight;
   } else {
-    return new Promise(resolve => resolve(imgBlob));
+    return null;
   }
   canvas.width = width;
   canvas.height = height;
   ctx.drawImage(img, 0, 0, width, height);
-  const dataUrl = canvas.toDataURL(ENCODING);
+  return canvas.toDataURL(ENCODING);
+}
+
+function resizeImageFromDataUrl(imgAsDataUrl, resizeSettings = {}) {
+  const img = new Image();
+  img.src = imgAsDataUrl;
+  return drawAndResize(img, resizeSettings) || imgAsDataUrl;
+}
+
+async function resizeImage(imgBlob, resizeSettings = {}) {
+  if (!(imgBlob instanceof Blob)) {
+    return null;
+  }
+
+  const img = new Image();
+  const reader = new FileReader();
+  await loadFile(reader, img, imgBlob);
+  const dataUrl = drawAndResize(img, resizeSettings);
+  if (!dataUrl) {
+    return new Promise(resolve => resolve(imgBlob));
+  }
   return new Promise(async resolve => resolve(dataURItoBlob(dataUrl)));
 }
 
 module.exports = {
-  resizeImage,
+  resizeImage, resizeImageFromDataUrl,
 };

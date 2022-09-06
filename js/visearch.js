@@ -9,6 +9,7 @@ const va = require('visenze-tracking-javascript');
 const URI = require('jsuri');
 const pjson = require('../package.json');
 const { searchbyid, searchbyimage, searchbyidbypost } = require('./productsearch');
+const { resizeImageFromDataUrl } = require('./resizer');
 
 const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
 const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';
@@ -149,7 +150,7 @@ const RESULT_LOAD = 'result_load';
     function wrapCallback(productId, callback, resp) {
       wrapExperimentResponse(resp);
       callback(resp);
-      saveQueryId();
+      saveQueryId(resp);
       sendResultLoadEvent(productId, resp);
     }
 
@@ -289,6 +290,8 @@ const RESULT_LOAD = 'result_load';
         }
       });
     };
+
+    prototypes.resize_image = (imageAsDataUrl, resizeSettings) => resizeImageFromDataUrl(imageAsDataUrl, resizeSettings || settings.resizeSettings);
 
     this.q.push = function push(command) {
       applyPrototypesCall(command);
