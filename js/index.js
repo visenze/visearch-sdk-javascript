@@ -33,6 +33,7 @@ function visearch(settings) {
     'get_session_time_remaining',
     'get_default_tracking_params',
     'reset_session',
+    'resize_image',
   ];
 
   // For each of our methods, generate a queueing stub.

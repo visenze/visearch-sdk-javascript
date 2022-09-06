@@ -55,6 +55,7 @@
 			'get_session_time_remaining',
 			'get_default_tracking_params',
 			'reset_session',
+			'resize_image',
 		];
 		// For each of our methods, generate a queueing stub.
 		for (var i = 0; i < __visearch_obj.methods.length; i++) {
