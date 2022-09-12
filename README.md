@@ -562,13 +562,13 @@ json | Custom json parameter. Max length: 512. | No
 #### 5.2.1 Getting session Id
 
 ```javascript
-var sessionId = visearch.get_sid();
+var sessionId = visearch.get_sid(onSuccess, onError);
 ```
 
 #### 5.2.2 Getting query Id
 
 ```javascript
-var queryId = visearch.get_query_id();
+var queryId = visearch.get_query_id(onSuccess, onError);
 ```
 This will fetch the last query Id from any request made by replacement, and if none is found retrieved from the last value saved in local storage.
 
@@ -586,5 +586,5 @@ visearch.set('resize_settings', {maxHeight: 1024, maxWidth: 1024});
 
 You can also call the `resize_image` method to resize the image yourself. The method takes in returns image in Data URL form.
 ```javascript
-var resizedImage = visearch.resize_image(imgAsDataURL, resizeSettings);
+var resizedImage = visearch.resize_image(imgAsDataURL, resizeSettings, onSuccess, onFailure);
 ```
