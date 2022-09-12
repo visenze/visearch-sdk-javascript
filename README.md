@@ -583,3 +583,8 @@ If your image contains fine details such as textile patterns and textures, you c
 ```javascript
 visearch.set('resize_settings', {maxHeight: 1024, maxWidth: 1024});
 ```
+
+You can also call the `resize_image` method to resize the image yourself. The method takes in returns image in Data URL form.
+```javascript
+var resizedImage = visearch.resize_image(imgAsDataURL, resizeSettings);
+```
