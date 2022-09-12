@@ -294,7 +294,14 @@ const RESULT_LOAD = 'result_load';
       });
     };
 
-    prototypes.resize_image = (imageAsDataUrl, resizeSettings) => resizeImageFromDataUrl(imageAsDataUrl, resizeSettings || settings.resizeSettings);
+    prototypes.resize_image = (imageAsDataUrl, resizeSettings, onSuccess, onFailure) => {
+      try {
+        const img = resizeImageFromDataUrl(imageAsDataUrl, resizeSettings || settings.resizeSettings);
+        onSuccess(img);
+      } catch (err) {
+        onFailure(err);
+      }
+    };
 
     this.q.push = function push(command) {
       applyPrototypesCall(command);
