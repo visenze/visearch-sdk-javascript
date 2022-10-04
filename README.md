@@ -544,7 +544,7 @@ visearch.send("click", {
 
 User action(s) can be sent through an batch event handler.
 
-A common use case for this batch event method is to group up all `transaction` by sending it in a batch. The SDK will automatically generate a `transId` that would be used to aggregate as an order.
+A common use case for this batch event method is to group up all `transaction` by sending it in a batch. This SDK will automatically generate a `transId` to group transactions as an order.
 
 ```javascript
 visearch.send_events('transaction', [{
@@ -573,11 +573,11 @@ Field | Description | Required
 queryId| The request id of the search. This reqid can be obtained from the search response callback:```res.reqid``` | Yes
 action | Event action. Currently we support the following event actions: `product_click`, `product_view`, `add_to_cart`, and `transaction`. | Yes
 pid | Product ID ( generally, this is the `im_name`) for this product. Can be retrieved via `im_name` in result. | Required for `product_view`, `product_click` and `add_to_cart` events
-imUrl | Image URL ( generally this is the `im_url`) for this product.
-pos | Position of the product in Search Results e.g. click position/ view position. Note that this starts from 1 , not 0. | Required for `product_view`, `product_click` and `add_to_cart` events
-transId | Transaction ID | Required for transaction event.
+imUrl | Image URL ( generally this is the `im_url`) for this product. | No
+pos | Position of the product in Search Results e.g. click position/ view position. Note that this starts from 1 , not 0.
+transId | Transaction ID to group transactions as an order. | No
 value | Transaction value e.g. numerical order value | Required for transaction event.
-sid | User session ID.
+sid | User session ID. | No
 uid | Unique user/device ID. If not provided, a random (non-personalizable) UUID will be generated to track the browser. | No
 cat | A generic string to categorize / group the events in related user flow. For example: `privacy_flow`, `videos`, `search_results`. Typically, categories are used to group related UI elements. Max length: 32 | No
 name | Event name e.g. `open_app` , `click_on_camera_btn`. Max length: 32. | No
