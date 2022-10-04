@@ -1,15 +1,22 @@
 {
   "name": "visearch-javascript-sdk",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "JavaScript SDK for ViSearch of visenze.com",
   "main": "./js/index.js",
   "scripts": {
     "eslint": "eslint *.js js/*.js",
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/visenze/visearch-sdk-javascript.git"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "globals": {
+      "window": {}
+    }
   },
   "author": "dejun@visenze.com",
   "license": "MIT",
@@ -28,6 +35,8 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
     "imports-loader": "^0.8.0",
+    "jest": "^29.1.1",
+    "jest-environment-jsdom": "^29.1.1",
     "nodemon": "^1.11.0",
     "webpack": "^4.46.0",
     "webpack-stream": "^5.2.1"
@@ -42,6 +51,6 @@
     "lodash.find": "^4.6.0",
     "lodash.isfunction": "^3.0.9",
     "node-fetch": "^2.6.7",
-    "visenze-tracking-javascript": "1.1.0"
+    "visenze-tracking-javascript": "1.2.0"
   }
 }

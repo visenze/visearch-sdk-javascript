@@ -8,3 +8,8 @@ test*.js
 .codeclimate.yml
 .eslintrc.js
 aws-profile.json
+
+.idea
+test
+babel.config.js
+.eslintignore

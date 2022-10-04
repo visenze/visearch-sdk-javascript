@@ -16,7 +16,7 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
     - [1.1 Installation](#11-installation)
     - [1.2 Setup](#12-setup)
     - [1.3 Demo](#13-demo)
-  - [2. API](#2-productsearch-api)
+  - [2. API](#2-api)
     - [2.1 Search by Image](#21-search-by-image)
     - [2.2 Recommendations](#22-recommendations)
   - [3. Search Results](#3-search-results)
@@ -31,11 +31,14 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
   - [4. Advanced Search Parameters](#4-advanced-search-parameters)
     - [4.1 Example - Retrieving Metadata](#41-example---retrieving-metadata)
     - [4.2 Example - Filtering Results](#42-example---filtering-results)
-    - [4.3 Example - Automatic Object Recognition Beta](#43-example---automatic-object-recognition-beta)
+    - [4.3 Example - Automatic Object Recognition](#43-example---automatic-object-recognition)
   - [5. Event Tracking](#5-event-tracking)
     - [5.1 Setup Tracking](#51-setup-tracking)
     - [5.2 Send Events](#52-send-events)
-  - [6. Resize Settings](#6-resize-settings)
+      - [5.2.1 Getting session Id](#521-getting-session-id)
+      - [5.2.2 Getting query Id](#522-getting-query-id)
+    - [5.2 Send Batch Events](#52-send-batch-events)
+  - [6. Resize settings](#6-resize-settings)
 
 ----
 
@@ -122,7 +125,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   ```html
   <script type="text/javascript">
-  !function(c,d,e,f,a){if(Array.isArray(a))for(var b=0;b<a.length;b++)g(c,d,e,f,a[b]);else g(c,d,e,f,a);function g(c,l,m,n,d){var a=c[d]=c[d]||{};a.q=a.q||[],a.factory=function(b){return function(){var c=Array.prototype.slice.call(arguments);return c.unshift(b),a.q.push(c),a}},a.methods=["product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_query_id","get_session_time_remaining","get_default_tracking_params","reset_session","resize_image"];for(var e=0;e<a.methods.length;e++){var h=a.methods[e];a[h]=a.factory(h)}if(c.initVisearchFactory)initVisearchFactory(c[d]);else{var f,g,i,b,j,k=(f=l,g=m,i=n,(b=f.createElement(g)).type="text/javascript",b.async=!0,b.src=i,(j=f.getElementsByTagName(g)[0]).parentNode.insertBefore(b,j),b);k.onload=function(){initVisearchFactory(c[d])},k.onerror=function(){console.log("Unable to load ViSearch Javascript SDK")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-3.0.1.min.js","visearch");
+  !function(e,t,r,s,a){if(Array.isArray(a))for(var i=0;i<a.length;i++)n(e,t,r,s,a[i]);else n(e,t,r,s,a);function n(e,t,r,s,a){var i=e[a]=e[a]||{};i.q=i.q||[],i.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),i.q.push(t),i}},i.methods=["set","setKeys","send","send_events","product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_query_id","get_session_time_remaining","get_default_tracking_params","reset_session","resize_image","generate_uuid"];for(var n=0;n<i.methods.length;n++){var o=i.methods[n];i[o]=i.factory(o)}if(e.initVisearchFactory)initVisearchFactory(e[a]);else{var c=function(e,t,r){var s=e.createElement(t);s.type="text/javascript",s.async=!0,s.src=r;var a=e.getElementsByTagName(t)[0];return a.parentNode.insertBefore(s,a),s}(t,r,s);c.onload=function(){initVisearchFactory(e[a])},c.onerror=function(){console.log("Unable to load ViSearch Javascript SDK")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-3.1.0.min.js","visearch");
   visearch.set('app_key', 'YOUR_APP_KEY');
   visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
   </script>
@@ -461,9 +464,12 @@ visearch.send(action, {
   queryId: '<search request ID>',
   pid: '<product ID> ',
   pos: <product position in Search Results>,
-  imUrl: 'product image URL'
   ...
   ...
+}, (action, params) => {
+  // success callback
+}, (err) => {
+  // error callback
 });
 ```
 
@@ -479,7 +485,22 @@ visearch.product_search_by_id('product-id', {
 });
 ```
 
-Currently, we support the following event actions: `click`, `view`, `product_click`, `product_view`, `add_to_cart`, and `transaction`. The `action` parameter can be an arbitrary string and custom events can be sent.
+
+#### 5.2.1 Getting session Id
+
+```javascript
+var sessionId = visearch.get_sid(onSuccess, onError);
+```
+
+#### 5.2.2 Getting query Id
+
+```javascript
+var queryId = visearch.get_query_id(onSuccess, onError);
+```
+This will fetch the last query Id from any request made by replacement, and if none is found retrieved from the last value saved in local storage.
+
+
+Currently, we support the following event actions: `product_click`, `product_view`, `add_to_cart`, and `transaction`. The `action` parameter can be an arbitrary string and custom events can be sent.
 
 ```javascript
 // send product click
@@ -487,7 +508,6 @@ visearch.send("product_click", {
                 queryId: "<search reqid>",
                 pid: "<your im_name>",
                 pos: 1, // product position in Search Results, start from 1
-                imUrl: "<product image URL e.g. im_url>"
             });
             
 // send product impression
@@ -495,7 +515,6 @@ visearch.send("product_view", {
                 queryId: "<search reqid>",
                 pid: "<your im_name>",
                 pos: 1, // product position in Search Results, start from 1
-                imUrl: "<product image URL e.g. im_url>"
             });
             
 // send Transaction event e.g order purchase of $300
@@ -511,7 +530,6 @@ visearch.send("add_to_cart", {
                 queryId: "<search reqid>",
                 pid: "<your im_name>",
                 pos: 1, // product position in Search Results, start from 1
-                imUrl: "<product image URL e.g. im_url>"
             });
 
 // send custom event
@@ -522,14 +540,40 @@ visearch.send("click", {
             });
 ```
 
+### 5.2 Send Batch Events
+
+User action(s) can be sent through an batch event handler. Register an event handler to the element in which the user will interact.
+
+A common use case for this batch event method is to group up all `transaction` by sending it in a batch. The SDK will automatically generate a `transId` that would be used to aggregate as an order.
+
+```javascript
+visearch.send_events('transaction', [{
+  queryId: '<search request ID>',
+  pid: '<product ID - 1> ',
+  value: 300,
+  ...
+  ...
+},{
+  queryId: '<search request ID>',
+  pid: '<product ID - 2> ',
+  value: 400
+  ...
+  ...
+}], (action, params) => {
+  // success callback
+}, (err) => {
+  // error callback
+});
+```
+
 Below are the brief description for various parameters. Please note that invalid events (such as missing required fields or exceed length limit) will not be captured by server.
 
 Field | Description | Required
 --- | --- | ---
 queryId| The request id of the search. This reqid can be obtained from the search response callback:```res.reqid``` | Yes
-action | Event action. Currently we support the following event actions: `click`, `view`, `product_click`, `product_view`, `add_to_cart`, and `transaction`. | Yes
+action | Event action. Currently we support the following event actions: `product_click`, `product_view`, `add_to_cart`, and `transaction`. | Yes
 pid | Product ID ( generally, this is the `im_name`) for this product. Can be retrieved via `im_name` in result. | Required for `product_view`, `product_click` and `add_to_cart` events
-imUrl | Image URL ( generally this is the `im_url`) for this product. | Required for `product_view`, `product_click` and `add_to_cart` events
+imUrl | Image URL ( generally this is the `im_url`) for this product.
 pos | Position of the product in Search Results e.g. click position/ view position. Note that this starts from 1 , not 0. | Required for `product_view`, `product_click` and `add_to_cart` events
 transId | Transaction ID | Required for transaction event.
 value | Transaction value e.g. numerical order value | Required for transaction event.
@@ -558,19 +602,6 @@ s3 | Custom string parameter. Max length: 64. | No
 s4 | Custom string parameter. Max length: 64. | No
 s5 | Custom string parameter. Max length: 64. | No
 json | Custom json parameter. Max length: 512. | No
-
-#### 5.2.1 Getting session Id
-
-```javascript
-var sessionId = visearch.get_sid(onSuccess, onError);
-```
-
-#### 5.2.2 Getting query Id
-
-```javascript
-var queryId = visearch.get_query_id(onSuccess, onError);
-```
-This will fetch the last query Id from any request made by replacement, and if none is found retrieved from the last value saved in local storage.
 
 ## 6. Resize settings
 

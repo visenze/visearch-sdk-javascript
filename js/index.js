@@ -21,6 +21,7 @@ function visearch(settings) {
     'set',
     'setKeys',
     'send',
+    'send_events',
     'product_search_by_image',
     'product_search_by_id',
     'product_recommendations',
@@ -34,6 +35,7 @@ function visearch(settings) {
     'get_default_tracking_params',
     'reset_session',
     'resize_image',
+    'generate_uuid',
   ];
 
   // For each of our methods, generate a queueing stub.
