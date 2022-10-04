@@ -542,7 +542,7 @@ visearch.send("click", {
 
 ### 5.2 Send Batch Events
 
-User action(s) can be sent through an batch event handler. Register an event handler to the element in which the user will interact.
+User action(s) can be sent through an batch event handler.
 
 A common use case for this batch event method is to group up all `transaction` by sending it in a batch. The SDK will automatically generate a `transId` that would be used to aggregate as an order.
 
