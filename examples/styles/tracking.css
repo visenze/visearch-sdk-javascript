@@ -1,0 +1,12 @@
+body {
+  background-color: #ecf0f1;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: #34495e;
+  padding: 10px;
+}
+
+textarea {
+  width: 400px;
+  height: 100px;
+}

@@ -1,0 +1,130 @@
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/tracking.css" />
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="js/snippet.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            // TODO: insert your app key, placement id and endpoint here
+            visearch.set("app_key", "");
+            visearch.set("placement_id", "");
+            visearch.set("endpoint", "")
+            visearch.set("is_cn", false);
+
+            const refreshTrackingInfo = () => {
+                // display uid & sid
+                visearch.get_uid((uid) => {
+                    $("#uid").text(uid);
+                });
+
+                visearch.get_sid((sid) => {
+                    $("#sid").text(sid);
+                });
+
+                visearch.get_session_time_remaining((time) => {
+                    $("#sessionTimeRemaining").text(time);
+                });
+            };
+
+            setInterval(() => {
+                refreshTrackingInfo();
+            }, 1000);
+
+            // reset session
+            $("#resetSessionBtn").click(function () {
+                visearch.reset_session();
+                refreshTrackingInfo();
+            });
+
+            // change uid
+            $("#newUidBtn").click(function () {
+                const newUid = $("#newUidTxt").val();
+                $("#newUidTxt").val("");
+                visearch.set_uid(newUid);
+
+                refreshTrackingInfo();
+            });
+
+            $("#singleEventButton").click(function () {
+                const action = $("#singleEventAction").val();
+                const params = $("#singleEventParams").val();
+                const json = JSON.parse(params);
+                visearch.send(action, json, (action, event) => {
+                    console.log(action,event);
+                }, (failure) => {
+                    console.error(failure);
+                });
+            });
+
+            $("#batchEventButton").click(function () {
+                const action = $("#batchEventAction").val();
+                const params = $("#batchEventParams").val();
+                const json = JSON.parse(params);
+                visearch.send_events(action, json,(action, event) => {
+                    console.log(action,event);
+                }, (failure) => {
+                    console.error(failure);
+                });
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div class="main container-fluid">
+        <div class="content">
+            <h2>Example for tracking</h2>
+
+            <h3>Tracking info</h3>
+            <div>
+                <div>
+                    <p>
+                        uid: <span id="uid"></span>
+                        <br />
+                        sid: <span id="sid"></span>
+                        <br />
+                        session time remaining: <span id="sessionTimeRemaining"></span>
+                    </p>
+                </div>
+
+                <div>
+                    <button id="resetSessionBtn">reset session</button>
+                    <br />
+                    <input id="newUidTxt" /> <button id="newUidBtn">set new uid</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h3>Send single event</h3>
+
+            action: <input id="singleEventAction" value="product_view" />
+            <br />
+            json params: <textarea id="singleEventParams">{"pid":"mock-pid","queryId":"mock-queryId"}</textarea>
+            <br />
+            <button id="singleEventButton">send single event</button>
+
+        </div>
+
+        <div>
+            <h3>Send batch events</h3>
+
+            action: <input id="batchEventAction" value="transaction" />
+            <br />
+            json params: <textarea
+                id="batchEventParams">[{"pid":"mock-pid1","value":"111","queryId":"mock-queryId"},{"pid":"mock-pid3","value":"333","queryId":"mock-queryId","transId":"mock-transId"}, {"pid":"mock-pid2","value":"222","queryId":"mock-queryId"}]</textarea>
+            <br />
+            <button id="batchEventButton">send batch events</button>
+
+        </div>
+    </div>
+</body>
+
+</html>

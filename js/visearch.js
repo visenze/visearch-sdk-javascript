@@ -53,29 +53,33 @@ const RESULT_LOAD = 'result_load';
       return tracker;
     }
 
+    function setSdkVersion(params = {}) {
+      params.v = SDK_VERSION;
+      params.sdk = SDK;
+
+      return params;
+    }
+
+    /**
+     * if event is not provided, we send the default tracking params;
+     * which includes: sdk, sid, ts, uid and version
+     * @returns tracking parameters
+     */
     function getDefaultTrackingParams() {
       tracker = getTracker();
       if (tracker) {
-        const params = tracker.getDefaultParams();
-        params.v = SDK_VERSION;
-        params.sdk = SDK;
+        let params = tracker.getDefaultParams();
+        params = setSdkVersion(params);
         return params;
       }
       return null;
     }
 
-    function sendEvent(action, params, callback = () => { }, failure = () => { }) {
+
+    function sendEvent(action, event, callback = () => { }, failure = () => { }) {
       tracker = getTracker();
-      let trackingParams;
-      // if params is not provided, we send the default tracking params;
-      // which includes: code, sdk, sid, ts, uid and version
-      const defaultParams = getDefaultTrackingParams() || {};
-      if (!params) {
-        trackingParams = defaultParams;
-      } else {
-        // user params take priority
-        trackingParams = { ...defaultParams, ...params };
-      }
+      const trackingParams = setSdkVersion(event);
+
       if (tracker) {
         tracker.sendEvent(action, trackingParams,
           () => {
@@ -83,6 +87,25 @@ const RESULT_LOAD = 'result_load';
           }, (err) => {
             failure(err, trackingParams);
           });
+      }
+    }
+
+    function sendEvents(action, events, callback = () => { }, failure = () => { }) {
+      tracker = getTracker();
+
+      if (tracker && tracker.validateEvents(events, failure)) {
+        const batchId = tracker.generateUUID();
+
+        events.forEach((event) => {
+          event.v = SDK_VERSION;
+          event.sdk = SDK;
+
+          if (action.toLowerCase() === 'transaction' && !event.transId) {
+            event.transId = batchId;
+          }
+
+          sendEvent(action, event, callback, failure);
+        });
       }
     }
 
@@ -167,8 +190,12 @@ const RESULT_LOAD = 'result_load';
       });
     };
 
-    prototypes.send = (action, params, callback, failure) => {
-      sendEvent(action, params, callback, failure);
+    prototypes.send = (action, event, callback, failure) => {
+      sendEvent(action, event, callback, failure);
+    };
+
+    prototypes.send_events = (action, events, callback, failure) => {
+      sendEvents(action, events, callback, failure);
     };
 
     prototypes.product_search_by_image = (params, options, callback, failure) => {
@@ -224,7 +251,7 @@ const RESULT_LOAD = 'result_load';
     /**
      * Manage tracker UID & SID
      */
-    prototypes.set_uid = (uid, callback = () => {}, failure = () => {}) => {
+    prototypes.set_uid = (uid, callback = () => { }, failure = () => { }) => {
       tracker = getTracker();
       if (tracker) {
         tracker.setUID(uid);
@@ -234,7 +261,7 @@ const RESULT_LOAD = 'result_load';
       }
     };
 
-    prototypes.get_uid = (callback = () => {}, failure = () => {}) => {
+    prototypes.get_uid = (callback = () => { }, failure = () => { }) => {
       tracker = getTracker();
       if (tracker) {
         callback(tracker.getUID());
@@ -243,7 +270,7 @@ const RESULT_LOAD = 'result_load';
       }
     };
 
-    prototypes.get_sid = (callback = () => {}, failure = () => {}) => {
+    prototypes.get_sid = (callback = () => { }, failure = () => { }) => {
       tracker = getTracker();
       if (tracker) {
         callback(tracker.getSID());
@@ -254,7 +281,7 @@ const RESULT_LOAD = 'result_load';
 
     prototypes.get_query_id = () => queryId || localStorage.get(`visenze_query_id_${settings.placement_id}`);
 
-    prototypes.get_session_time_remaining = (callback = () => {}, failure = () => {}) => {
+    prototypes.get_session_time_remaining = (callback = () => { }, failure = () => { }) => {
       tracker = getTracker();
       if (tracker) {
         callback(tracker.getSessionTimeRemaining());
@@ -263,7 +290,7 @@ const RESULT_LOAD = 'result_load';
       }
     };
 
-    prototypes.reset_session = (callback = () => {}, failure = () => {}) => {
+    prototypes.reset_session = (callback = () => { }, failure = () => { }) => {
       tracker = getTracker();
       if (tracker) {
         callback(tracker.resetSession());
@@ -272,7 +299,7 @@ const RESULT_LOAD = 'result_load';
       }
     };
 
-    prototypes.get_default_tracking_params = (callback = () => {}, failure = () => {}) => {
+    prototypes.get_default_tracking_params = (callback = () => { }, failure = () => { }) => {
       tracker = getTracker();
       if (tracker) {
         callback(getDefaultTrackingParams());
@@ -300,6 +327,15 @@ const RESULT_LOAD = 'result_load';
         onSuccess(img);
       } catch (err) {
         onFailure(err);
+      }
+    };
+
+    prototypes.generate_uuid = (callback = () => { }, failure = () => { }) => {
+      tracker = getTracker();
+      if (tracker) {
+        callback(tracker.generateUUID());
+      } else {
+        failure(Error('Tracker is not found'));
       }
     };
 
@@ -355,5 +391,5 @@ const RESULT_LOAD = 'result_load';
     module.exports = ViSearch;
   }
 
-// eslint-disable-next-line no-restricted-globals
+  // eslint-disable-next-line no-restricted-globals
 }(typeof self !== 'undefined' ? self : this));
