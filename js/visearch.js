@@ -279,7 +279,17 @@ const RESULT_LOAD = 'result_load';
       }
     };
 
-    prototypes.get_query_id = () => queryId || localStorage.get(`visenze_query_id_${settings.placement_id}`);
+    prototypes.get_last_query_id = (callback = () => { }, failure = () => { }) => {
+      try {
+        if (queryId) {
+          callback(queryId);
+        } else {
+          callback(localStorage.getItem(`visenze_query_id_${settings.placement_id}`));
+        }
+      } catch (err) {
+        failure(err);
+      }
+    };
 
     prototypes.get_session_time_remaining = (callback = () => { }, failure = () => { }) => {
       tracker = getTracker();

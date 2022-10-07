@@ -30,7 +30,7 @@ function visearch(settings) {
     'set_uid',
     'get_uid',
     'get_sid',
-    'get_query_id',
+    'get_last_query_id',
     'get_session_time_remaining',
     'get_default_tracking_params',
     'reset_session',
