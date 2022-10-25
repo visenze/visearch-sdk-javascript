@@ -23,12 +23,20 @@ function dataURItoBlob(dataURI) {
 
 function loadFile(reader, img, imgBlob) {
   reader.readAsDataURL(imgBlob);
-  return new Promise(((resolve) => {
+  return new Promise((resolve) => {
     reader.onload = function onload(e) {
       img.src = e.target.result;
       resolve();
     };
-  }));
+  });
+}
+
+function loadImage(img) {
+  return new Promise((resolve) => {
+    img.onload = function onload(e) {
+      resolve();
+    };
+  });
 }
 
 function drawAndResize(img, resizeSettings) {
@@ -69,6 +77,7 @@ async function resizeImage(imgBlob, resizeSettings = {}) {
   const img = new Image();
   const reader = new FileReader();
   await loadFile(reader, img, imgBlob);
+  await loadImage(img);
   const dataUrl = drawAndResize(img, resizeSettings);
   if (!dataUrl) {
     return new Promise(resolve => resolve(imgBlob));
