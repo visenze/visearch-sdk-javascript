@@ -13,6 +13,9 @@ function getEndPoint(settings) {
 function getAuthParams(settings, params) {
   params.app_key = settings.app_key;
   params.placement_id = settings.placement_id;
+  if (!settings.placement_id && settings.strategy_id) {
+    params.strategy_id = settings.strategy_id;
+  }
   return params;
 }
 
