@@ -36,7 +36,8 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
     - [5.1 Setup Tracking](#51-setup-tracking)
     - [5.2 Send Events](#52-send-events)
       - [5.2.1 Getting session Id](#521-getting-session-id)
-      - [5.2.2 Getting query Id](#522-getting-query-id)
+      - [5.2.2 Getting user Id](#522-getting-user-id)
+      - [5.2.3 Getting query Id](#523-getting-query-id)
     - [5.2 Send Batch Events](#52-send-batch-events)
   - [6. Resize settings](#6-resize-settings)
 
@@ -69,7 +70,7 @@ Firstly, take a look at the table below to understand what each key represents:
 | Key | Importance | Description |
 |:---|:---|:---|
 | app_key | Compulsory | All SDK functions depends on a valid app_key being set. The app key also limits the API features you can use. |
-| placement_id | Situational | Required if you are using [ProductSearch API](#3-productsearch-api). |
+| placement_id | Situational | Required if you are using [ProductSearch API](#2-api). |
 | endpoint | Situational | Default is `https://search.visenze.com/` |
 | timeout | Optional | Defaulted to 15000 |
 
@@ -77,7 +78,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
 - If you are using the project provided directly from the main [repo](https://github.com/visenze/visearch-sdk-javascript):
   - Locate all `*.html` files within the `./examples` directory
-  - Look for all `// TODO: ` comments and fill them up:
+  - Look for all `// TODO:` comments and fill them up:
   - Any additional keys to be set should also be placed in the same area:
 
 - If you included this SDK into your own project via npm, add the following at the start of your app:
@@ -125,7 +126,7 @@ Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
   ```html
   <script type="text/javascript">
-  !function(e,t,r,s,a){if(Array.isArray(a))for(var i=0;i<a.length;i++)n(e,t,r,s,a[i]);else n(e,t,r,s,a);function n(e,t,r,s,a){var i=e[a]=e[a]||{};i.q=i.q||[],i.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),i.q.push(t),i}},i.methods=["set","setKeys","send","send_events","product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_last_query_id","get_session_time_remaining","get_default_tracking_params","reset_session","resize_image","generate_uuid"];for(var n=0;n<i.methods.length;n++){var o=i.methods[n];i[o]=i.factory(o)}if(e.initVisearchFactory)initVisearchFactory(e[a]);else{var c=function(e,t,r){var s=e.createElement(t);s.type="text/javascript",s.async=!0,s.src=r;var a=e.getElementsByTagName(t)[0];return a.parentNode.insertBefore(s,a),s}(t,r,s);c.onload=function(){initVisearchFactory(e[a])},c.onerror=function(){console.log("Unable to load ViSearch Javascript SDK")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-3.1.2.min.js","visearch");
+  !function(e,t,r,s,a){if(Array.isArray(a))for(var i=0;i<a.length;i++)n(e,t,r,s,a[i]);else n(e,t,r,s,a);function n(e,t,r,s,a){var i=e[a]=e[a]||{};i.q=i.q||[],i.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),i.q.push(t),i}},i.methods=["set","setKeys","send","send_events","product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_last_query_id","get_session_time_remaining","get_default_tracking_params","reset_session","resize_image","generate_uuid"];for(var n=0;n<i.methods.length;n++){var o=i.methods[n];i[o]=i.factory(o)}if(e.initVisearchFactory)initVisearchFactory(e[a]);else{var c=function(e,t,r){var s=e.createElement(t);s.type="text/javascript",s.async=!0,s.src=r;var a=e.getElementsByTagName(t)[0];return a.parentNode.insertBefore(s,a),s}(t,r,s);c.onload=function(){initVisearchFactory(e[a])},c.onerror=function(){console.log("Unable to load ViSearch Javascript SDK")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-3.1.3.min.js","visearch");
   visearch.set('app_key', 'YOUR_APP_KEY');
   visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
   </script>
@@ -308,7 +309,7 @@ Javascript does not contain type definitions and the REST API response for all o
 
 | Name | Type | Description |
 |:---|:---|:---|
-| product_id | string | The product's ID which can be used in [Recommendations](#2.2-recommendations). |
+| product_id | string | The product's ID which can be used in [Recommendations](#22-recommendations). |
 | main_image_url | string | Image URL. |
 | data | object | This data field is dependent on the metadata requested by user under [here](#41-example---retrieving-metadata). |
 
@@ -473,7 +474,7 @@ visearch.send(action, {
 });
 ```
 
-To send events, first retrieve the search query ID (the `reqid`) found in the search results response call back. 
+To send events, first retrieve the search query ID (the `reqid`) found in the search results response call back.
 
 ```javascript
 visearch.product_search_by_id('product-id', {
@@ -485,20 +486,46 @@ visearch.product_search_by_id('product-id', {
 });
 ```
 
-
 #### 5.2.1 Getting session Id
 
 ```javascript
-var sessionId = visearch.get_sid(onSuccess, onError);
+var onSuccess = (sid) => {
+  /* do something */
+};
+var onError = (err) => {
+  /* do something */
+}
+
+visearch.get_sid(onSuccess, onError);
 ```
 
-#### 5.2.2 Getting query Id
+#### 5.2.2 Getting user Id
 
 ```javascript
-var queryId = visearch.get_last_query_id(onSuccess, onError);
-```
-This will fetch the last query Id from any request made by replacement, and if none is found retrieved from the last value saved in local storage.
+var onSuccess = (uid) => {
+  /* do something */
+};
+var onError = (err) => {
+  /* do something */
+}
 
+visearch.get_uid(onSuccess, onError);
+```
+
+#### 5.2.3 Getting query Id
+
+```javascript
+var onSuccess = (query_id) => {
+  /* do something */
+};
+var onError = (err) => {
+  /* do something */
+}
+
+visearch.get_last_query_id(onSuccess, onError);
+```
+
+This will fetch the last query Id from any request made by replacement, and if none is found retrieved from the last value saved in local storage.
 
 Currently, we support the following event actions: `product_click`, `product_view`, `add_to_cart`, and `transaction`. The `action` parameter can be an arbitrary string and custom events can be sent.
 
@@ -616,6 +643,7 @@ visearch.set('resize_settings', {maxHeight: 1024, maxWidth: 1024});
 ```
 
 You can also call the `resize_image` method to resize the image yourself. The method takes in returns image in Data URL form.
+
 ```javascript
 var resizedImage = visearch.resize_image(imgAsDataURL, resizeSettings, onSuccess, onFailure);
 ```
