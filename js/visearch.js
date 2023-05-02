@@ -331,9 +331,9 @@ const RESULT_LOAD = 'result_load';
       });
     };
 
-    prototypes.resize_image = (imageAsDataUrl, resizeSettings, onSuccess, onFailure) => {
+    prototypes.resize_image = async (imageAsDataUrl, resizeSettings, onSuccess, onFailure) => {
       try {
-        const img = resizeImageFromDataUrl(imageAsDataUrl, resizeSettings || settings.resizeSettings);
+        const img = await resizeImageFromDataUrl(imageAsDataUrl, resizeSettings || settings.resizeSettings);
         onSuccess(img);
       } catch (err) {
         onFailure(err);
