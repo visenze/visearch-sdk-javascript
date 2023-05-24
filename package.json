@@ -7,10 +7,10 @@
   "scripts": {
     "lint": "eslint . --ext .ts",
     "start-demo": "npm run build-dev && node examples/app.js",
-    "preinstall": "node -p \"'export const version =  \\'' + require('./package.json').version + '\\';'\" > src/version.ts",
+    "get-version": "node -p \"'export const version =  \\'' + require('./package.json').version + '\\';'\" > src/version.ts",
     "build-dev": "webpack --mode development  --config webpack.config.js",
-    "build": "npm run preinstall && webpack --config webpack.config.js",
-    "publish-npm": "npm run preinstall && npx tsc && npm publish"
+    "build": "npm run get-version && webpack --config webpack.config.js",
+    "publish-npm": "npm run get-version && npx tsc && npm publish"
   },
   "repository": {
     "type": "git",
