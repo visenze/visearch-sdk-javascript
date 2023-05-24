@@ -2,11 +2,7 @@ import { ViSearch } from './visearch';
 import { ViSearchClient } from '../types/shared';
 
 (function init(context): void {
-  if (typeof window === 'undefined') {
-    exports.default = (configs?: Record<string, unknown>): ViSearchClient => {
-      return ViSearch(configs);
-    };
-  } else if (context && !context.viInit) {
+  if (typeof window === 'undefined' && context && !context.viInit) {
     context.viInit = (context: any, clientName: string): ViSearchClient => {
       const client = ViSearch();
       const stub = context[clientName];
@@ -18,3 +14,5 @@ import { ViSearchClient } from '../types/shared';
     }
   }
 }(typeof self !== 'undefined' ? self : this));
+
+export default ViSearch;

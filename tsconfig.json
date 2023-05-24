@@ -7,7 +7,6 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "declaration": true,
-    "sourceMap": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "lib",

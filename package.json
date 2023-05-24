@@ -10,7 +10,8 @@
     "get-version": "node -p \"'export const version =  \\'' + require('./package.json').version + '\\';'\" > src/version.ts",
     "build-dev": "webpack --mode development  --config webpack.config.js",
     "build": "npm run get-version && webpack --config webpack.config.js",
-    "publish-npm": "npm run get-version && npx tsc && npm publish"
+    "publish-npm": "npm run get-version && npx tsc && npm publish",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
