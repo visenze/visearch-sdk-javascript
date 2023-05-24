@@ -68,9 +68,10 @@ function drawAndResize(img: HTMLImageElement, resizeSettings?: ResizeSettings): 
   return canvas.toDataURL(ENCODING);
 }
 
-function resizeImageFromDataUrl(imgAsDataUrl: string, resizeSettings?: ResizeSettings): string | null {
+async function resizeImageFromDataUrl(imgAsDataUrl: string, resizeSettings?: ResizeSettings): string | null {
   const img = new Image();
   img.src = imgAsDataUrl;
+  await loadImage(img);
   return drawAndResize(img, resizeSettings) || imgAsDataUrl;
 }
 
