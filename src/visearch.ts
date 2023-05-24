@@ -374,14 +374,14 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     }
   }
 
-  function resizeImage(
+  async function resizeImage(
     imageAsDataUrl: string,
     resizeSettings: PSResizeSettings | undefined,
     onSuccess: GenericCallback,
     onFailure?: GenericCallback,
-  ): void {
+  ): Promise<void> {
     try {
-      const img = resizeImageFromDataUrl(
+      const img = await resizeImageFromDataUrl(
         imageAsDataUrl,
         resizeSettings || settings.resize_settings,
       );
