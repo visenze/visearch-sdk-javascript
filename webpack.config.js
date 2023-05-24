@@ -1,13 +1,33 @@
 const path = require('path');
 const webpack = require('webpack');
+const CompressionPlugin = require('compression-webpack-plugin');
+const S3Plugin = require('webpack-s3-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const pjson = require('./package.json');
 const version = pjson.version;
 
+const s3plugin = new S3Plugin({
+  // Only upload js
+  include: /.*\.(js)/,
+  s3Options: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID, //process.env.AWS_ACCESS_KEY_ID
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, //process.env.AWS_SECRET_ACCESS_KEY
+    region: 'ap-southeast-1'
+  },
+  s3UploadOptions: {
+    Bucket: 'visenze-static'
+  },
+  basePathTransform: function () {
+    return new Promise(function (resolve, _) {
+      resolve('visearch/dist/js');
+    });
+  }
+});
+
 module.exports = (_, argv) => {
   const mode = argv.mode || 'production';
   const filename = (mode === 'development') ? `visearch.js` : `visearch-${version}.min.js`;
-  return {
+  const configs = {
     resolve: {
       extensions: ['.ts', '.js'],
     },
@@ -47,6 +67,13 @@ module.exports = (_, argv) => {
         Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise',
         fetch: 'imports-loader?this=>global!exports-loader?global.fetch!node-fetch',
       }),
+      new CompressionPlugin
     ],
+  };
+
+  if (mode === 'production') {
+    configs.plugins.push(s3plugin);
   }
+
+  return configs;
 };
