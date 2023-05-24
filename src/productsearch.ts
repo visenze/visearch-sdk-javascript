@@ -36,7 +36,7 @@ function getEndpoint(settings: ViSearchSettings): string {
   if (settings.endpoint) {
     return settings.endpoint;
   }
-  return settings['is_CN'] ? CN_END_POINT : END_POINT;
+  return settings['is_cn'] ? CN_END_POINT : END_POINT;
 }
 
 function getQueryParams(params: Record<string, unknown> | undefined, vaParams: Record<string, unknown>, settings: ViSearchSettings): Record<string, unknown> {
