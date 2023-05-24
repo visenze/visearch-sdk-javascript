@@ -15,7 +15,7 @@ import {
 } from './productsearch';
 import { resizeImageFromDataUrl } from './resizer';
 import isFunction from 'lodash.isfunction';
-import { PSResponse, ViSearchSettings, GenericCallback, ResizeSettings, ViSearchClient } from '../types/index';
+import { PSResponse, ViSearchSettings, GenericCallback, PSResizeSettings, ViSearchClient } from '../types/index';
 
 const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
 const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';
@@ -376,7 +376,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
 
   function resizeImage(
     imageAsDataUrl: string,
-    resizeSettings: ResizeSettings | undefined,
+    resizeSettings: PSResizeSettings | undefined,
     onSuccess: GenericCallback,
     onFailure?: GenericCallback,
   ): void {

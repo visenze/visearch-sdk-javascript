@@ -1,4 +1,4 @@
-import { ResizeSettings } from '../types';
+import { PSResizeSettings } from '../types';
 
 const MAX_WIDTH = 512;
 const MAX_HEIGHT = 512;
@@ -41,7 +41,7 @@ async function loadImage(img: HTMLImageElement): Promise<void> {
   });
 }
 
-function drawAndResize(img: HTMLImageElement, resizeSettings?: ResizeSettings): string | null {
+function drawAndResize(img: HTMLImageElement, resizeSettings?: PSResizeSettings): string | null {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -68,14 +68,14 @@ function drawAndResize(img: HTMLImageElement, resizeSettings?: ResizeSettings): 
   return canvas.toDataURL(ENCODING);
 }
 
-async function resizeImageFromDataUrl(imgAsDataUrl: string, resizeSettings?: ResizeSettings): string | null {
+async function resizeImageFromDataUrl(imgAsDataUrl: string, resizeSettings?: PSResizeSettings): string | null {
   const img = new Image();
   img.src = imgAsDataUrl;
   await loadImage(img);
   return drawAndResize(img, resizeSettings) || imgAsDataUrl;
 }
 
-async function resizeImage(imgBlob: Blob, resizeSettings?: ResizeSettings): Promise<Blob | null> {
+async function resizeImage(imgBlob: Blob, resizeSettings?: PSResizeSettings): Promise<Blob | null> {
   if (!(imgBlob instanceof Blob)) {
     return null;
   }

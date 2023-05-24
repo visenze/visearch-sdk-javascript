@@ -44,7 +44,7 @@ export interface ViSearchClient {
   apply_prototypes_call: (command: [string, unknown]) => void,
   resize_image: (
     imageAsDataUrl: string,
-    resizeSettings: ResizeSettings | undefined,
+    resizeSettings: PSResizeSettings | undefined,
     onSuccess: GenericCallback,
     onFailure?: GenericCallback,
   ) => void,
@@ -58,7 +58,7 @@ export type ViSearchSettings = {
   analytics_endpoint?: string;
   endpoint?: string;
   timeout?: number;
-  resize_settings?: ResizeSettings
+  resize_settings?: PSResizeSettings
   [key: string]: unknown;
 }
 
@@ -108,7 +108,7 @@ export interface PSObject {
   result: PSProduct[]
 }
 
-export interface ResizeSettings { maxWidth: number, maxHeight: number }
+export interface PSResizeSettings { maxWidth: number, maxHeight: number }
 
 declare global {
   interface Window {
