@@ -10,7 +10,7 @@
     "preinstall": "node -p \"'export const version =  \\'' + require('./package.json').version + '\\';'\" > src/version.ts",
     "build-dev": "webpack --mode development  --config webpack.config.js",
     "build": "npm run preinstall && webpack --config webpack.config.js",
-    "publish": "npm run preinstall && npx tsc && npm publish"
+    "publish-npm": "npm run preinstall && npx tsc && npm publish"
   },
   "repository": {
     "type": "git",
