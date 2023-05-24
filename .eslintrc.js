@@ -1,11 +1,25 @@
 module.exports = {
-  "extends": "airbnb-base",
-  "env": {
-    "browser": true,
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
   },
-  "rules": {
-    "no-param-reassign": ["error", {
-      "props": false,
-    }],
+  root: true,
+  extends: [
+    "eslint:recommended",
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+  ],
+  parserOptions: {
+    project: './tsconfig.json'
   },
+  ignorePatterns: ['dist/**/*'],
+  rules: {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/explicit-function-return-type": "error"
+  }
 };

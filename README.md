@@ -63,104 +63,103 @@ npm install visearch-javascript-sdk
 
 ### 1.2 Setup
 
-Before you can start using the SDK, you will need to set up the SDK keys. Most of these keys can be found in your account's [dashboard](https://console.visenze.com).
+#### 1.2.1 Import and initialization
 
-Firstly, take a look at the table below to understand what each key represents:
+- In Node
+  
+  ```javascript
+  import ViSearch from 'visearch-javascript-sdk';
+
+  ...
+  
+  const visearch = ViSearch();
+  ```
+
+  - Create multiple instances
+
+  If you have multiple placements or if you want to run placements with different configurations, you would need to create multiple ViSearch instances.
+
+    ```javascript
+    const visearch1 = ViSearch();
+    const visearch2 = ViSearch();
+    ```
+
+- In browser
+
+  If you wish to include the SDK directly onto your webpage, add this to the header of your site
+
+  ```html
+  <script type="text/javascript">
+  !function(e,t,r,s,a){if(Array.isArray(a))for(var i=0;i<a.length;i++)n(e,t,r,s,a[i]);else n(e,t,r,s,a);function n(e,t,r,s,a){var i=e[a]=e[a]||{};i.q=i.q||[],i.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),i.q.push(t),i}},i.methods=["set","set_keys","send","send_events","product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_last_query_id","get_session_time_remaining","get_default_tracking_params","reset_session","resize_image","generate_uuid"];for(var n=0;n<i.methods.length;n++){var o=i.methods[n];i[o]=i.factory(o)}if(e.initVisearchFactory)initVisearchFactory(e[a]);else{var c=function(e,t,r){var s=e.createElement(t);s.type="text/javascript",s.async=!0,s.src=r;var a=e.getElementsByTagName(t)[0];return a.parentNode.insertBefore(s,a),s}(t,r,s);c.onload=function(){initVisearchFactory(e[a])},c.onerror=function(){console.log("Unable to load ViSearch Javascript SDK")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.0.0.min.js","visearch");
+  </script>
+  ```
+
+  - Create multiple instances
+
+  Copy the same code but change the keyword "visearch" into an array of your desired instances names.
+
+    ```html
+    <script type="text/javascript">
+    ...(window,document,"script",0,["visearch", "visearch2"]);
+    </script>
+    ```
+
+#### 1.2.2 Configure keys
+
+Before you can start using the SDK, you will need to set up . Most of these keys can be found in your account's [dashboard](https://console.visenze.com).
+
+Please take a look at the table below to understand what each key represents:
 
 | Key | Importance | Description |
 |:---|:---|:---|
 | app_key | Compulsory | All SDK functions depends on a valid app_key being set. The app key also limits the API features you can use. |
-| placement_id | Situational | Required if you are using [ProductSearch API](#2-api). |
+| placement_id | Compulsory | Placement id of the current placement |
 | endpoint | Situational | Default is `https://search.visenze.com/` |
 | timeout | Optional | Defaulted to 15000 |
+| uid | Optional | If this is not provided, we will auto generate the uid |
 
-Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
-- If you are using the project provided directly from the main [repo](https://github.com/visenze/visearch-sdk-javascript):
-  - Locate all `*.html` files within the `./examples` directory
-  - Look for all `// TODO:` comments and fill them up:
-  - Any additional keys to be set should also be placed in the same area:
+Set up the ViSearch instance(s) with the keys from console.
 
-- If you included this SDK into your own project via npm, add the following at the start of your app:
-  
-  ```javascript
-  // Import module
-  import ViSearch from 'visearch-javascript-sdk';
+```javascript
+visearch.set('app_key', 'YOUR_APP_KEY');
+visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
+visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS);
+```
 
-  // Initialize visearch instance
-  const { visearch } = new ViSearch();
-  // Set up keys
-  visearch.set('app_key', 'YOUR_APP_KEY');
-  visearch.set('placement_id', 'YOUR_PLACEMENT_ID'); 
-  visearch.set('endpoint', 'YOUR_ENDPOINT');
-  visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS);
-  ```
+or
 
-  or you can initialize visearch with the configs directly
+```javascript
+visearch.set_keys({
+  'app_key': 'YOUR_APP_KEY',
+  'placement_id': 'YOUR_PLACEMENT_ID'
+});
+visearch2.set_keys({
+  'app_key': 'YOUR_APP_KEY_2',
+  'placement_id': 'YOUR_PLACEMENT_ID_2'
+});
+```
 
-  ```javascript
-  const { visearch } = new ViSearch({
-    app_key: 'YOUR_APP_KEY',
-    placement_id: 'YOUR_PLACEMENT_ID', 
-    endpoint: 'YOUR_ENDPOINT',
-    timeout: TIMEOUT_INTERVAL_IN_MS
-  });
-  ```
+or
 
-  - If you want to create multiple instances of ViSearch, you can instantiate ViSearch multiple times.
-
-  ```javascript
-  // Import module
-  import ViSearch from 'visearch-javascript-sdk';
-
-  // Initialize visearch instance
-  const visearch = new ViSearch().visearch;
-  const visearch2 = new ViSearch().visearch;
-
-  // Set up keys
-  visearch.set('app_key', 'YOUR_APP_KEY');
-  visearch2.set('app_key', 'YOUR_APP_KEY');
-  ```
-
-- If you wish to include the SDK directly onto your webpage, add this to the header of your site:
-
-  ```html
-  <script type="text/javascript">
-  !function(e,t,r,s,a){if(Array.isArray(a))for(var i=0;i<a.length;i++)n(e,t,r,s,a[i]);else n(e,t,r,s,a);function n(e,t,r,s,a){var i=e[a]=e[a]||{};i.q=i.q||[],i.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),i.q.push(t),i}},i.methods=["set","setKeys","send","send_events","product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_last_query_id","get_session_time_remaining","get_default_tracking_params","reset_session","resize_image","generate_uuid"];for(var n=0;n<i.methods.length;n++){var o=i.methods[n];i[o]=i.factory(o)}if(e.initVisearchFactory)initVisearchFactory(e[a]);else{var c=function(e,t,r){var s=e.createElement(t);s.type="text/javascript",s.async=!0,s.src=r;var a=e.getElementsByTagName(t)[0];return a.parentNode.insertBefore(s,a),s}(t,r,s);c.onload=function(){initVisearchFactory(e[a])},c.onerror=function(){console.log("Unable to load ViSearch Javascript SDK")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-3.1.3.min.js","visearch");
-  visearch.set('app_key', 'YOUR_APP_KEY');
-  visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
-  </script>
-  ```
-
-  - If you want to include multiple instances of ViSearch SDK onto the webpage but with different configurations and placements, copy the same code but change the keyword "visearch" into an array of your desired instances names and initialize all the instances in a similar manner
-
-  ```html
-  <script type="text/javascript">
-  ...(window,document,"script",0,["visearch", "visearch2"]);
-
-  visearch.set('app_key', 'YOUR_APP_KEY_1');
-  visearch.set('placement_id', 'YOUR_PLACEMENT_ID_1');
-  visearch2.set('app_key', 'YOUR_APP_KEY_2');
-  visearch2.set('placement_id', 'YOUR_PLACEMENT_ID_2');
-  </script>
-  ```
+if you are in a Node env, you can pass the configs in directly when creating the ViSearch client.
+```javascript
+const visearch = ViSearch({
+  'app_key': 'YOUR_APP_KEY',
+  'placement_id': 'YOUR_PLACEMENT_ID'
+})
+```
 
 ### 1.3 Demo
 
-The demo is only applicable to those who work directly off the main [repo](https://github.com/visenze/visearch-sdk-javascript). You are required to have a Node.js environment and remember to **fill up the relevant demo files**.
+The demo is only applicable to those who work directly off the main [repo](https://github.com/visenze/visearch-sdk-javascript). You are required to have a Node.js environment and remember to **fill up the relevant files**.
 
-- To run the Node.js demo:
-  
-  ```javascript
-  node testSDK
-  ```
-
-  > Update the `// TODO` in [here](/testSDK.js).
+  > Create a `.env` file and fill in the relevant app key and placement id
 
 - To run the webpage demo:
   
   ```javascript
-  npm run gulp
+  npm run start-demo
   ```
 
   After the above command, you should see that the server is running locally on your device. You can then access the different demo webpages in your browser by using this format `http://localhost:3000/examples/*.html`.
@@ -172,8 +171,10 @@ The demo is only applicable to those who work directly off the main [repo](https
   - E.g. Product search by image:
 
     `http://localhost:3000/examples/product_search_by_image.html`
-  
-  > Update the `// TODO` in all `*.html` files within the `./examples` directory
+
+  - E.g. Tracking:
+
+  `http://localhost:3000/examples/tracking.html`
 
 ## 2. API
 
@@ -449,12 +450,7 @@ To improve search performance and gain useful data insights, it is recommended t
 
 ### 5.1 Setup Tracking
 
-To send the events, we will initialize the event tracker with a tracking ID generated from your app key and placement ID for you. There are two different endpoints for tracker (1 for China and another for the rest of the world). If the SDK is intended to be used in China region, please set `is_cn` parameter to `true`.
-
-```javascript
-// optional, send events to global or China server
-visearch.set("is_cn", false);
-```
+To send the events, we will initialize the event tracker with a tracking ID generated from your app key and placement ID for you. There are two different endpoints for tracker (1 for China and another for the rest of the world).
 
 ### 5.2 Send Events
 

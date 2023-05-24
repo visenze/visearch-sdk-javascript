@@ -1,4 +1,5 @@
 node_modules/
+lib/
 package-lock.json
 .DS_Store
 dist/
@@ -7,4 +8,7 @@ dist/
 .sass-cache/
 .idea/
 .npmrc
+.vscode
+.env
+src/version.ts
 aws-profile.json

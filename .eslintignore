@@ -1,3 +1,5 @@
 test
 jest.config.js
-babel.config.js
+babel.config.json
+webpack-dev.config.js
+webpack.config.js
