@@ -68,7 +68,7 @@ function drawAndResize(img: HTMLImageElement, resizeSettings?: PSResizeSettings)
   return canvas.toDataURL(ENCODING);
 }
 
-async function resizeImageFromDataUrl(imgAsDataUrl: string, resizeSettings?: PSResizeSettings): string | null {
+async function resizeImageFromDataUrl(imgAsDataUrl: string, resizeSettings?: PSResizeSettings): Promise<string | null> {
   const img = new Image();
   img.src = imgAsDataUrl;
   await loadImage(img);
