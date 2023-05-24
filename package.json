@@ -9,8 +9,8 @@
     "start-demo": "npm run build-dev && node examples/app.js",
     "preinstall": "node -p \"'export const version =  \\'' + require('./package.json').version + '\\';'\" > src/version.ts",
     "build-dev": "webpack --mode development  --config webpack.config.js",
-    "build": "webpack --config webpack.config.js",
-    "publish": "npx tsc && npm publish"
+    "build": "npm run preinstall && webpack --config webpack.config.js",
+    "publish": "npm run preinstall && npx tsc && npm publish"
   },
   "repository": {
     "type": "git",
