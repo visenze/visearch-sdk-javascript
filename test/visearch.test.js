@@ -1,150 +1,112 @@
-jest.mock('../package.json');
-jest.mock('visenze-tracking-javascript');
-
-const va = require('visenze-tracking-javascript');
-const ViSearch = require('../js/visearch');
-const pjson = require('../package.json');
-
+import { ViSearch } from '../src/visearch';
 import { expect, jest, test } from '@jest/globals';
+import * as dotenv from 'dotenv';
+dotenv.config()
 
-let visearch;
-let mockTracker;
+const searchConfigs = {
+  app_key: process.env.SEARCH_APP_KEY,
+  placement_id: process.env.SEARCH_PLACEMENT_ID,
+  timeOut: 2000,
+};
 
-let mockCallback;
-let mockFailCallback;
+const recConfigs = {
+  app_key: process.env.REC_APP_KEY,
+  placement_id: process.env.REC_PLACEMENT_ID,
+  timeOut: 2000,
+};
 
-function assertThatAutoFillParams(params) {
-    expect(params.v).toBe(pjson.version);
-    expect(params.sdk).toBe('visearch js sdk');
+const IM_URL = process.env.SEARCH_IM_URL;
+const PID = process.env.REC_PID;
+
+const searchClient = ViSearch(searchConfigs);
+const recClient = ViSearch(recConfigs);
+
+const getQueryIdAsync = async (client) => {
+  return new Promise(resolve => {
+    client.get_last_query_id((reqid) => resolve(reqid));
+  })
+};
+
+const getDefaultParamAsyncs = async (client) => {
+  return new Promise((resolve) => {
+    client.get_default_tracking_params((data) => {
+      resolve(data);
+    });
+  });
 }
 
+const assertSearchSuccess = async (client, response) => {
+  const lastReqId = await getQueryIdAsync(client);
+  expect(response.status).toBe('OK');
+  expect(lastReqId).toEqual(response.reqid);
+};
+
 beforeEach(() => {
-    visearch = new ViSearch();
-    mockTracker = jest.mock();
-
-    va.init = jest.fn(() => {
-        return mockTracker;
-    })
-
-    mockCallback = jest.fn();
-    mockFailCallback = jest.fn();
+  localStorage.clear();
 });
 
-describe('get_default_tracking_params', () => {
-    beforeEach(() => {
-        mockTracker.getDefaultParams = jest.fn(() => {
-            return { mock_key: 'mock_value' };
-        });
+describe('init ViSearch', () => {
+  test('from init config', async () => {
+    const client = ViSearch({
+      app_key: 'A',
+      placement_id: 'P11',
     });
+    const meta = await getDefaultParamAsyncs(client);
+    expect(meta.code).toBe('A:P11');
+  });
 
-    test('fail to init tracker', () => {
-        mockTracker = null;
+  test('from using set', async () => {
+    const client = ViSearch();
+    client.set('app_key', 'B');
+    client.set('placement_id', 'P12');
+    const meta = await getDefaultParamAsyncs(client);
 
-        mockFailCallback = jest.fn((error) => {
-            expect(error instanceof Error).toBe(true);
-            expect(error.message).toBe('Tracker is not found');
-        });
+    expect(meta.code).toBe('B:P12');
+  });
 
-        visearch.prototypes.get_default_tracking_params(mockCallback, mockFailCallback);
-        expect(mockCallback).toBeCalledTimes(0);
-        expect(mockFailCallback).toBeCalledTimes(1);
+  test('from using set_keys', async () => {
+    const client = ViSearch();
+    client.set_keys({
+      app_key: 'C',
+      placement_id: 'P13',
     });
+    const meta = await getDefaultParamAsyncs(client);
+    expect(meta.code).toBe('C:P13');
+  });
 
-    test('default params with auto filled version & sdk', () => {
-        mockCallback = jest.fn((defaultParams) => {
-            expect(defaultParams.mock_key).toBe('mock_value');
-            assertThatAutoFillParams(defaultParams);
+  test('multiple instances init correctly', async () => {
+    const meta1 = await getDefaultParamAsyncs(searchClient);
+    const meta2 = await getDefaultParamAsyncs(recClient);
+    expect(meta1.code).not.toBe(meta2.code);
 
-            return defaultParams;
-        })
+    const meta1_next = await getDefaultParamAsyncs(searchClient)
+    expect(meta1.code).toEqual(meta1_next.code);
+  });
+})
 
-        visearch.prototypes.get_default_tracking_params(mockCallback, mockFailCallback);
-        expect(mockCallback).toBeCalledTimes(1);
-        expect(mockFailCallback).toBeCalledTimes(0);
+describe('search', () => {
+  test('search by image url', async () => {
+    const res = await new Promise((resolve) => {
+      searchClient.product_search_by_image({
+        im_url: IM_URL,
+        attrs_to_get: ['product_id'],
+      }, (res) => {
+        resolve(res);
+      });
     });
+    await assertSearchSuccess(searchClient, res);
+  });
 });
 
-describe('send', () => {
-    beforeEach(() => {
-        mockTracker.sendEvent = jest.fn();
+describe('recommendations', () => {
+  test('search success', async () => {
+    const res = await new Promise((resolve) => {
+      recClient.product_search_by_id(PID, {
+        attrs_to_get: ['product_id', 'main_image_url'],
+      }, (res) => {
+        resolve(res);
+      });
     });
-
-    test('auto fill version & sdk', () => {
-        const action = 'product_view'
-        const event1 = {};
-
-        visearch.prototypes.send(action, event1, mockCallback, mockFailCallback);
-        assertThatAutoFillParams(event1);
-        expect(mockTracker.sendEvent).toBeCalledTimes(1);
-    });
-});
-
-describe('send_events', () => {
-    const mockUUID = 'mock-uuid';
-    beforeEach(() => {
-
-        mockTracker.validateEvents = jest.fn(() => {
-            return true;
-        });
-
-        mockTracker.sendEvent = jest.fn();
-
-        mockTracker.generateUUID = jest.fn(() => {
-            return mockUUID;
-        });
-    });
-
-    test('invalid events', () => {
-        mockTracker.validateEvents = jest.fn(() => {
-            return false;
-        })
-
-        visearch.prototypes.send_events('transaction', [{}]);
-        expect(mockTracker.sendEvent).toBeCalledTimes(0);
-    });
-
-    test('non-transaction should not autofill transId', () => {
-        const action = 'add_to_cart';
-        const event1 = {};
-        const events = [event1];
-
-        visearch.prototypes.send_events(action, events);
-
-        assertThatAutoFillParams(event1);
-        expect(event1.transId).toBe(undefined);
-
-        expect(mockTracker.sendEvent).toBeCalledTimes(1);
-    });
-
-
-    test('upper case transaction', () => {
-        const action = 'TRANSACTION';
-        const event1 = {};
-        const events = [event1];
-
-        visearch.prototypes.send_events(action, events);
-
-        assertThatAutoFillParams(event1);
-        expect(event1.transId).toBe(mockUUID);
-
-        expect(mockTracker.sendEvent).toBeCalledTimes(1);
-    });
-
-    test('auto fill version & sdk', () => {
-        const action = 'transaction';
-        const event1 = {};
-        const event2 = { transId: 'sample-transId' };
-        const event3 = {};
-        const events = [event1, event2, event3];
-
-        visearch.prototypes.send_events(action, events);
-
-        assertThatAutoFillParams(event1);
-        assertThatAutoFillParams(event2);
-        expect(event1.transId).toBe(mockUUID);
-        expect(event2.transId).toBe('sample-transId');
-        expect(event3.transId).toBe(mockUUID);
-
-        expect(mockTracker.sendEvent).toBeCalledTimes(3);
-    });
+    await assertSearchSuccess(recClient, res);
+  });
 });
