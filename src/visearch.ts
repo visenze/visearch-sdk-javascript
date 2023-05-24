@@ -15,7 +15,7 @@ import {
 } from './productsearch';
 import { resizeImageFromDataUrl } from './resizer';
 import isFunction from 'lodash.isfunction';
-import { PSResponse, ViSearchSettings, GenericCallback, PSResizeSettings, ViSearchClient } from '../types/index';
+import { PSResponse, ViSearchSettings, GenericCallback, PSResizeSettings, ViSearchClient } from '../types/shared';
 
 const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
 const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';

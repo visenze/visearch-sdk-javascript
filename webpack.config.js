@@ -63,10 +63,6 @@ module.exports = (_, argv) => {
     },
     mode,
     plugins: [
-      new webpack.ProvidePlugin({
-        Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise',
-        fetch: 'imports-loader?this=>global!exports-loader?global.fetch!node-fetch',
-      }),
       new CompressionPlugin
     ],
   };

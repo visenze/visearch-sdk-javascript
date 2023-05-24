@@ -4,18 +4,19 @@
     "types/**/*"
   ],
   "compilerOptions": {
-    "types": [
-      "./types",
-    ],
     "module": "ESNext",
     "moduleResolution": "node",
-    "allowJs": true,
+    "declaration": true,
+    "sourceMap": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "lib",
     "resolveJsonModule": true,
     "strict": true,
     "noImplicitAny": false,
-    "target": "ES2017"
+    "target": "ES6",
+    "typeRoots": [
+      "./types"
+    ],
   }
 }

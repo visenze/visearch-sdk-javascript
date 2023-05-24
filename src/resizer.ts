@@ -1,4 +1,4 @@
-import { PSResizeSettings } from '../types';
+import { PSResizeSettings } from '../types/shared';
 
 const MAX_WIDTH = 512;
 const MAX_HEIGHT = 512;

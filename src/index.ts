@@ -1,9 +1,11 @@
 import { ViSearch } from './visearch';
-import { ViSearchClient } from '../types';
+import { ViSearchClient } from '../types/shared';
 
 (function init(context): void {
   if (typeof window === 'undefined') {
-    exports.default = ViSearch;
+    exports.default = (configs?: Record<string, unknown>): ViSearchClient => {
+      return ViSearch(configs);
+    };
   } else if (context && !context.viInit) {
     context.viInit = (context: any, clientName: string): ViSearchClient => {
       const client = ViSearch();

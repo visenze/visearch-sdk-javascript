@@ -3,7 +3,7 @@ import FormData from 'form-data';
 import isFunction from 'lodash.isfunction';
 import { version } from './version';
 import { resizeImage } from './resizer';
-import { ViSearchSettings, GenericCallback, PSResponse } from '../types';
+import { ViSearchSettings, GenericCallback, PSResponse } from '../types/shared';
 import fetch, { Response } from 'node-fetch';
 const DEFAULT_TIMEOUT = 15000;
 const USER_AGENT = `visearch-js-sdk/${version}`;

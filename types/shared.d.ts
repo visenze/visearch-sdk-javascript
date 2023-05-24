@@ -1,5 +1,3 @@
-export declare function ViSearch(configs?: Record<string, unknown>): ViSearchClient;
-
 export type GenericCallback = (...arg: any) => void;
 
 export interface ViSearchClient {

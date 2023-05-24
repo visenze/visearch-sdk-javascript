@@ -1,5 +1,5 @@
 import { sendGetRequest, sendPostRequest } from './common';
-import { GenericCallback, ViSearchSettings } from '../types';
+import { GenericCallback, ViSearchSettings } from '../types/shared';
 
 const END_POINT = 'https://search.visenze.com';
 const CN_END_POINT = 'https://search.visenze.com.cn';
