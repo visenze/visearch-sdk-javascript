@@ -1,21 +1,31 @@
 <html>
+
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles/uploadsearch.css" />
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="/styles/uploadsearch.css" />
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-  <script type="text/javascript" src="http://opoloo.github.io/jquery_upload_preview/assets/js/jquery.uploadPreview.min.js"></script>
-  <script type="text/javascript" src="js/snippet.js"></script>
+  <script type="text/javascript"
+    src="http://opoloo.github.io/jquery_upload_preview/assets/js/jquery.uploadPreview.min.js"></script>
+  <script type="text/javascript" src="/js/snippet.js"></script>
   <script type="text/javascript">
 
-    $(function() {
-      // TODO: insert your app key, placement id and endpoint here
-      visearch.set("app_key", "YOUR_APP_KEY");
-      visearch.set("placement_id", "YOUR PLACEMENT ID");
-      visearch.set("endpoint", "")
-      visearch.set("is_cn", false);
-      
+    $(function () {
+      function getKey(path) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", `/env/${path}`, false);
+        xhr.send();
+        return xhr.response;
+      }
+
+      // TODO: please fill in the .env file with relevant keys
+      visearch.set("app_key", getKey("SEARCH_APP_KEY"));
+      visearch.set("placement_id", getKey("SEARCH_PLACEMENT_ID"));
+      visearch.set("endpoint", getKey("ENDPOINT"))
+
       const refreshTrackingInfo = () => {
         // display uid & sid
         visearch.get_uid((uid) => {
@@ -32,17 +42,17 @@
       };
 
       setInterval(() => {
-          refreshTrackingInfo();
+        refreshTrackingInfo();
       }, 1000);
 
       // reset session
-      $("#resetSessionBtn").click(function() {
-          visearch.reset_session();
-          refreshTrackingInfo();
+      $("#resetSessionBtn").click(function () {
+        visearch.reset_session();
+        refreshTrackingInfo();
       });
 
       // change uid
-      $("#newUidBtn").click(function(){
+      $("#newUidBtn").click(function () {
         const newUid = $("#newUidTxt").val();
         $("#newUidTxt").val("");
         visearch.set_uid(newUid);
@@ -60,7 +70,7 @@
       var response_template = Handlebars.compile($("#response-template").html());
 
       //setup visearch client.
-      $("form .submit").click(function() {
+      $("form .submit").click(function () {
         if ($("#image").val() != "") {
           event.preventDefault();
           $(".submit .glyphicon").show();
@@ -68,14 +78,14 @@
           //start of the viserach api
           visearch.product_search_by_image({
             image: $("#image")[0],
-          }, function(res) {
-            if(res.status == "OK"){
+          }, function (res) {
+            if (res.status == "OK") {
               $(".main .similars").html(response_template(res));
-            }else{
+            } else {
               $(".main .similars").html(res.error);
             }
             $(".submit .glyphicon").hide();
-          }, function(err){
+          }, function (err) {
             /**
              *{message:"Failed to fetch"}
              **/
@@ -101,18 +111,18 @@
         <div class="row">
           <div id="image-preview" class="col-xs-10 col-sm-10 col-md-4">
             <label for="image" id="image-label">Choose File</label>
-            <input type="file" name="image" id="image" accept="image/*;capture=camera"/>
+            <input type="file" name="image" id="image" accept="image/*;capture=camera" />
           </div>
         </div>
         <div class="row">
           <button class="submit" class="prefix">
             Search
-            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ></span>
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
           </button>
         </div>
       </form>
 
-      
+
       <h3>Tracking info</h3>
       <div>
         <div>
@@ -124,7 +134,7 @@
             session time remaining: <span id="sessionTimeRemaining"></span>
           </p>
         </div>
-      
+
         <div>
           <button id="resetSessionBtn">reset session</button>
           <br />
@@ -147,4 +157,5 @@
     {{/each}}
   </script>
 </body>
+
 </html>
