@@ -7,7 +7,10 @@ const CN_END_POINT = 'https://search.visenze.com.cn';
 const PATH_SEARCH = 'v1/product/search_by_image';
 const PATH_REC = 'v1/product/recommendations';
 
-function getAnalyticsParams(queryParams: Record<string, unknown> | undefined, vaParams?: Record<string, unknown>): Record<string, unknown> {
+function getAnalyticsParams(
+  queryParams: Record<string, unknown> | undefined,
+  vaParams?: Record<string, unknown>
+): Record<string, unknown> {
   const params: Record<string, unknown> = {};
   if (vaParams) {
     params.va_uid = vaParams.uid;
@@ -24,7 +27,7 @@ function getAnalyticsParams(queryParams: Record<string, unknown> | undefined, va
 function getAuthParams(settings: ViSearchSettings): Record<string, unknown> {
   const params: Record<string, unknown> = {
     app_key: settings.app_key,
-    placement_id: settings.placement_id
+    placement_id: settings.placement_id,
   };
   if (!settings.placement_id && settings.strategy_id) {
     params.strategy_id = settings.strategy_id;
@@ -39,25 +42,49 @@ function getEndpoint(settings: ViSearchSettings): string {
   return settings['is_cn'] ? CN_END_POINT : END_POINT;
 }
 
-function getQueryParams(params: Record<string, unknown> | undefined, vaParams: Record<string, unknown>, settings: ViSearchSettings): Record<string, unknown> {
+function getQueryParams(
+  params: Record<string, unknown> | undefined,
+  vaParams: Record<string, unknown>,
+  settings: ViSearchSettings
+): Record<string, unknown> {
   return {
     ...(params ?? {}),
     ...getAnalyticsParams(params, vaParams),
-    ...getAuthParams(settings)
+    ...getAuthParams(settings),
   };
 }
 
-function searchByImage(settings: ViSearchSettings, params: Record<string, unknown>, vaParams: Record<string, unknown>, callback?: GenericCallback, failure?: GenericCallback): Promise<void> {
+function searchByImage(
+  settings: ViSearchSettings,
+  params: Record<string, unknown>,
+  vaParams: Record<string, unknown>,
+  callback?: GenericCallback,
+  failure?: GenericCallback
+): Promise<void> {
   const queryParams = getQueryParams(params, vaParams, settings);
   return sendPostRequest(settings, getEndpoint(settings), PATH_SEARCH, queryParams, callback, failure);
 }
 
-function searchById(settings: ViSearchSettings, productId: string, params: Record<string, unknown> | undefined, vaParams: Record<string, unknown>, callback?: GenericCallback, failure?: GenericCallback): Promise<void> {
+function searchById(
+  settings: ViSearchSettings,
+  productId: string,
+  params: Record<string, unknown> | undefined,
+  vaParams: Record<string, unknown>,
+  callback?: GenericCallback,
+  failure?: GenericCallback
+): Promise<void> {
   const queryParams = getQueryParams(params, vaParams, settings);
   return sendGetRequest(settings, getEndpoint(settings), `${PATH_REC}/${productId}`, queryParams, callback, failure);
 }
 
-function searchByIdByPost(settings: ViSearchSettings, productId: string, params: Record<string, unknown> | undefined, vaParams: Record<string, unknown>, callback?: GenericCallback, failure?: GenericCallback): Promise<void> {
+function searchByIdByPost(
+  settings: ViSearchSettings,
+  productId: string,
+  params: Record<string, unknown> | undefined,
+  vaParams: Record<string, unknown>,
+  callback?: GenericCallback,
+  failure?: GenericCallback
+): Promise<void> {
   const queryParams = getQueryParams(params, vaParams, settings);
   return sendPostRequest(settings, getEndpoint(settings), `${PATH_REC}/${productId}`, queryParams, callback, failure);
 }

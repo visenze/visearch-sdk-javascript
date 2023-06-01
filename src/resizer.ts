@@ -86,9 +86,9 @@ async function resizeImage(imgBlob: Blob, resizeSettings?: PSResizeSettings): Pr
   await loadImage(img);
   const dataUrl = drawAndResize(img, resizeSettings);
   if (!dataUrl) {
-    return new Promise(resolve => resolve(imgBlob));
+    return new Promise((resolve) => resolve(imgBlob));
   }
-  return new Promise(resolve => resolve(dataURItoBlob(dataUrl)));
+  return new Promise((resolve) => resolve(dataURItoBlob(dataUrl)));
 }
 
 export { resizeImageFromDataUrl, resizeImage };

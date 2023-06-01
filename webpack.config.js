@@ -12,21 +12,21 @@ const s3plugin = new S3Plugin({
   s3Options: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID, //process.env.AWS_ACCESS_KEY_ID
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, //process.env.AWS_SECRET_ACCESS_KEY
-    region: 'ap-southeast-1'
+    region: 'ap-southeast-1',
   },
   s3UploadOptions: {
-    Bucket: 'visenze-static'
+    Bucket: 'visenze-static',
   },
   basePathTransform: function () {
     return new Promise(function (resolve, _) {
       resolve('visearch/dist/js');
     });
-  }
+  },
 });
 
 module.exports = (_, argv) => {
   const mode = argv.mode || 'production';
-  const filename = (mode === 'development') ? `visearch.js` : `visearch-${version}.min.js`;
+  const filename = mode === 'development' ? `visearch.js` : `visearch-${version}.min.js`;
   const configs = {
     resolve: {
       extensions: ['.ts', '.js'],
@@ -44,12 +44,9 @@ module.exports = (_, argv) => {
         {
           test: /\.ts$/,
           exclude: /node_modules/,
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
-            presets: [
-              "@babel/preset-env",
-              "@babel/preset-typescript",
-            ]
+            presets: ['@babel/preset-env', '@babel/preset-typescript'],
           },
         },
       ],
@@ -57,14 +54,12 @@ module.exports = (_, argv) => {
     optimization: {
       minimizer: [
         new TerserPlugin({
-          extractComments: false
-        })
-      ]
+          extractComments: false,
+        }),
+      ],
     },
     mode,
-    plugins: [
-      new CompressionPlugin
-    ],
+    plugins: [new CompressionPlugin()],
   };
 
   if (mode === 'production') {

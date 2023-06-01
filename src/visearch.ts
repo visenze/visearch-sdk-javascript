@@ -8,14 +8,10 @@ import URI from 'jsuri';
 import va from 'visenze-tracking-javascript';
 import { version } from './version';
 
-import {
-  searchById,
-  searchByImage,
-  searchByIdByPost,
-} from './productsearch';
+import { searchById, searchByImage, searchByIdByPost } from './productsearch';
 import { resizeImageFromDataUrl } from './resizer';
 import isFunction from 'lodash.isfunction';
-import { PSResponse, ViSearchSettings, GenericCallback, PSResizeSettings, ViSearchClient } from '../types/shared';
+import { PSResponse, ViSearchSettings, ViSearchClient } from '../types/shared';
 import { VAClient } from 'visenze-tracking-javascript/types/shared';
 
 const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
@@ -45,58 +41,25 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
   const q: any = [];
   const settings: ViSearchSettings = {
     app_key: '',
-    placement_id: ''
-  };
-  const prototypes: ViSearchClient = {
-    q,
-    set,
-    set_keys: setKeys,
-    send: sendEvent,
-    send_events: sendEvents,
-    product_search_by_image: productSearchByImage,
-    product_search_by_id: productSearchById,
-    product_recommendations: productSearchById,
-    product_recommendations_by_post: productSearchByIdByPost,
-    product_search_by_id_by_post: productSearchByIdByPost,
-    set_uid: setUid,
-    get_uid: getUid,
-    get_sid: getSid,
-    get_last_query_id: getLastQueryId,
-    get_session_time_remaining: getSessionTimeRemaining,
-    reset_session: resetSession,
-    get_default_tracking_params: getTrackingParams,
-    apply_prototypes_call: applyPrototypesCall,
-    resize_image: resizeImage,
-    generate_uuid: generateUuid
+    placement_id: '',
   };
   let lastQueryId: string;
   let tracker: VAClient;
 
-  Object.defineProperty(q, 'push', (args: [string, unknown]) => applyPrototypesCall(args));
+  Object.defineProperty(q, 'push', (args: [string, unknown]) => prototypes.apply_prototypes_call(args));
 
   if (configs) {
     Object.entries(configs).forEach(([key, value]) => {
       settings[key] = value;
-    })
-  }
-
-  /**
-   * Apply calling on prototypes methods.
-   */
-  function applyPrototypesCall(command: [string, unknown]): void {
-    const fnName = command[0];
-    const args = command.slice(1);
-    if (isFunction(prototypes[fnName])) {
-      prototypes[fnName](...args);
-    }
+    });
   }
 
   function getTracker(): VAClient {
     if (!tracker) {
       const code = `${settings.app_key}:${settings.placement_id}`;
-      const endpoint = settings.analytics_endpoint || (settings.endpoint === STAGING_ENDPOINT
-        ? ANALYTICS_STAGING_ENDPOINT
-        : undefined);
+      const endpoint =
+        settings.analytics_endpoint ||
+        (settings.endpoint === STAGING_ENDPOINT ? ANALYTICS_STAGING_ENDPOINT : undefined);
       tracker = va({
         code,
         uid: settings.uid,
@@ -120,49 +83,6 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     return {};
   }
 
-  function sendEvent(action: string, eventParams: Record<string, unknown>, callback?: (action: string, eventParams: Record<string, unknown>) => void, failure?: GenericCallback): void {
-    const tracker = getTracker();
-    const params = { ...getSdkVersion(), ...eventParams };
-
-    if (tracker) {
-      tracker.sendEvent(
-        action,
-        params,
-        () => {
-          callback?.(action, params);
-        },
-        (err) => {
-          failure?.(err, params);
-        },
-      );
-    }
-  }
-
-  function sendEvents(
-    action: string,
-    eventParamsList: Record<string, unknown>[],
-    callback?: (action: string, eventParams: Record<string, unknown>) => void,
-    failure?: GenericCallback,
-  ): void {
-    const tracker = getTracker();
-
-    if (tracker && tracker.validateEvents(eventParamsList, failure)) {
-      const batchId = tracker.generateUUID();
-
-      eventParamsList.forEach((eventParams) => {
-        const params = {
-          ...eventParams, ...getSdkVersion(),
-        };
-
-        if (action.toLowerCase() === 'transaction' && !params.transId) {
-          params.transId = batchId;
-        }
-
-        sendEvent(action, params, callback, failure);
-      });
-    }
-  }
-
   function sendResultLoadEvent(productId: string | undefined, resp: PSResponse): void {
     if (resp.status !== 'OK') {
       return;
@@ -177,10 +97,8 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       metadata.pid = productId;
     }
     // send out event if the pixel is in place
-    if (window && window.vsPlacementLoaded
-      && window.vsPlacementLoaded[settings.placement_id]
-    ) {
-      sendEvent(RESULT_LOAD, metadata);
+    if (window && window.vsPlacementLoaded && window.vsPlacementLoaded[settings.placement_id]) {
+      prototypes.send(RESULT_LOAD, metadata);
     }
     // push result_load event to GTM datalayer if user enable GTM tracking
     if (settings.gtm_tracking) {
@@ -205,10 +123,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       return;
     }
     lastQueryId = resp.reqid;
-    localStorage.setItem(
-      `visenze_query_id_${settings.placement_id}`,
-      lastQueryId,
-    );
+    localStorage.setItem(`visenze_query_id_${settings.placement_id}`, lastQueryId);
   }
 
   /**
@@ -227,177 +142,15 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
    * Wrapper for callback with additional send result_load event and new method to track a/b test
    * @param {*} resp response from ProductSearch API
    */
-  function wrapCallback(productId: string | undefined, callback: ((resp: PSResponse) => void) | undefined, resp: PSResponse): void {
+  function wrapCallback(
+    productId: string | undefined,
+    callback: ((resp: PSResponse) => void) | undefined,
+    resp: PSResponse
+  ): void {
     wrapExperimentResponse(resp);
     callback?.(resp);
     saveQueryId(resp);
     sendResultLoadEvent(productId, resp);
-  }
-
-  function set(key, value): void {
-    settings[key] = value;
-  }
-
-  function setKeys(configs): void {
-    Object.entries(configs).forEach(([key, value]) => {
-      settings[key] = value;
-    });
-  }
-
-  function productSearchByImage(
-    params: Record<string, unknown>,
-    callback?: (resp: PSResponse) => void,
-    failure?: GenericCallback,
-  ): Promise<void> {
-    const altCallback = wrapCallback.bind(undefined, undefined, callback);
-
-    return searchByImage(
-      settings,
-      params,
-      getDefaultTrackingParams(),
-      altCallback,
-      failure,
-    );
-  }
-
-  function productSearchById(
-    productId: string,
-    params: Record<string, unknown> | undefined,
-    callback: (resp: PSResponse) => void,
-    failure?: GenericCallback,
-  ): Promise<void> {
-    const altCallback = wrapCallback.bind(undefined, undefined, callback);
-
-    return searchById(
-      settings,
-      productId,
-      params,
-      getDefaultTrackingParams(),
-      altCallback,
-      failure,
-    );
-  }
-
-  function productSearchByIdByPost(
-    productId: string,
-    params: Record<string, unknown> | undefined,
-    callback: (resp: PSResponse) => void,
-    failure?: GenericCallback,
-  ): Promise<void> {
-    const altCallback = wrapCallback.bind(undefined, undefined, callback);
-
-    return searchByIdByPost(
-      settings,
-      productId,
-      params,
-      getDefaultTrackingParams(),
-      altCallback,
-      failure,
-    );
-  }
-
-  function setUid(uid: string, callback: (uid: string) => void, failure?: GenericCallback): void {
-    tracker = getTracker();
-    if (tracker) {
-      tracker.setUID(uid);
-      callback(uid);
-    } else {
-      failure?.(Error('Tracker is not found'));
-    }
-  }
-
-  function getUid(callback: (uid: string) => void, failure?: GenericCallback): void {
-    const tracker = getTracker();
-    if (tracker) {
-      callback(tracker.getUID());
-    } else {
-      failure?.(Error('Tracker is not found'));
-    }
-  }
-
-  function getSid(callback: (sid: string) => void, failure?: GenericCallback): void {
-    tracker = getTracker();
-    if (tracker) {
-      callback(tracker.getSID());
-    } else {
-      failure?.(Error('Tracker is not found'));
-    }
-  }
-
-  function getLastQueryId(
-    callback: (lastQueryId: string | null) => void,
-    failure?: GenericCallback,
-  ): void {
-    try {
-      if (lastQueryId) {
-        callback(lastQueryId);
-      } else {
-        callback(
-          localStorage.getItem(`visenze_query_id_${settings.placement_id}`),
-        );
-      }
-    } catch (err) {
-      failure?.(err);
-    }
-  }
-
-  function getSessionTimeRemaining(
-    callback: GenericCallback,
-    failure?: GenericCallback,
-  ): void {
-    tracker = getTracker();
-    if (tracker) {
-      callback(tracker.getSessionTimeRemaining());
-    } else {
-      failure?.(Error('Tracker is not found'));
-    }
-  }
-
-  function resetSession(callback: GenericCallback, failure?: GenericCallback): void {
-    tracker = getTracker();
-    if (tracker) {
-      callback(tracker.resetSession());
-    } else {
-      failure?.(Error('Tracker is not found'));
-    }
-  }
-
-  function getTrackingParams(
-    callback: (params: Record<string, unknown>) => void,
-    failure?: GenericCallback,
-  ): void {
-    tracker = getTracker();
-    if (tracker) {
-      callback(getDefaultTrackingParams());
-    } else {
-      failure?.(Error('Tracker is not found'));
-    }
-  }
-
-  async function resizeImage(
-    imageAsDataUrl: string,
-    resizeSettings: PSResizeSettings | undefined,
-    onSuccess: GenericCallback,
-    onFailure?: GenericCallback,
-  ): Promise<void> {
-    try {
-      const img = await resizeImageFromDataUrl(
-        imageAsDataUrl,
-        resizeSettings || settings.resize_settings,
-      );
-      onSuccess(img);
-    } catch (err) {
-      onFailure?.(err);
-    }
-  }
-
-  function generateUuid(callback: (uuid: string) => void, failure?: GenericCallback): void {
-    const tracker = getTracker();
-    if (tracker) {
-      callback(tracker.generateUUID());
-    } else {
-      failure?.(Error('Tracker is not found'));
-    }
   }
 
   function sendRefClickEvent(): void {
@@ -415,8 +168,8 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     // If reqid, action and imName are found in current page content, send event tracking.
     if (reqid && imName) {
       // Get event 'action' for page will set it as 'click' action by default if not specified.
-      const action = getQueryParamValue(curUri, QUERY_ACTION) as string || 'click';
-      sendEvent(action, {
+      const action = (getQueryParamValue(curUri, QUERY_ACTION) as string) || 'click';
+      prototypes.send(action, {
         queryId: getQueryParamValue(curUri, QUERY_REQID),
         im_name: getQueryParamValue(curUri, QUERY_IMNAME),
       });
@@ -426,6 +179,159 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
   if (typeof window !== 'undefined') {
     sendRefClickEvent();
   }
+
+  const prototypes: ViSearchClient = {
+    q,
+    set: function (key, value) {
+      settings[key] = value;
+    },
+    set_keys: function (configs) {
+      Object.entries(configs).forEach(([key, value]) => {
+        settings[key] = value;
+      });
+    },
+    send: function (action, eventParams, callback?, failure?) {
+      const tracker = getTracker();
+      const params = { ...getSdkVersion(), ...eventParams };
+
+      if (tracker) {
+        tracker.sendEvent(
+          action,
+          params,
+          () => {
+            callback?.(action, params);
+          },
+          (err) => {
+            failure?.(err, params);
+          }
+        );
+      }
+    },
+    send_events: function (action, eventParamsList, callback?, failure?) {
+      const tracker = getTracker();
+
+      if (tracker && tracker.validateEvents(eventParamsList, failure)) {
+        const batchId = tracker.generateUUID();
+
+        eventParamsList.forEach((eventParams) => {
+          const params = {
+            ...eventParams,
+            ...getSdkVersion(),
+          };
+
+          if (action.toLowerCase() === 'transaction' && !params.transId) {
+            params.transId = batchId;
+          }
+
+          prototypes.send(action, params, callback, failure);
+        });
+      }
+    },
+    product_search_by_image: function (params, callback?, failure?) {
+      const altCallback = wrapCallback.bind(undefined, undefined, callback);
+
+      return searchByImage(settings, params, getDefaultTrackingParams(), altCallback, failure);
+    },
+    product_search_by_id: function (productId, params, callback, failure?) {
+      const altCallback = wrapCallback.bind(undefined, undefined, callback);
+
+      return searchById(settings, productId, params, getDefaultTrackingParams(), altCallback, failure);
+    },
+    product_recommendations: function (productId, params, callback, failure?) {
+      return this.product_search_by_id(productId, params, callback, failure);
+    },
+    product_recommendations_by_post: function (productId, params, callback, failure?) {
+      const altCallback = wrapCallback.bind(undefined, undefined, callback);
+
+      return searchByIdByPost(settings, productId, params, getDefaultTrackingParams(), altCallback, failure);
+    },
+    product_search_by_id_by_post: function (productId, params, callback, failure?) {
+      return this.product_recommendations_by_post(productId, params, callback, failure);
+    },
+    set_uid: function (uid, callback, failure?) {
+      tracker = getTracker();
+      if (tracker) {
+        tracker.setUID(uid);
+        callback(uid);
+      } else {
+        failure?.(Error('Tracker is not found'));
+      }
+    },
+    get_uid: function (callback, failure?) {
+      const tracker = getTracker();
+      if (tracker) {
+        callback(tracker.getUID());
+      } else {
+        failure?.(Error('Tracker is not found'));
+      }
+    },
+    get_sid: function (callback, failure?) {
+      tracker = getTracker();
+      if (tracker) {
+        callback(tracker.getSID());
+      } else {
+        failure?.(Error('Tracker is not found'));
+      }
+    },
+    get_last_query_id: function (callback, failure?) {
+      try {
+        if (lastQueryId) {
+          callback(lastQueryId);
+        } else {
+          callback(localStorage.getItem(`visenze_query_id_${settings.placement_id}`));
+        }
+      } catch (err) {
+        failure?.(err);
+      }
+    },
+    get_session_time_remaining: function (callback, failure?) {
+      tracker = getTracker();
+      if (tracker) {
+        callback(tracker.getSessionTimeRemaining());
+      } else {
+        failure?.(Error('Tracker is not found'));
+      }
+    },
+    reset_session: function (callback, failure?) {
+      tracker = getTracker();
+      if (tracker) {
+        callback(tracker.resetSession());
+      } else {
+        failure?.(Error('Tracker is not found'));
+      }
+    },
+    get_default_tracking_params: function (callback, failure?) {
+      tracker = getTracker();
+      if (tracker) {
+        callback(getDefaultTrackingParams());
+      } else {
+        failure?.(Error('Tracker is not found'));
+      }
+    },
+    apply_prototypes_call: function (command) {
+      const fnName = command[0];
+      const args = command.slice(1);
+      if (isFunction(prototypes[fnName])) {
+        prototypes[fnName](...args);
+      }
+    },
+    resize_image: async function (imageAsDataUrl, resizeSettings, onSuccess, onFailure?) {
+      try {
+        const img = await resizeImageFromDataUrl(imageAsDataUrl, resizeSettings || settings.resize_settings);
+        onSuccess(img);
+      } catch (err) {
+        onFailure?.(err);
+      }
+    },
+    generate_uuid: function (callback, failure?) {
+      const tracker = getTracker();
+      if (tracker) {
+        callback(tracker.generateUUID());
+      } else {
+        failure?.(Error('Tracker is not found'));
+      }
+    },
+  };
 
   return prototypes;
 }

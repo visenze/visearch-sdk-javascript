@@ -11,8 +11,8 @@ import { ViSearchClient } from '../types/shared';
       // replace the stub with the 'real' one after backcall
       context[clientName] = client;
       return client;
-    }
+    };
   }
-}(typeof self !== 'undefined' ? self : this));
+})(typeof self !== 'undefined' ? self : this);
 
 export default ViSearch;

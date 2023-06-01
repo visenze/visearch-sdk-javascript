@@ -1,7 +1,7 @@
 import { ViSearch } from '../src/visearch';
 import { expect, jest, test } from '@jest/globals';
 import * as dotenv from 'dotenv';
-dotenv.config()
+dotenv.config();
 
 const searchConfigs = {
   app_key: process.env.SEARCH_APP_KEY,
@@ -22,9 +22,9 @@ const searchClient = ViSearch(searchConfigs);
 const recClient = ViSearch(recConfigs);
 
 const getQueryIdAsync = async (client) => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     client.get_last_query_id((reqid) => resolve(reqid));
-  })
+  });
 };
 
 const getDefaultParamAsyncs = async (client) => {
@@ -33,7 +33,7 @@ const getDefaultParamAsyncs = async (client) => {
       resolve(data);
     });
   });
-}
+};
 
 const assertSearchSuccess = async (client, response) => {
   const lastReqId = await getQueryIdAsync(client);
@@ -79,20 +79,23 @@ describe('init ViSearch', () => {
     const meta2 = await getDefaultParamAsyncs(recClient);
     expect(meta1.code).not.toBe(meta2.code);
 
-    const meta1_next = await getDefaultParamAsyncs(searchClient)
+    const meta1_next = await getDefaultParamAsyncs(searchClient);
     expect(meta1.code).toEqual(meta1_next.code);
   });
-})
+});
 
 describe('search', () => {
   test('search by image url', async () => {
     const res = await new Promise((resolve) => {
-      searchClient.product_search_by_image({
-        im_url: IM_URL,
-        attrs_to_get: ['product_id'],
-      }, (res) => {
-        resolve(res);
-      });
+      searchClient.product_search_by_image(
+        {
+          im_url: IM_URL,
+          attrs_to_get: ['product_id'],
+        },
+        (res) => {
+          resolve(res);
+        }
+      );
     });
     await assertSearchSuccess(searchClient, res);
   });
@@ -101,11 +104,15 @@ describe('search', () => {
 describe('recommendations', () => {
   test('search success', async () => {
     const res = await new Promise((resolve) => {
-      recClient.product_search_by_id(PID, {
-        attrs_to_get: ['product_id', 'main_image_url'],
-      }, (res) => {
-        resolve(res);
-      });
+      recClient.product_search_by_id(
+        PID,
+        {
+          attrs_to_get: ['product_id', 'main_image_url'],
+        },
+        (res) => {
+          resolve(res);
+        }
+      );
     });
     await assertSearchSuccess(recClient, res);
   });

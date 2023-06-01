@@ -35,7 +35,13 @@ function getHeaders(settings: ViSearchSettings): Record<string, any> {
 /**
  * Sends the request as configured in the fetch object.
  */
-function sendRequest(timeoutInMS: number | undefined, fetchObj: Promise<Response>, path: string, callback?: GenericCallback, failure?: GenericCallback): Promise<void> {
+function sendRequest(
+  timeoutInMS: number | undefined,
+  fetchObj: Promise<Response>,
+  path: string,
+  callback?: GenericCallback,
+  failure?: GenericCallback
+): Promise<void> {
   const start = new Date().getTime();
   let reqid: string | null;
   return timeout(timeoutInMS || DEFAULT_TIMEOUT, fetchObj)
@@ -62,7 +68,14 @@ function sendRequest(timeoutInMS: number | undefined, fetchObj: Promise<Response
     });
 }
 
-export const sendGetRequest = (settings: ViSearchSettings, endpoint: string, path: string, queryParams: Record<string, unknown>, callback?: GenericCallback, failure?: GenericCallback): Promise<void> => {
+export const sendGetRequest = (
+  settings: ViSearchSettings,
+  endpoint: string,
+  path: string,
+  queryParams: Record<string, unknown>,
+  callback?: GenericCallback,
+  failure?: GenericCallback
+): Promise<void> => {
   const url = new URI(endpoint).setPath(path);
   Object.entries(queryParams).forEach(([key, value]) => {
     url.addQueryParam(key, value as string);
@@ -75,10 +88,15 @@ export const sendGetRequest = (settings: ViSearchSettings, endpoint: string, pat
   return sendRequest(settings.timeout, fetchObj, path, callback, failure);
 };
 
-export const sendPostRequest = async (settings: ViSearchSettings, endpoint: string, path: string, queryParams: Record<string, unknown>, callback?: GenericCallback, failure?: GenericCallback): Promise<void> => {
-  const url = new URI(endpoint)
-    .setPath(path)
-    .toString();
+export const sendPostRequest = async (
+  settings: ViSearchSettings,
+  endpoint: string,
+  path: string,
+  queryParams: Record<string, unknown>,
+  callback?: GenericCallback,
+  failure?: GenericCallback
+): Promise<void> => {
+  const url = new URI(endpoint).setPath(path).toString();
 
   const postData = new FormData();
   if (queryParams.image) {

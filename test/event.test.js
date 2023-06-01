@@ -1,5 +1,5 @@
 import { expect, test, jest } from '@jest/globals';
-import { version } from '../src/version'
+import { version } from '../src/version';
 import { ViSearch } from '../src/visearch';
 import va from 'visenze-tracking-javascript';
 
@@ -10,13 +10,13 @@ jest.mock('visenze-tracking-javascript', () => {
     __esModule: true,
     default: jest.fn(() => mockTracker),
   };
-})
+});
 
 let visearch;
 let mockCallback = jest.fn();
 let mockFailCallback = jest.fn();
 
-function assertThatAutoFillParams (params) {
+function assertThatAutoFillParams(params) {
   expect(params.v).toBe(version);
   expect(params.sdk).toBe('visearch js sdk');
 }
@@ -26,7 +26,7 @@ beforeEach(() => {
   mockTracker = {
     getDefaultParams: jest.fn(() => {
       return { mock_key: 'mock_value' };
-    })
+    }),
   };
   mockCallback.mockClear();
   mockFailCallback.mockClear();
@@ -41,10 +41,7 @@ describe('get_default_tracking_params', () => {
       expect(error.message).toBe('Tracker is not found');
     });
 
-    visearch.get_default_tracking_params(
-      mockCallback,
-      mockFailCallback
-    );
+    visearch.get_default_tracking_params(mockCallback, mockFailCallback);
     expect(mockCallback).toBeCalledTimes(0);
     expect(mockFailCallback).toBeCalledTimes(1);
   });
@@ -57,10 +54,7 @@ describe('get_default_tracking_params', () => {
       return defaultParams;
     });
 
-    visearch.get_default_tracking_params(
-      mockCallback,
-      mockFailCallback
-    );
+    visearch.get_default_tracking_params(mockCallback, mockFailCallback);
     expect(mockCallback).toBeCalledTimes(1);
     expect(mockFailCallback).toBeCalledTimes(0);
   });
@@ -115,9 +109,12 @@ describe('send_events', () => {
     visearch.send_events(action, events);
 
     expect(mockTracker.sendEvent).toBeCalledTimes(1);
-    expect(mockTracker.sendEvent).toBeCalledWith('add_to_cart',
-      { "sdk": "visearch js sdk", "v": version }
-      , expect.any(Function), expect.any(Function));
+    expect(mockTracker.sendEvent).toBeCalledWith(
+      'add_to_cart',
+      { sdk: 'visearch js sdk', v: version },
+      expect.any(Function),
+      expect.any(Function)
+    );
   });
 
   test('upper case transaction', () => {
@@ -128,9 +125,12 @@ describe('send_events', () => {
     visearch.send_events(action, events);
 
     expect(mockTracker.sendEvent).toBeCalledTimes(1);
-    expect(mockTracker.sendEvent).toBeCalledWith('TRANSACTION',
-      { "sdk": "visearch js sdk", "v": version, transId: mockUUID }
-      , expect.any(Function), expect.any(Function));
+    expect(mockTracker.sendEvent).toBeCalledWith(
+      'TRANSACTION',
+      { sdk: 'visearch js sdk', v: version, transId: mockUUID },
+      expect.any(Function),
+      expect.any(Function)
+    );
   });
 
   test('auto fill version & sdk', () => {
@@ -143,13 +143,17 @@ describe('send_events', () => {
     visearch.send_events(action, events);
 
     expect(mockTracker.sendEvent).toBeCalledTimes(3);
-    expect(mockTracker.sendEvent)
-      .toBeCalledWith('transaction',
-        { "sdk": "visearch js sdk", "v": version, transId: mockUUID }
-        , expect.any(Function), expect.any(Function));
-    expect(mockTracker.sendEvent)
-      .toBeCalledWith('transaction',
-        { "sdk": "visearch js sdk", "v": version, transId: 'sample-transId' }
-        , expect.any(Function), expect.any(Function));
+    expect(mockTracker.sendEvent).toBeCalledWith(
+      'transaction',
+      { sdk: 'visearch js sdk', v: version, transId: mockUUID },
+      expect.any(Function),
+      expect.any(Function)
+    );
+    expect(mockTracker.sendEvent).toBeCalledWith(
+      'transaction',
+      { sdk: 'visearch js sdk', v: version, transId: 'sample-transId' },
+      expect.any(Function),
+      expect.any(Function)
+    );
   });
 });
