@@ -45,7 +45,7 @@ export interface ViSearchClient {
     resizeSettings: PSResizeSettings | undefined,
     onSuccess: GenericCallback,
     onFailure?: GenericCallback,
-  ) => void,
+  ) => Promise<void>,
   generate_uuid: (callback: (uuid: string) => void, failure?: GenericCallback) => void
 }
 
@@ -78,8 +78,9 @@ export interface PSResponseSuccessGeneral {
   limit?: number;
   total?: number;
   product_types?: any[];
-  strategy?: any;
-  experiment?: any;
+  experiment?: {
+    experiment_no_recommendation?: boolean
+  };
   experiment_no_recommendation?: boolean;
 }
 

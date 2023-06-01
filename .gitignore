@@ -1,6 +1,4 @@
 node_modules/
-lib/
-package-lock.json
 .DS_Store
 dist/
 *.log
@@ -10,5 +8,10 @@ dist/
 .npmrc
 .vscode
 .env
-src/version.ts
 aws-profile.json
+
+lib/
+cjs/
+esm/
+package-lock.json
+src/version.ts

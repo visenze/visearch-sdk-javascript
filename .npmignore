@@ -1,13 +1,3 @@
-examples/
-dist/
-src/
-test/
-webpack.config.js
-webpack-dev.config.js
-babel.config.json
-.eslintignore
-.eslintrc.js
-jest.config.js
 aws-profile.json
 .env
 
@@ -15,3 +5,20 @@ aws-profile.json
 .codeclimate.yml
 .idea
 .vscode
+
+examples/
+dist/
+src/
+webpack.config.js
+webpack-dev.config.js
+babel.config.js
+.eslintignore
+.eslintrc.js
+
+test/
+jest.config.js
+
+fixup
+tsconfig.json
+tsconfig.cjs.json
+tsconfig.base.json

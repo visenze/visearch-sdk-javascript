@@ -16,6 +16,7 @@ import {
 import { resizeImageFromDataUrl } from './resizer';
 import isFunction from 'lodash.isfunction';
 import { PSResponse, ViSearchSettings, GenericCallback, PSResizeSettings, ViSearchClient } from '../types/shared';
+import { VAClient } from 'visenze-tracking-javascript/types/shared';
 
 const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
 const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';
@@ -69,7 +70,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     generate_uuid: generateUuid
   };
   let lastQueryId: string;
-  let tracker: any;
+  let tracker: VAClient;
 
   Object.defineProperty(q, 'push', (args: [string, unknown]) => applyPrototypesCall(args));
 
@@ -90,14 +91,13 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     }
   }
 
-  function getTracker(): any {
+  function getTracker(): VAClient {
     if (!tracker) {
       const code = `${settings.app_key}:${settings.placement_id}`;
-      const endpoint = settings.analytics_endpoint
-        || (settings.endpoint === STAGING_ENDPOINT
-          ? ANALYTICS_STAGING_ENDPOINT
-          : null);
-      tracker = va.init({
+      const endpoint = settings.analytics_endpoint || (settings.endpoint === STAGING_ENDPOINT
+        ? ANALYTICS_STAGING_ENDPOINT
+        : undefined);
+      tracker = va({
         code,
         uid: settings.uid,
         endpoint,
@@ -115,7 +115,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     tracker = getTracker();
     const trackerParams = tracker.getDefaultParams();
     if (tracker) {
-      return { ...(trackerParams as Record<string, unknown>), ...getSdkVersion() };
+      return { ...trackerParams, ...getSdkVersion() };
     }
     return {};
   }

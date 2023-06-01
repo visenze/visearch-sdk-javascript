@@ -1,16 +1,20 @@
-jest.mock('../package.json');
-jest.mock('visenze-tracking-javascript');
-
-import va from 'visenze-tracking-javascript';
-import { ViSearch } from '../src/visearch';
-import { version } from '../src/version'
 import { expect, test, jest } from '@jest/globals';
+import { version } from '../src/version'
+import { ViSearch } from '../src/visearch';
+import va from 'visenze-tracking-javascript';
 
-let visearch;
 let mockTracker;
 
-let mockCallback;
-let mockFailCallback;
+jest.mock('visenze-tracking-javascript', () => {
+  return {
+    __esModule: true,
+    default: jest.fn(() => mockTracker),
+  };
+})
+
+let visearch;
+let mockCallback = jest.fn();
+let mockFailCallback = jest.fn();
 
 function assertThatAutoFillParams (params) {
   expect(params.v).toBe(version);
@@ -19,23 +23,16 @@ function assertThatAutoFillParams (params) {
 
 beforeEach(() => {
   visearch = ViSearch();
-  mockTracker = jest.mock();
-
-  va.init = jest.fn(() => {
-    return mockTracker;
-  });
-
-  mockCallback = jest.fn();
-  mockFailCallback = jest.fn();
+  mockTracker = {
+    getDefaultParams: jest.fn(() => {
+      return { mock_key: 'mock_value' };
+    })
+  };
+  mockCallback.mockClear();
+  mockFailCallback.mockClear();
 });
 
 describe('get_default_tracking_params', () => {
-  beforeEach(() => {
-    mockTracker.getDefaultParams = jest.fn(() => {
-      return { mock_key: 'mock_value' };
-    });
-  });
-
   test('fail to init tracker', () => {
     mockTracker = null;
 

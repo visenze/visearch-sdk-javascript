@@ -13,7 +13,7 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.json'
   },
-  ignorePatterns: ['dist/**/*'],
+  ignorePatterns: ['dist/**/*', 'cjs/**/*', 'esm/**/*'],
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
