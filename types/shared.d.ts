@@ -45,12 +45,12 @@ export interface ViSearchClient {
     callback: (resp: PSResponse) => void,
     failure?: GenericCallback
   ) => Promise<void>;
-  set_uid: (uid: string, callback: (uid: string) => void, failure?: GenericCallback) => void;
+  set_uid: (uid: string, callback?: (uid: string) => void, failure?: GenericCallback) => void;
   get_uid: (callback: (uid: string) => void, failure?: GenericCallback) => void;
   get_sid: (callback: (sid: string) => void, failure?: GenericCallback) => void;
   get_last_query_id: (callback: (lastQueryId: string | null) => void, failure?: GenericCallback) => void;
-  get_session_time_remaining: (callback: GenericCallback, failure?: GenericCallback) => void;
-  reset_session: (callback: (sid: string) => void, failure?: GenericCallback) => void;
+  get_session_time_remaining: (callback: (time: number) => void, failure?: GenericCallback) => void;
+  reset_session: (callback?: (sid: string) => void, failure?: GenericCallback) => void;
   get_default_tracking_params: (callback: (params: Record<string, unknown>) => void, failure?: GenericCallback) => void;
   apply_prototypes_call: (command: [keyof ViSearchClient, unknown]) => void;
   resize_image: (

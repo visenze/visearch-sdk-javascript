@@ -49,6 +49,12 @@ module.exports = (_, argv) => {
             presets: ['@babel/preset-env', '@babel/preset-typescript'],
           },
         },
+        {
+          test: /\.js$/,
+          resolve: {
+            fullySpecified: false,
+          },
+        },
       ],
     },
     optimization: {
