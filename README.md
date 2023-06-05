@@ -90,7 +90,7 @@ npm install visearch-javascript-sdk
 
   ```html
   <script type="text/javascript">
-  !function(e,t,r,s,i){if(Array.isArray(i))for(var a=0;a<i.length;a++)n(e,t,r,s,i[a]);else n(e,t,r,s,i);function n(e,t,r,s,i){var a=e[i]||{};e[i]=a,a.q=a.q||[],a.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),a.q.push(t),a}},a.methods=["set","set_keys","send","send_events","product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_last_query_id","get_session_time_remaining","get_default_tracking_params","reset_session","resize_image","generate_uuid",];for(var n=0;n<a.methods.length;n++){var o=a.methods[n];a[o]=a.factory(o)}if(e.viInit)viInit(e,i);else{var c,d,u,f,p,g=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(p=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,p),f);g.onload=function(){viInit(e,i)},g.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.0.0.min.js","visearch");
+  !function(e,t,r,s,i){if(Array.isArray(i))for(var a=0;a<i.length;a++)n(e,t,r,s,i[a]);else n(e,t,r,s,i);function n(e,t,r,s,i){var a=e[i]||{};e[i]=a,a.q=a.q||[],a.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),a.q.push(t),a}},a.methods=["set","set_keys","send","send_events","product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_last_query_id","get_session_time_remaining","get_default_tracking_params","reset_session","resize_image","generate_uuid",];for(var n=0;n<a.methods.length;n++){var o=a.methods[n];a[o]=a.factory(o)}if(e.viInit)viInit(e,i);else{var c,d,u,f,p,g=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(p=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,p),f);g.onload=function(){viInit(e,i)},g.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.0.0-rc.0.min.js","visearch");
   </script>
   ```
 
@@ -155,6 +155,16 @@ const visearch = ViSearch({
 The demo is only applicable to those who work directly off the main [repo](https://github.com/visenze/visearch-sdk-javascript). You are required to have a Node.js environment and remember to **fill up the relevant files**.
 
   > Create a `.env` file and fill in the relevant app key and placement id
+
+```
+SEARCH_APP_KEY = 
+SEARCH_PLACEMENT_ID = 
+SEARCH_IM_URL = 
+REC_PID = 
+REC_APP_KEY = 
+REC_PLACEMENT_ID = 
+ENDPOINT = 
+```
 
 - To run the webpage demo:
   
