@@ -10,7 +10,6 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "strict": true,
-    "noImplicitAny": true,
     "stripInternal": true,
     "typeRoots": [
       "./types"
