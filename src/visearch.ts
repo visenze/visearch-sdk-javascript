@@ -106,9 +106,9 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         window.dataLayer = [];
       }
       const data: {
-        [key: string]: { queryId: string, pid?: string } | string
+        [key: string]: { queryId: string; pid?: string } | string;
       } = { event: 'vs_result_load' };
-      const params: { queryId: string, pid?: string } = { queryId: resp.reqid };
+      const params: { queryId: string; pid?: string } = { queryId: resp.reqid };
       if (productId) {
         params.pid = productId;
       }
@@ -255,7 +255,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       tracker = getTracker();
       if (tracker) {
         tracker.setUID(uid);
-        callback(uid);
+        callback?.(uid);
       } else {
         failure?.(Error('Tracker is not found'));
       }
@@ -298,7 +298,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     reset_session: function (callback, failure) {
       tracker = getTracker();
       if (tracker) {
-        callback(tracker.resetSession());
+        callback?.(tracker.resetSession());
       } else {
         failure?.(Error('Tracker is not found'));
       }

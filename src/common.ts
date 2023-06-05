@@ -27,7 +27,7 @@ function timeout(ms: number, promise: Promise<unknown>): Promise<unknown> {
 function getHeaders(settings: ViSearchSettings): HeadersInit {
   const output: HeadersInit = {
     Accept: 'application/json',
-    'X-Requested-With': settings.user_agent as string || USER_AGENT,
+    'X-Requested-With': (settings.user_agent as string) || USER_AGENT,
   };
   return output;
 }
