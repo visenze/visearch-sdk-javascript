@@ -4,7 +4,7 @@ import isFunction from 'lodash.isfunction';
 import { version } from './version';
 import { resizeImage } from './resizer';
 import { ViSearchSettings, GenericCallback, PSResponse } from '../types/shared';
-import fetch, { Response } from 'node-fetch';
+import fetch, { Response, HeadersInit } from 'node-fetch';
 const DEFAULT_TIMEOUT = 15000;
 const USER_AGENT = `visearch-js-sdk/${version}`;
 
@@ -24,10 +24,10 @@ function timeout(ms: number, promise: Promise<unknown>): Promise<unknown> {
 /**
  * Generates HTTP headers.
  */
-function getHeaders(settings: ViSearchSettings): Record<string, any> {
-  const output: Record<string, any> = {
+function getHeaders(settings: ViSearchSettings): HeadersInit {
+  const output: HeadersInit = {
     Accept: 'application/json',
-    'X-Requested-With': settings.user_agent || USER_AGENT,
+    'X-Requested-With': settings.user_agent as string || USER_AGENT,
   };
   return output;
 }

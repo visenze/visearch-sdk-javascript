@@ -10,7 +10,7 @@
     getStub(context, doc, element, src, objs);
   }
 
-  function insertScript(doc, element, src) {
+  function insertScript (doc, element, src) {
     // create element to load javascript async
     var el = doc.createElement(element);
     el.type = 'text/javascript';
@@ -21,7 +21,7 @@
     return el;
   }
 
-  function getStub(context, doc, element, src, obj_name) {
+  function getStub (context, doc, element, src, obj_name) {
     var __visearch_obj = context[obj_name] || {};
     context[obj_name] = __visearch_obj;
     __visearch_obj.q = __visearch_obj.q || [];

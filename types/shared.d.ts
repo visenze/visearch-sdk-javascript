@@ -2,8 +2,8 @@ export type GenericCallback = (...arg: any) => void;
 
 export interface ViSearchClient {
   q: any;
-  set(key: string, value: unknown);
-  set_keys(keys: Record<string, unknown>);
+  set: (key: string, value: unknown) => void;
+  set_keys: (keys: Record<string, unknown>) => void;
   send: (
     action: string,
     eventParams: Record<string, unknown>,
@@ -52,7 +52,7 @@ export interface ViSearchClient {
   get_session_time_remaining: (callback: GenericCallback, failure?: GenericCallback) => void;
   reset_session: (callback: (sid: string) => void, failure?: GenericCallback) => void;
   get_default_tracking_params: (callback: (params: Record<string, unknown>) => void, failure?: GenericCallback) => void;
-  apply_prototypes_call: (command: [string, unknown]) => void;
+  apply_prototypes_call: (command: [keyof ViSearchClient, unknown]) => void;
   resize_image: (
     imageAsDataUrl: string,
     resizeSettings: PSResizeSettings | undefined,
@@ -129,6 +129,7 @@ declare global {
   interface Window {
     vsPlacementLoaded: Record<string, boolean>;
     dataLayer?: any[];
-    viInit?: (context: any, clientName: string) => ViSearchClient;
+    viInit?: (context: typeof globalThis, clientName: string) => ViSearchClient;
   }
+  var viInit: (context: typeof globalThis, clientName: string) => ViSearchClient;
 }

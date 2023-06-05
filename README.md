@@ -159,6 +159,7 @@ The demo is only applicable to those who work directly off the main [repo](https
 - To run the webpage demo:
   
   ```javascript
+  npm run write-version
   npm run start-demo
   ```
 

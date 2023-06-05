@@ -38,7 +38,7 @@ function getQueryParamValue(uri: URI, name: string): unknown {
 }
 
 export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
-  const q: any = [];
+  const q: unknown[] = [];
   const settings: ViSearchSettings = {
     app_key: '',
     placement_id: '',
@@ -46,7 +46,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
   let lastQueryId: string;
   let tracker: VAClient;
 
-  Object.defineProperty(q, 'push', (args: [string, unknown]) => prototypes.apply_prototypes_call(args));
+  Object.defineProperty(q, 'push', (args: [keyof ViSearchClient, unknown]) => prototypes.apply_prototypes_call(args));
 
   if (configs) {
     Object.entries(configs).forEach(([key, value]) => {
@@ -105,11 +105,14 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       if (!window.dataLayer) {
         window.dataLayer = [];
       }
-      const data = { event: 'vs_result_load' };
-      data[settings.placement_id] = { queryId: resp.reqid };
+      const data: {
+        [key: string]: { queryId: string, pid?: string } | string
+      } = { event: 'vs_result_load' };
+      const params: { queryId: string, pid?: string } = { queryId: resp.reqid };
       if (productId) {
-        data[settings.placement_id].pid = productId;
+        params.pid = productId;
       }
+      data[settings.placement_id] = params;
       window.dataLayer.push(data);
     }
   }

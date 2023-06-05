@@ -1,5 +1,8 @@
 {
-  "include": ["src/**/*", "types/**/*"],
+  "include": [
+    "src/**/*",
+    "types/**/*"
+  ],
   "compilerOptions": {
     "moduleResolution": "node",
     "declaration": true,
@@ -7,9 +10,15 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "stripInternal": true,
-    "typeRoots": ["./types"],
-    "lib": ["es2018", "dom", "esnext"]
+    "typeRoots": [
+      "./types"
+    ],
+    "lib": [
+      "es2018",
+      "dom",
+      "esnext"
+    ]
   }
 }
