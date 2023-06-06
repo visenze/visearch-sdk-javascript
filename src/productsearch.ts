@@ -1,4 +1,4 @@
-import { sendGetRequest, sendPostRequest } from './common';
+import { sendGetRequest, sendPostRequest } from './common.js';
 import { GenericCallback, ViSearchSettings } from '../types/shared';
 
 const END_POINT = 'https://search.visenze.com';

@@ -1,8 +1,8 @@
 import URI from 'jsuri';
 import FormData from 'form-data';
 import isFunction from 'lodash.isfunction';
-import { version } from './version';
-import { resizeImage } from './resizer';
+import { version } from './version.js';
+import { resizeImage } from './resizer.js';
 import { ViSearchSettings, GenericCallback, PSResponse } from '../types/shared';
 import fetch, { Response, HeadersInit } from 'node-fetch';
 const DEFAULT_TIMEOUT = 15000;

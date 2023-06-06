@@ -13,5 +13,4 @@ aws-profile.json
 lib/
 cjs/
 esm/
-package-lock.json
 src/version.ts

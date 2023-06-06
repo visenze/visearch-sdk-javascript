@@ -6,10 +6,10 @@
 import find from 'lodash.find';
 import URI from 'jsuri';
 import va from 'visenze-tracking-javascript';
-import { version } from './version';
+import { version } from './version.js';
 
-import { searchById, searchByImage, searchByIdByPost } from './productsearch';
-import { resizeImageFromDataUrl } from './resizer';
+import { searchById, searchByImage, searchByIdByPost } from './productsearch.js';
+import { resizeImageFromDataUrl } from './resizer.js';
 import isFunction from 'lodash.isfunction';
 import { PSResponse, ViSearchSettings, ViSearchClient } from '../types/shared';
 import { VAClient } from 'visenze-tracking-javascript/types/shared';
@@ -232,12 +232,10 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     },
     product_search_by_image: function (params, callback, failure) {
       const altCallback = wrapCallback.bind(undefined, undefined, callback);
-
       return searchByImage(settings, params, getDefaultTrackingParams(), altCallback, failure);
     },
     product_search_by_id: function (productId, params, callback, failure) {
       const altCallback = wrapCallback.bind(undefined, undefined, callback);
-
       return searchById(settings, productId, params, getDefaultTrackingParams(), altCallback, failure);
     },
     product_recommendations: function (productId, params, callback, failure) {
@@ -245,7 +243,6 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     },
     product_recommendations_by_post: function (productId, params, callback, failure) {
       const altCallback = wrapCallback.bind(undefined, undefined, callback);
-
       return searchByIdByPost(settings, productId, params, getDefaultTrackingParams(), altCallback, failure);
     },
     product_search_by_id_by_post: function (productId, params, callback, failure) {

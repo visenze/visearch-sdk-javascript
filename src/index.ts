@@ -1,4 +1,4 @@
-import { ViSearch } from './visearch';
+import { ViSearch } from './visearch.js';
 import { ViSearchClient } from '../types/shared';
 
 (function init(context): void {
