@@ -60,10 +60,12 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       const endpoint =
         settings.analytics_endpoint ||
         (settings.endpoint === STAGING_ENDPOINT ? ANALYTICS_STAGING_ENDPOINT : undefined);
+      const isCN = !!settings.is_cn;
       tracker = va({
         code,
         uid: settings.uid,
         endpoint,
+        isCN
       });
     }
     return tracker;
