@@ -56,7 +56,7 @@ export interface ViSearchClient {
   resize_image: (
     imageAsDataUrl: string,
     resizeSettings: PSResizeSettings | undefined,
-    onSuccess: GenericCallback,
+    onSuccess: (dataUrl: null | string) => void,
     onFailure?: GenericCallback
   ) => Promise<void>;
   generate_uuid: (callback: (uuid: string) => void, failure?: GenericCallback) => void;
