@@ -11,7 +11,7 @@ import { version } from './version.js';
 import { searchById, searchByImage, searchByIdByPost } from './productsearch.js';
 import { resizeImageFromDataUrl } from './resizer.js';
 import isFunction from 'lodash.isfunction';
-import { PSResponse, ViSearchSettings, ViSearchClient } from '../types/shared';
+import { ProductSearchResponse, ViSearchSettings, ViSearchClient } from '../types/shared';
 import { VAClient } from 'visenze-tracking-javascript/types/shared';
 
 const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
@@ -85,7 +85,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     return {};
   }
 
-  function sendResultLoadEvent(productId: string | undefined, resp: PSResponse): void {
+  function sendResultLoadEvent(productId: string | undefined, resp: ProductSearchResponse): void {
     if (resp.status !== 'OK') {
       return;
     } else if ('objects' in resp && resp.objects.length === 0) {
@@ -123,7 +123,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
    * Save the query Id of the last request to local storage if the request is successfull
    * @param {*} resp response from ProductSearch API
    */
-  function saveQueryId(resp: PSResponse): void {
+  function saveQueryId(resp: ProductSearchResponse): void {
     if (resp.status !== 'OK') {
       return;
     }
@@ -134,7 +134,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
   /**
    * Wrapping response with addition method for abtesting tracking
    */
-  function wrapExperimentResponse(resp: PSResponse): void {
+  function wrapExperimentResponse(resp: ProductSearchResponse): void {
     if (resp.status !== 'OK') {
       return;
     }
@@ -149,8 +149,8 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
    */
   function wrapCallback(
     productId: string | undefined,
-    callback: ((resp: PSResponse) => void) | undefined,
-    resp: PSResponse
+    callback: ((resp: ProductSearchResponse) => void) | undefined,
+    resp: ProductSearchResponse
   ): void {
     wrapExperimentResponse(resp);
     callback?.(resp);

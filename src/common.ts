@@ -3,7 +3,7 @@ import FormData from 'form-data';
 import isFunction from 'lodash.isfunction';
 import { version } from './version.js';
 import { resizeImage } from './resizer.js';
-import { ViSearchSettings, GenericCallback, PSResponse } from '../types/shared';
+import { ViSearchSettings, GenericCallback, ProductSearchResponse } from '../types/shared';
 import fetch, { Response, HeadersInit } from 'node-fetch';
 const DEFAULT_TIMEOUT = 15000;
 const USER_AGENT = `visearch-js-sdk/${version}`;
@@ -53,8 +53,8 @@ function sendRequest(
     .then((json) => {
       const stop = new Date().getTime();
       console.log(`ViSearch ${path} finished in ${stop - start}ms`);
-      if (reqid && !(json as PSResponse).reqid) {
-        (json as PSResponse).reqid = reqid;
+      if (reqid && !(json as ProductSearchResponse).reqid) {
+        (json as ProductSearchResponse).reqid = reqid;
       }
       if (isFunction(callback)) {
         callback(json);
@@ -103,10 +103,14 @@ export const sendPostRequest = async (
     const img = queryParams.image;
     delete queryParams.image;
     let resizedImage;
-    if (img instanceof Blob) {
-      resizedImage = await resizeImage(img, settings.resize_settings);
-    } else if (img instanceof HTMLInputElement && img.files) {
-      resizedImage = await resizeImage(img.files[0], settings.resize_settings);
+    if (settings['disable_resize']) {
+      resizedImage = img;
+    } else {
+      if (img instanceof Blob) {
+        resizedImage = await resizeImage(img, settings.resize_settings);
+      } else if (img instanceof HTMLInputElement && img.files) {
+        resizedImage = await resizeImage(img.files[0], settings.resize_settings);
+      }
     }
     postData.append('image', resizedImage);
   }
