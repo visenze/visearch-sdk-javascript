@@ -131,11 +131,16 @@ const RESULT_LOAD = 'result_load';
       }
     }
 
-    function sendResultLoadEvent(productId, args) {
-      if (args.status !== 'OK' || args.result.length === 0) {
+
+    function isRequestHasResult(resp) {
+      return (resp.result && resp.result.length) || (resp.objects && resp.objects.length);
+    }
+
+    function sendResultLoadEvent(productId, resp) {
+      if (resp.status !== 'OK' || !isRequestHasResult(resp)) {
         return;
       }
-      const metadata = { queryId: args.reqid };
+      const metadata = { queryId: resp.reqid };
       if (productId) {
         metadata.pid = productId;
       }
@@ -149,7 +154,7 @@ const RESULT_LOAD = 'result_load';
           window.dataLayer = [];
         }
         const data = { event: 'vs_result_load' };
-        data[settings.placement_id] = { queryId: args.reqid };
+        data[settings.placement_id] = { queryId: resp.reqid };
         if (productId) {
           data[settings.placement_id].pid = productId;
         }
@@ -162,7 +167,7 @@ const RESULT_LOAD = 'result_load';
      * @param {*} resp response from ProductSearch API
      */
     function saveQueryId(resp) {
-      if (resp.status !== 'OK' || resp.result.length === 0) {
+      if (resp.status !== 'OK') {
         return;
       }
       queryId = resp.reqid;
