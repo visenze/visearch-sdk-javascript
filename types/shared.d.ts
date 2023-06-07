@@ -149,17 +149,17 @@ export interface ObjectProductResponse extends ProductType {
   id: string;
   category: string;
   name: string;
-  excluded_pids: string[];
+  excluded_pids?: string[];
   total: number;
   result: Product[];
-  facets: Facet[];
-  group_results: GroupProductResponse[];
+  facets?: Facet[];
+  group_results?: GroupProductResponse[];
 }
 
 export interface ProductType {
   type: string;
-  score: number;
-  rerankScore: number;
+  score?: number;
+  rerankScore?: number;
   box: number[];
   attributes: { [index: string]: string[] };
   box_type: string;
@@ -171,7 +171,7 @@ export interface ResizeSettings {
 }
 
 export interface FacetItem {
-  count: number;
+  count?: number;
   value: string;
 }
 
@@ -183,7 +183,7 @@ export interface FacetRange {
 export interface Facet {
   key: string;
   items: FacetItem[];
-  range: FacetRange;
+  range?: FacetRange;
 }
 
 declare global {
