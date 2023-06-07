@@ -2,11 +2,9 @@
 
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link rel="stylesheet" href="/styles/tracking.css" />
-  <script type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
   <script type="text/javascript" src="/js/snippet.js"></script>
   <script type="text/javascript">
@@ -26,15 +24,15 @@
 
       const refreshTrackingInfo = () => {
         // display uid & sid
-        visearch.get_uid((uid) => {
+        visearch.getUid((uid) => {
           $("#uid").text(uid);
         });
 
-        visearch.get_sid((sid) => {
+        visearch.getSid((sid) => {
           $("#sid").text(sid);
         });
 
-        visearch.get_session_time_remaining((time) => {
+        visearch.getSessionTimeRemaining((time) => {
           $("#sessionTimeRemaining").text(time);
         });
       };
@@ -45,7 +43,7 @@
 
       // reset session
       $("#resetSessionBtn").click(function () {
-        visearch.reset_session();
+        visearch.resetSession();
         refreshTrackingInfo();
       });
 
@@ -53,7 +51,7 @@
       $("#newUidBtn").click(function () {
         const newUid = $("#newUidTxt").val();
         $("#newUidTxt").val("");
-        visearch.set_uid(newUid);
+        visearch.setUid(newUid);
 
         refreshTrackingInfo();
       });
@@ -62,7 +60,7 @@
         const action = $("#singleEventAction").val();
         const params = $("#singleEventParams").val();
         const json = JSON.parse(params);
-        visearch.send(action, json, (action, event) => {
+        visearch.sendEvent(action, json, (action, event) => {
           console.log(action, event);
         }, (failure) => {
           console.error(failure);
@@ -73,7 +71,7 @@
         const action = $("#batchEventAction").val();
         const params = $("#batchEventParams").val();
         const json = JSON.parse(params);
-        visearch.send_events(action, json, (action, event) => {
+        visearch.sendEvents(action, json, (action, event) => {
           console.log(action, event);
         }, (failure) => {
           console.error(failure);
@@ -124,8 +122,7 @@
 
       action: <input id="batchEventAction" value="transaction" />
       <br />
-      json params: <textarea
-        id="batchEventParams">[{"pid":"mock-pid1","value":"111","queryId":"mock-queryId"},{"pid":"mock-pid3","value":"333","queryId":"mock-queryId","transId":"mock-transId"}, {"pid":"mock-pid2","value":"222","queryId":"mock-queryId"}]</textarea>
+      json params: <textarea id="batchEventParams">[{"pid":"mock-pid1","value":"111","queryId":"mock-queryId"},{"pid":"mock-pid3","value":"333","queryId":"mock-queryId","transId":"mock-transId"}, {"pid":"mock-pid2","value":"222","queryId":"mock-queryId"}]</textarea>
       <br />
       <button id="batchEventButton">send batch events</button>
 

@@ -23,13 +23,13 @@ const recClient = ViSearch(recConfigs);
 
 const getQueryIdAsync = async (client) => {
   return new Promise((resolve) => {
-    client.get_last_query_id((reqid) => resolve(reqid));
+    client.getLastQueryId((reqid) => resolve(reqid));
   });
 };
 
 const getDefaultParamAsyncs = async (client) => {
   return new Promise((resolve) => {
-    client.get_default_tracking_params((data) => {
+    client.getDefaultTrackingParams((data) => {
       resolve(data);
     });
   });
@@ -64,9 +64,9 @@ describe('init ViSearch', () => {
     expect(meta.code).toBe('B:P12');
   });
 
-  test('from using set_keys', async () => {
+  test('from using setKeys', async () => {
     const client = ViSearch();
-    client.set_keys({
+    client.setKeys({
       app_key: 'C',
       placement_id: 'P13',
     });
@@ -87,7 +87,7 @@ describe('init ViSearch', () => {
 describe('search', () => {
   test('search by image url', async () => {
     const res = await new Promise((resolve) => {
-      searchClient.product_search_by_image(
+      searchClient.productSearchByImage(
         {
           im_url: IM_URL,
           attrs_to_get: ['product_id'],
@@ -104,7 +104,7 @@ describe('search', () => {
 describe('recommendations', () => {
   test('search success', async () => {
     const res = await new Promise((resolve) => {
-      recClient.product_search_by_id(
+      recClient.productSearchById(
         PID,
         {
           attrs_to_get: ['product_id', 'main_image_url'],

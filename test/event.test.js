@@ -32,7 +32,7 @@ beforeEach(() => {
   mockFailCallback.mockClear();
 });
 
-describe('get_default_tracking_params', () => {
+describe('getDefaultTrackingParams', () => {
   test('fail to init tracker', () => {
     mockTracker = null;
 
@@ -41,7 +41,7 @@ describe('get_default_tracking_params', () => {
       expect(error.message).toBe('Tracker is not found');
     });
 
-    visearch.get_default_tracking_params(mockCallback, mockFailCallback);
+    visearch.getDefaultTrackingParams(mockCallback, mockFailCallback);
     expect(mockCallback).toBeCalledTimes(0);
     expect(mockFailCallback).toBeCalledTimes(1);
   });
@@ -54,7 +54,7 @@ describe('get_default_tracking_params', () => {
       return defaultParams;
     });
 
-    visearch.get_default_tracking_params(mockCallback, mockFailCallback);
+    visearch.getDefaultTrackingParams(mockCallback, mockFailCallback);
     expect(mockCallback).toBeCalledTimes(1);
     expect(mockFailCallback).toBeCalledTimes(0);
   });
@@ -73,12 +73,12 @@ describe('send', () => {
       return params;
     });
 
-    visearch.send(action, event1, mockCallback, mockFailCallback);
+    visearch.sendEvent(action, event1, mockCallback, mockFailCallback);
     expect(mockTracker.sendEvent).toBeCalledTimes(1);
   });
 });
 
-describe('send_events', () => {
+describe('sendEvents', () => {
   const mockUUID = 'mock-uuid';
   beforeEach(() => {
     mockTracker.validateEvents = jest.fn(() => {
@@ -97,7 +97,7 @@ describe('send_events', () => {
       return false;
     });
 
-    visearch.send_events('transaction', [{}]);
+    visearch.sendEvents('transaction', [{}]);
     expect(mockTracker.sendEvent).toBeCalledTimes(0);
   });
 
@@ -106,7 +106,7 @@ describe('send_events', () => {
     const event1 = {};
     const events = [event1];
 
-    visearch.send_events(action, events);
+    visearch.sendEvents(action, events);
 
     expect(mockTracker.sendEvent).toBeCalledTimes(1);
     expect(mockTracker.sendEvent).toBeCalledWith(
@@ -122,7 +122,7 @@ describe('send_events', () => {
     const event1 = {};
     const events = [event1];
 
-    visearch.send_events(action, events);
+    visearch.sendEvents(action, events);
 
     expect(mockTracker.sendEvent).toBeCalledTimes(1);
     expect(mockTracker.sendEvent).toBeCalledWith(
@@ -140,7 +140,7 @@ describe('send_events', () => {
     const event3 = {};
     const events = [event1, event2, event3];
 
-    visearch.send_events(action, events);
+    visearch.sendEvents(action, events);
 
     expect(mockTracker.sendEvent).toBeCalledTimes(3);
     expect(mockTracker.sendEvent).toBeCalledWith(

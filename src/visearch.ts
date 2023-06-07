@@ -46,7 +46,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
   let lastQueryId: string;
   let tracker: VAClient;
 
-  Object.defineProperty(q, 'push', (args: [keyof ViSearchClient, unknown]) => prototypes.apply_prototypes_call(args));
+  Object.defineProperty(q, 'push', (args: [keyof ViSearchClient, unknown]) => prototypes.applyPrototypesCall(args));
 
   if (configs) {
     Object.entries(configs).forEach(([key, value]) => {
@@ -100,7 +100,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     }
     // send out event if the pixel is in place
     if (window && window.vsPlacementLoaded && window.vsPlacementLoaded[settings.placement_id]) {
-      prototypes.send(RESULT_LOAD, metadata);
+      prototypes.sendEvent(RESULT_LOAD, metadata);
     }
     // push result_load event to GTM datalayer if user enable GTM tracking
     if (settings.gtm_tracking) {
@@ -174,7 +174,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     if (reqid && imName) {
       // Get event 'action' for page will set it as 'click' action by default if not specified.
       const action = (getQueryParamValue(curUri, QUERY_ACTION) as string) || 'click';
-      prototypes.send(action, {
+      prototypes.sendEvent(action, {
         queryId: getQueryParamValue(curUri, QUERY_REQID),
         im_name: getQueryParamValue(curUri, QUERY_IMNAME),
       });
@@ -190,12 +190,12 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     set: function (key, value) {
       settings[key] = value;
     },
-    set_keys: function (configs) {
+    setKeys: function (configs) {
       Object.entries(configs).forEach(([key, value]) => {
         settings[key] = value;
       });
     },
-    send: function (action, eventParams, callback, failure) {
+    sendEvent: function (action, eventParams, callback, failure) {
       const tracker = getTracker();
       const params = { ...getSdkVersion(), ...eventParams };
 
@@ -212,7 +212,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         );
       }
     },
-    send_events: function (action, eventParamsList, callback, failure) {
+    sendEvents: function (action, eventParamsList, callback, failure) {
       const tracker = getTracker();
 
       if (tracker && tracker.validateEvents(eventParamsList, failure)) {
@@ -228,29 +228,29 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
             params.transId = batchId;
           }
 
-          prototypes.send(action, params, callback, failure);
+          prototypes.sendEvent(action, params, callback, failure);
         });
       }
     },
-    product_search_by_image: function (params, callback, failure) {
+    productSearchByImage: function (params, callback, failure) {
       const altCallback = wrapCallback.bind(undefined, undefined, callback);
       return searchByImage(settings, params, getDefaultTrackingParams(), altCallback, failure);
     },
-    product_search_by_id: function (productId, params, callback, failure) {
+    productSearchById: function (productId, params, callback, failure) {
       const altCallback = wrapCallback.bind(undefined, undefined, callback);
       return searchById(settings, productId, params, getDefaultTrackingParams(), altCallback, failure);
     },
-    product_recommendations: function (productId, params, callback, failure) {
-      return this.product_search_by_id(productId, params, callback, failure);
+    productRecommendations: function (productId, params, callback, failure) {
+      return this.productSearchById(productId, params, callback, failure);
     },
-    product_recommendations_by_post: function (productId, params, callback, failure) {
+    productRecommendationsByPost: function (productId, params, callback, failure) {
       const altCallback = wrapCallback.bind(undefined, undefined, callback);
       return searchByIdByPost(settings, productId, params, getDefaultTrackingParams(), altCallback, failure);
     },
-    product_search_by_id_by_post: function (productId, params, callback, failure) {
-      return this.product_recommendations_by_post(productId, params, callback, failure);
+    productSearchByIdByPost: function (productId, params, callback, failure) {
+      return this.productRecommendationsByPost(productId, params, callback, failure);
     },
-    set_uid: function (uid, callback, failure) {
+    setUid: function (uid, callback, failure) {
       tracker = getTracker();
       if (tracker) {
         tracker.setUID(uid);
@@ -259,7 +259,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         failure?.(Error('Tracker is not found'));
       }
     },
-    get_uid: function (callback, failure) {
+    getUid: function (callback, failure) {
       const tracker = getTracker();
       if (tracker) {
         callback(tracker.getUID());
@@ -267,7 +267,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         failure?.(Error('Tracker is not found'));
       }
     },
-    get_sid: function (callback, failure) {
+    getSid: function (callback, failure) {
       tracker = getTracker();
       if (tracker) {
         callback(tracker.getSID());
@@ -275,7 +275,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         failure?.(Error('Tracker is not found'));
       }
     },
-    get_last_query_id: function (callback, failure) {
+    getLastQueryId: function (callback, failure) {
       try {
         if (lastQueryId) {
           callback(lastQueryId);
@@ -286,7 +286,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         failure?.(err);
       }
     },
-    get_session_time_remaining: function (callback, failure) {
+    getSessionTimeRemaining: function (callback, failure) {
       tracker = getTracker();
       if (tracker) {
         callback(tracker.getSessionTimeRemaining());
@@ -294,7 +294,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         failure?.(Error('Tracker is not found'));
       }
     },
-    reset_session: function (callback, failure) {
+    resetSession: function (callback, failure) {
       tracker = getTracker();
       if (tracker) {
         callback?.(tracker.resetSession());
@@ -302,7 +302,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         failure?.(Error('Tracker is not found'));
       }
     },
-    get_default_tracking_params: function (callback, failure) {
+    getDefaultTrackingParams: function (callback, failure) {
       tracker = getTracker();
       if (tracker) {
         callback(getDefaultTrackingParams());
@@ -310,14 +310,14 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         failure?.(Error('Tracker is not found'));
       }
     },
-    apply_prototypes_call: function (command) {
+    applyPrototypesCall: function (command) {
       const fnName = command[0];
       const args = command.slice(1);
       if (isFunction(prototypes[fnName])) {
         prototypes[fnName](...args);
       }
     },
-    resize_image: async function (imageAsDataUrl, resizeSettings, onSuccess, onFailure) {
+    resizeImage: async function (imageAsDataUrl, resizeSettings, onSuccess, onFailure) {
       try {
         const img = await resizeImageFromDataUrl(imageAsDataUrl, resizeSettings || settings.resize_settings);
         onSuccess(img);
@@ -325,7 +325,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         onFailure?.(err);
       }
     },
-    generate_uuid: function (callback, failure) {
+    generateUuid: function (callback, failure) {
       const tracker = getTracker();
       if (tracker) {
         callback(tracker.generateUUID());

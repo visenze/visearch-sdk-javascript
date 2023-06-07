@@ -27,7 +27,7 @@ import {
       const client = ViSearch();
       const stub = (context as any)[clientName];
       const q = stub?.q || [];
-      q.forEach((command: [keyof ViSearchClient, unknown]) => client.apply_prototypes_call(command));
+      q.forEach((command: [keyof ViSearchClient, unknown]) => client.applyPrototypesCall(command));
       // replace the stub with the 'real' one after backcall
       (context as any)[clientName] = client;
       return client;

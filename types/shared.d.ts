@@ -3,63 +3,63 @@ export type GenericCallback = (...arg: any) => void;
 export interface ViSearchClient {
   q: any;
   set: (key: string, value: unknown) => void;
-  set_keys: (keys: Record<string, unknown>) => void;
-  send: (
+  setKeys: (keys: Record<string, unknown>) => void;
+  sendEvent: (
     action: string,
     eventParams: Record<string, unknown>,
     callback?: (action: string, params: Record<string, unknown>) => void,
     failure?: GenericCallback
   ) => void;
-  send_events: (
+  sendEvents: (
     action: string,
     eventParamsList: Record<string, unknown>[],
     callback?: () => void,
     failure?: GenericCallback
   ) => void;
-  product_search_by_image: (
+  productSearchByImage: (
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
     failure?: GenericCallback
   ) => Promise<void>;
-  product_search_by_id: (
+  productSearchById: (
     pid: string,
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
     failure?: GenericCallback
   ) => Promise<void>;
-  product_recommendations: (
+  productRecommendations: (
     pid: string,
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
     failure?: GenericCallback
   ) => Promise<void>;
-  product_recommendations_by_post: (
+  productRecommendationsByPost: (
     pid: string,
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
     failure?: GenericCallback
   ) => Promise<void>;
-  product_search_by_id_by_post: (
+  productSearchByIdByPost: (
     pid: string,
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
     failure?: GenericCallback
   ) => Promise<void>;
-  set_uid: (uid: string, callback?: (uid: string) => void, failure?: GenericCallback) => void;
-  get_uid: (callback: (uid: string) => void, failure?: GenericCallback) => void;
-  get_sid: (callback: (sid: string) => void, failure?: GenericCallback) => void;
-  get_last_query_id: (callback: (lastQueryId: string | null) => void, failure?: GenericCallback) => void;
-  get_session_time_remaining: (callback: (time: number) => void, failure?: GenericCallback) => void;
-  reset_session: (callback?: (sid: string) => void, failure?: GenericCallback) => void;
-  get_default_tracking_params: (callback: (params: Record<string, unknown>) => void, failure?: GenericCallback) => void;
-  apply_prototypes_call: (command: [keyof ViSearchClient, unknown]) => void;
-  resize_image: (
+  setUid: (uid: string, callback?: (uid: string) => void, failure?: GenericCallback) => void;
+  getUid: (callback: (uid: string) => void, failure?: GenericCallback) => void;
+  getSid: (callback: (sid: string) => void, failure?: GenericCallback) => void;
+  getLastQueryId: (callback: (lastQueryId: string | null) => void, failure?: GenericCallback) => void;
+  getSessionTimeRemaining: (callback: (time: number) => void, failure?: GenericCallback) => void;
+  resetSession: (callback?: (sid: string) => void, failure?: GenericCallback) => void;
+  getDefaultTrackingParams: (callback: (params: Record<string, unknown>) => void, failure?: GenericCallback) => void;
+  applyPrototypesCall: (command: [keyof ViSearchClient, unknown]) => void;
+  resizeImage: (
     imageAsDataUrl: string,
     resizeSettings: ResizeSettings | undefined,
     onSuccess: (dataUrl: null | string) => void,
     onFailure?: GenericCallback
   ) => Promise<void>;
-  generate_uuid: (callback: (uuid: string) => void, failure?: GenericCallback) => void;
+  generateUuid: (callback: (uuid: string) => void, failure?: GenericCallback) => void;
 }
 
 export type ViSearchSettings = {

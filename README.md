@@ -90,7 +90,7 @@ npm install visearch-javascript-sdk
 
   ```html
   <script type="text/javascript">
-  !function(e,t,r,s,i){if(Array.isArray(i))for(var a=0;a<i.length;a++)n(e,t,r,s,i[a]);else n(e,t,r,s,i);function n(e,t,r,s,i){var a=e[i]||{};e[i]=a,a.q=a.q||[],a.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),a.q.push(t),a}},a.methods=["set","set_keys","send","send_events","product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_last_query_id","get_session_time_remaining","get_default_tracking_params","reset_session","resize_image","generate_uuid",];for(var n=0;n<a.methods.length;n++){var o=a.methods[n];a[o]=a.factory(o)}if(e.viInit)viInit(e,i);else{var c,d,u,f,p,g=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(p=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,p),f);g.onload=function(){viInit(e,i)},g.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.0.0-rc.0.min.js","visearch");
+  !function(e,t,r,s,i){if(Array.isArray(i))for(var a=0;a<i.length;a++)n(e,t,r,s,i[a]);else n(e,t,r,s,i);function n(e,t,r,s,i){var a=e[i]||{};e[i]=a,a.q=a.q||[],a.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),a.q.push(t),a}},a.methods=["set","setKeys","sendEvent","sendEvents","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var n=0;n<a.methods.length;n++){var o=a.methods[n];a[o]=a.factory(o)}if(e.viInit)viInit(e,i);else{var c,d,u,f,p,g=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(p=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,p),f);g.onload=function(){viInit(e,i)},g.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.0.0-rc.0.min.js","visearch");
   </script>
   ```
 
@@ -130,11 +130,11 @@ visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS);
 or
 
 ```javascript
-visearch.set_keys({
+visearch.setKeys({
   'app_key': 'YOUR_APP_KEY',
   'placement_id': 'YOUR_PLACEMENT_ID'
 });
-visearch2.set_keys({
+visearch2.setKeys({
   'app_key': 'YOUR_APP_KEY_2',
   'placement_id': 'YOUR_PLACEMENT_ID_2'
 });
@@ -210,7 +210,7 @@ Searching by Image can happen in three different ways - by url, id or File.
     // TODO handle error
   }
 
-  visearch.product_search_by_image(parameters, onResponse, onError);
+  visearch.productSearchByImage(parameters, onResponse, onError);
   ```
 
 - Using image url:
@@ -228,7 +228,7 @@ Searching by Image can happen in three different ways - by url, id or File.
     // TODO handle error
   }
 
-  visearch.product_search_by_image(parameters, onResponse, onError);
+  visearch.productSearchByImage(parameters, onResponse, onError);
   ```
 
 - Using image file:
@@ -253,7 +253,7 @@ Searching by Image can happen in three different ways - by url, id or File.
     // TODO handle error
   }
 
-  visearch.product_search_by_image(parameters, onResponse, onError);
+  visearch.productSearchByImage(parameters, onResponse, onError);
   ```
 
 > The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/search-by-image-api-1).
@@ -278,7 +278,7 @@ const onError = (error)=> {
   // TODO handle error
 }
 
-visearch.product_recommendations(product_id, parameters, onResponse, onError);
+visearch.productRecommendations(product_id, parameters, onResponse, onError);
 ```
 
 > The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/search-by-image-api-1).
@@ -388,7 +388,7 @@ There are many parameters that our API support and we will be showing you a few 
 To retrieve metadata of your image results, provide the list of metadata keys for the metadata value to be returned in the `attrs_to_get` property:
 
 ```js
-visearch.product_search_by_image({
+visearch.productSearchByImage({
   im_url: 'your-image-url',
   attrs_to_get: ['price', 'brand', 'im-url'], // list of fields to be returned
 }, (res) => {
@@ -405,7 +405,7 @@ visearch.product_search_by_image({
 To filter search results based on metadata values, provide a string array of metadata key to filter value in the `filters` property. Only price, category, brand, original_price support filter parameter.
 
 ```js
-visearch.product_search_by_image({
+visearch.productSearchByImage({
   im_url: 'your-image-url',
   filters: ['brand:my_brand'],
 }, (res) => {
@@ -428,7 +428,7 @@ With Automatic Object Recognition, ViSearch Search by Image API is smart to dete
 You can turn on the feature in upload search by setting the API parameter `detection=all`. We are now able to detect various types of fashion items, including `top`, `dress`, `bottom`, `shoe`, `bag`, `watch`. The list is ever-expanding as we explore this feature for other categories.
 
 ```js
-visearch.product_search_by_image({
+visearch.productSearchByImage({
   im_url: 'your-image-url',
   detection: 'all',
 }, (res) => {
@@ -443,7 +443,7 @@ You could also recognize objects from a paticular type on the uploaded query ima
 Sample request to detect `bag` in an uploaded image:
 
 ```js
-visearch.product_search_by_image({
+visearch.productSearchByImage({
   im_url: 'your-image-url',
   detection: 'bag',
 }, (res) => {
@@ -473,7 +473,7 @@ visearch.set("is_cn", false);
 User action(s) can be sent through an event handler. Register an event handler to the element in which the user will interact.
 
 ```javascript
-visearch.send(action, {
+visearch.sendEvent(action, {
   queryId: '<search request ID>',
   pid: '<product ID> ',
   pos: <product position in Search Results>,
@@ -489,7 +489,7 @@ visearch.send(action, {
 To send events, first retrieve the search query ID (the `reqid`) found in the search results response call back.
 
 ```javascript
-visearch.product_search_by_id('product-id', {
+visearch.productSearchById('product-id', {
   // request parameters
 }, (res) => {
   // get search query ID
@@ -508,7 +508,7 @@ var onError = (err) => {
   /* do something */
 }
 
-visearch.get_sid(onSuccess, onError);
+visearch.getSid(onSuccess, onError);
 ```
 
 #### 5.2.2 Getting user Id
@@ -521,7 +521,7 @@ var onError = (err) => {
   /* do something */
 }
 
-visearch.get_uid(onSuccess, onError);
+visearch.getUid(onSuccess, onError);
 ```
 
 #### 5.2.3 Getting query Id
@@ -534,7 +534,7 @@ var onError = (err) => {
   /* do something */
 }
 
-visearch.get_last_query_id(onSuccess, onError);
+visearch.getLastQueryId(onSuccess, onError);
 ```
 
 This will fetch the last query Id from any request made by replacement, and if none is found retrieved from the last value saved in local storage.
@@ -543,21 +543,21 @@ Currently, we support the following event actions: `product_click`, `product_vie
 
 ```javascript
 // send product click
-visearch.send("product_click", {
+visearch.sendEvent("product_click", {
                 queryId: "<search reqid>",
                 pid: "<your im_name>",
                 pos: 1, // product position in Search Results, start from 1
             });
             
 // send product impression
-visearch.send("product_view", {
+visearch.sendEvent("product_view", {
                 queryId: "<search reqid>",
                 pid: "<your im_name>",
                 pos: 1, // product position in Search Results, start from 1
             });
             
 // send Transaction event e.g order purchase of $300
-visearch.send("transaction", {
+visearch.sendEvent("transaction", {
                 name: "<optional event name>" // optional event name
                 queryId: "<search reqid>",
                 transId: "<your transaction ID>"
@@ -565,14 +565,14 @@ visearch.send("transaction", {
          });
 
 // send Add to Cart Event
-visearch.send("add_to_cart", {
+visearch.sendEvent("add_to_cart", {
                 queryId: "<search reqid>",
                 pid: "<your im_name>",
                 pos: 1, // product position in Search Results, start from 1
             });
 
 // send custom event
-visearch.send("click", {
+visearch.sendEvent("click", {
                 queryId: "<search reqid>",
                 name: "click_on_camera_button",
                 cat: "visual_search"
@@ -586,7 +586,7 @@ User action(s) can be sent through an batch event handler.
 A common use case for this batch event method is to group up all `transaction` by sending it in a batch. This SDK will automatically generate a `transId` to group transactions as an order.
 
 ```javascript
-visearch.send_events('transaction', [{
+visearch.sendEvents('transaction', [{
   queryId: '<search request ID>',
   pid: '<product ID - 1> ',
   value: 300,
@@ -654,8 +654,8 @@ If your image contains fine details such as textile patterns and textures, you c
 visearch.set('resize_settings', {maxHeight: 1024, maxWidth: 1024});
 ```
 
-You can also call the `resize_image` method to resize the image yourself. The method takes in returns image in Data URL form.
+You can also call the `resizeImage` method to resize the image yourself. The method takes in returns image in Data URL form.
 
 ```javascript
-var resizedImage = visearch.resize_image(imgAsDataURL, resizeSettings, onSuccess, onFailure);
+var resizedImage = visearch.resizeImage(imgAsDataURL, resizeSettings, onSuccess, onFailure);
 ```
