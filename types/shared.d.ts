@@ -75,7 +75,7 @@ export type ViSearchSettings = {
 
 export type PSResponse = PSResponseSuccess | PSResponseError;
 
-export type PSResponseSuccess = PSResponseSuccessGeneral | PSResponseSuccessObject;
+export type PSResponseSuccess = PSResponseSuccessResult | PSResponseSuccessObject;
 
 export interface PSResponseError {
   reqid: string;
@@ -86,7 +86,6 @@ export interface PSResponseSuccessGeneral {
   reqid: string;
   status: 'OK';
   method: string;
-  result: PSProduct[];
   page?: number;
   limit?: number;
   total?: number;
@@ -95,6 +94,10 @@ export interface PSResponseSuccessGeneral {
     experiment_no_recommendation?: boolean;
   };
   experiment_no_recommendation?: boolean;
+}
+
+export interface PSResponseSuccessResult extends PSResponseSuccessGeneral {
+  result: PSProduct[];
 }
 
 export interface PSResponseSuccessObject extends PSResponseSuccessGeneral {

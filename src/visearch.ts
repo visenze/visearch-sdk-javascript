@@ -90,7 +90,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       return;
     } else if ('objects' in resp && resp.objects.length === 0) {
       return;
-    } else if (resp.result.length === 0) {
+    } else if ('result' in resp && resp.result.length === 0) {
       return;
     }
 
@@ -124,7 +124,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
    * @param {*} resp response from ProductSearch API
    */
   function saveQueryId(resp: PSResponse): void {
-    if (resp.status !== 'OK' || resp.result.length === 0) {
+    if (resp.status !== 'OK') {
       return;
     }
     lastQueryId = resp.reqid;
