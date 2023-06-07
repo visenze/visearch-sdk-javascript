@@ -16,7 +16,7 @@ let visearch;
 let mockCallback = jest.fn();
 let mockFailCallback = jest.fn();
 
-function assertThatAutoFillParams(params) {
+function assertThatAutoFillParams (params) {
   expect(params.v).toBe(version);
   expect(params.sdk).toBe('visearch js sdk');
 }
