@@ -1,5 +1,25 @@
 import { ViSearch } from './visearch.js';
-import { ViSearchClient } from '../types/shared';
+import {
+  ViSearchClient,
+  GenericCallback,
+  ViSearchSettings,
+  SimpleResponse,
+  ProductSearchResponse,
+  ProductSearchResponseError,
+  ProductSearchResponseSuccess,
+  ProductSearchResponseResult,
+  ProductSearchResponseObject,
+  ProductSearchResponseGeneral,
+  SetInfo,
+  GroupProductResponse,
+  Product,
+  ObjectProductResponse,
+  ProductType,
+  ResizeSettings,
+  FacetItem,
+  FacetRange,
+  Facet
+} from '../types/shared';
 
 (function init(context): void {
   if (typeof window !== 'undefined' && context && !context.viInit) {
@@ -16,3 +36,24 @@ import { ViSearchClient } from '../types/shared';
 })(typeof self !== 'undefined' ? self : this);
 
 export default ViSearch;
+export {
+  ViSearchClient,
+  GenericCallback,
+  ViSearchSettings,
+  SimpleResponse,
+  ProductSearchResponse,
+  ProductSearchResponseError,
+  ProductSearchResponseSuccess,
+  ProductSearchResponseResult,
+  ProductSearchResponseObject,
+  ProductSearchResponseGeneral,
+  SetInfo,
+  GroupProductResponse,
+  Product,
+  ObjectProductResponse,
+  ProductType,
+  ResizeSettings,
+  FacetItem,
+  FacetRange,
+  Facet
+};
