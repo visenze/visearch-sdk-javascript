@@ -18,7 +18,7 @@ import {
   ResizeSettings,
   FacetItem,
   FacetRange,
-  Facet
+  Facet,
 } from '../types/shared';
 
 (function init(context): void {
@@ -55,5 +55,5 @@ export {
   ResizeSettings,
   FacetItem,
   FacetRange,
-  Facet
+  Facet,
 };

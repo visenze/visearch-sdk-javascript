@@ -65,7 +65,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
         code,
         uid: settings.uid,
         endpoint,
-        isCN
+        isCN,
       });
     }
     return tracker;
