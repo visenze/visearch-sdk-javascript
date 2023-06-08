@@ -18,6 +18,7 @@ babel.config.js
 test/
 jest.config.js
 
+index.ts
 fixup
 tsconfig.json
 tsconfig.cjs.json

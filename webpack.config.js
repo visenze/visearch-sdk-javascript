@@ -30,9 +30,12 @@ module.exports = (_, argv) => {
   const configs = {
     resolve: {
       extensions: ['.ts', '.js'],
+      extensionAlias: {
+        '.js': ['.js', '.ts'],
+      },
     },
     entry: {
-      main: path.join(__dirname, 'src/index.ts'),
+      main: path.join(__dirname, './index.ts'),
     },
     output: {
       path: path.join(__dirname, 'dist'),

@@ -78,7 +78,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
    */
   function getDefaultTrackingParams(): Record<string, unknown> {
     tracker = getTracker();
-    const trackerParams = tracker.getDefaultParams();
+    const trackerParams = tracker.getDefaultTrackingParams();
     if (tracker) {
       return { ...trackerParams, ...getSdkVersion() };
     }
@@ -204,10 +204,10 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
           action,
           params,
           () => {
-            callback?.(action, params);
+            callback?.();
           },
           (err) => {
-            failure?.(err, params);
+            failure?.(err);
           }
         );
       }
@@ -297,7 +297,8 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     resetSession: function (callback, failure) {
       tracker = getTracker();
       if (tracker) {
-        callback?.(tracker.resetSession());
+        const sid = tracker.resetSession();
+        callback?.(sid);
       } else {
         failure?.(Error('Tracker is not found'));
       }

@@ -1,21 +1,13 @@
+import { VAClient } from 'visenze-tracking-javascript';
+
 export type GenericCallback = (...arg: any) => void;
 
 export interface ViSearchClient {
   q: any;
   set: (key: string, value: unknown) => void;
   setKeys: (keys: Record<string, unknown>) => void;
-  sendEvent: (
-    action: string,
-    eventParams: Record<string, unknown>,
-    callback?: (action: string, params: Record<string, unknown>) => void,
-    failure?: GenericCallback
-  ) => void;
-  sendEvents: (
-    action: string,
-    eventParamsList: Record<string, unknown>[],
-    callback?: () => void,
-    failure?: GenericCallback
-  ) => void;
+  sendEvent: VAClient['sendEvent'],
+  sendEvents: VAClient['sendEvents'],
   productSearchByImage: (
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,

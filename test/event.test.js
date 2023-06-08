@@ -24,7 +24,7 @@ function assertThatAutoFillParams (params) {
 beforeEach(() => {
   visearch = ViSearch();
   mockTracker = {
-    getDefaultParams: jest.fn(() => {
+    getDefaultTrackingParams: jest.fn(() => {
       return { mock_key: 'mock_value' };
     }),
   };
