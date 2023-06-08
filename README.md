@@ -40,6 +40,7 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
       - [5.2.3 Getting query Id](#523-getting-query-id)
     - [5.2 Send Batch Events](#52-send-batch-events)
   - [6. Resize settings](#6-resize-settings)
+  - [7. Migration from v3](#7-migration-from-v3)
 
 ----
 
@@ -659,3 +660,7 @@ You can also call the `resizeImage` method to resize the image yourself. The met
 ```javascript
 var resizedImage = visearch.resizeImage(imgAsDataURL, resizeSettings, onSuccess, onFailure);
 ```
+
+## 7. Migration from v3
+
+The v4 SDK introduces a number of breaking changes, so if you're migrating from v3 you can refer [this guide](https://github.com/visenze/visearch-sdk-javascript/wiki/Migration-from-v3-to-v4.) for a smoother transition.
