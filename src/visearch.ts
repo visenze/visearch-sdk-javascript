@@ -5,14 +5,13 @@
 
 import find from 'lodash.find';
 import URI from 'jsuri';
-import va from 'visenze-tracking-javascript';
+import va, { VAClient } from 'visenze-tracking-javascript';
 import { version } from './version.js';
 
 import { searchById, searchByImage, searchByIdByPost } from './productsearch.js';
 import { resizeImageFromDataUrl } from './resizer.js';
 import isFunction from 'lodash.isfunction';
 import { ProductSearchResponse, ViSearchSettings, ViSearchClient } from '../types/shared';
-import { VAClient } from 'visenze-tracking-javascript/types/shared';
 
 const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
 const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';
