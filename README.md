@@ -170,7 +170,6 @@ ENDPOINT =
 - To run the webpage demo:
   
   ```javascript
-  npm run write-version
   npm run start-demo
   ```
 

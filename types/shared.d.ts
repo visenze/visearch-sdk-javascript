@@ -107,6 +107,7 @@ export interface ProductSearchResponseGeneral extends SimpleResponse {
     experiment_no_recommendation?: boolean;
   };
   experiment_no_recommendation?: boolean;
+  [key: string]: unknown;
 }
 
 export interface ProductSearchResponseResult extends ProductSearchResponseGeneral {
@@ -135,6 +136,7 @@ export interface Product {
   score?: number;
   image_s3_url?: string;
   pinned?: boolean;
+  [key: string]: unknown;
 }
 
 export interface ObjectProductResponse extends ProductType {
