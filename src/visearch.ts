@@ -87,9 +87,9 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
   function sendResultLoadEvent(productId: string | undefined, resp: ProductSearchResponse): void {
     if (resp.status !== 'OK') {
       return;
-    } else if ('objects' in resp && resp.objects.length === 0) {
+    } else if (resp.objects && resp.objects.length === 0) {
       return;
-    } else if ('result' in resp && resp.result.length === 0) {
+    } else if (resp.result && resp.result.length === 0) {
       return;
     }
 
