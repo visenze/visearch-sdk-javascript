@@ -105,8 +105,8 @@ export interface ProductSearchResponseSuccess extends SimpleResponse {
     experiment_no_recommendation?: boolean;
   };
   experiment_no_recommendation?: boolean;
-  result: Product[];
-  objects: ObjectProductResponse[];
+  result?: Product[];
+  objects?: ObjectProductResponse[];
   [key: string]: unknown;
 }
 
