@@ -73,8 +73,6 @@ export interface SimpleResponse {
 
 export type ProductSearchResponse = ProductSearchResponseSuccess | ProductSearchResponseError;
 
-export type ProductSearchResponseSuccess = ProductSearchResponseResult | ProductSearchResponseObject;
-
 export interface ProductSearchResponseError extends SimpleResponse {
   status: 'fail';
   error: {
@@ -83,7 +81,7 @@ export interface ProductSearchResponseError extends SimpleResponse {
   };
 }
 
-export interface ProductSearchResponseGeneral extends SimpleResponse {
+export interface ProductSearchResponseSuccess extends SimpleResponse {
   status: 'OK';
   page?: number;
   limit?: number;
@@ -107,15 +105,9 @@ export interface ProductSearchResponseGeneral extends SimpleResponse {
     experiment_no_recommendation?: boolean;
   };
   experiment_no_recommendation?: boolean;
-  [key: string]: unknown;
-}
-
-export interface ProductSearchResponseResult extends ProductSearchResponseGeneral {
   result: Product[];
-}
-
-export interface ProductSearchResponseObject extends ProductSearchResponseGeneral {
   objects: ObjectProductResponse[];
+  [key: string]: unknown;
 }
 
 export interface SetInfo {
