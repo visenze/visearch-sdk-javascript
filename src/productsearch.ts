@@ -13,24 +13,24 @@ function getAnalyticsParams(
 ): Record<string, unknown> {
   const params: Record<string, unknown> = {};
   if (vaParams) {
-    params.va_uid = vaParams.uid;
-    params.va_sdk = vaParams.sdk;
-    params.va_sdk_version = vaParams.v;
+    params['va_uid'] = vaParams['uid'];
+    params['va_sdk'] = vaParams['sdk'];
+    params['va_sdk_version'] = vaParams['v'];
     // search sid will take prority over analytics sid
-    params.va_sid = queryParams?.va_sid || vaParams.sid;
+    params['va_sid'] = queryParams?.['va_sid'] || vaParams['sid'];
     // search uid will take prority over analytics uid
-    params.va_uid = queryParams?.va_uid || vaParams.uid;
+    params['va_uid'] = queryParams?.['va_uid'] || vaParams['uid'];
   }
   return params;
 }
 
 function getAuthParams(settings: ViSearchSettings): Record<string, unknown> {
   const params: Record<string, unknown> = {
-    app_key: settings.app_key,
-    placement_id: settings.placement_id,
+    app_key: ['app_key'],
+    placement_id: settings['placement_id'],
   };
-  if (!settings.placement_id && settings.strategy_id) {
-    params.strategy_id = settings.strategy_id;
+  if (!settings['placement_id'] && settings['strategy_id']) {
+    params['strategy_id'] = settings['strategy_id'];
   }
   return params;
 }

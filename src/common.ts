@@ -27,7 +27,7 @@ function timeout(ms: number, promise: Promise<unknown>): Promise<unknown> {
 function getHeaders(settings: ViSearchSettings): HeadersInit {
   const output: HeadersInit = {
     Accept: 'application/json',
-    'X-Requested-With': (settings.user_agent as string) || USER_AGENT,
+    'X-Requested-With': (settings['user_agent'] as string) || USER_AGENT,
   };
   return output;
 }
@@ -99,9 +99,9 @@ export const sendPostRequest = async (
   const url = new URI(endpoint).setPath(path).toString();
 
   const postData = new FormData();
-  if (queryParams.image) {
-    const img = queryParams.image;
-    delete queryParams.image;
+  if (queryParams['image']) {
+    const img = queryParams['image'];
+    delete queryParams['image'];
     let resizedImage;
     if (settings['disable_resize']) {
       resizedImage = img;

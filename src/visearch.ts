@@ -59,7 +59,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       const endpoint =
         settings.analytics_endpoint ||
         (settings.endpoint === STAGING_ENDPOINT ? ANALYTICS_STAGING_ENDPOINT : undefined);
-      const isCN = !!settings.is_cn;
+      const isCN = !!settings['is_cn'];
       tracker = va({
         code,
         uid: settings.uid,
@@ -95,14 +95,14 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
 
     const metadata: Record<string, unknown> = { queryId: resp.reqid };
     if (productId) {
-      metadata.pid = productId;
+      metadata['pid'] = productId;
     }
     // send out event if the pixel is in place
     if (window && window.vsPlacementLoaded && window.vsPlacementLoaded[settings.placement_id]) {
       prototypes.sendEvent(RESULT_LOAD, metadata);
     }
     // push result_load event to GTM datalayer if user enable GTM tracking
-    if (settings.gtm_tracking) {
+    if (settings['gtm_tracking']) {
       if (!window.dataLayer) {
         window.dataLayer = [];
       }
@@ -111,7 +111,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       } = { event: 'vs_result_load' };
       const params: { queryId: string; pid?: string } = { queryId: resp.reqid };
       if (productId) {
-        params.pid = productId;
+        params['pid'] = productId;
       }
       data[settings.placement_id] = params;
       window.dataLayer.push(data);
@@ -223,8 +223,8 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
             ...getSdkVersion(),
           };
 
-          if (action.toLowerCase() === 'transaction' && !params.transId) {
-            params.transId = batchId;
+          if (action.toLowerCase() === 'transaction' && !params['transId']) {
+            params['transId'] = batchId;
           }
 
           prototypes.sendEvent(action, params, callback, failure);
