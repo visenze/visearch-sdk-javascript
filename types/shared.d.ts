@@ -172,6 +172,7 @@ export interface Facet {
   range?: FacetRange;
 }
 
+/* eslint-disable no-var */
 declare global {
   interface Window {
     vsPlacementLoaded: Record<string, boolean>;
@@ -180,3 +181,4 @@ declare global {
   }
   var viInit: (context: typeof globalThis, clientName: string) => ViSearchClient;
 }
+/* eslint-enable no-var */
