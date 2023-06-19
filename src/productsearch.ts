@@ -26,7 +26,7 @@ function getAnalyticsParams(
 
 function getAuthParams(settings: ViSearchSettings): Record<string, unknown> {
   const params: Record<string, unknown> = {
-    app_key: ['app_key'],
+    app_key: settings['app_key'],
     placement_id: settings['placement_id'],
   };
   if (!settings['placement_id'] && settings['strategy_id']) {
