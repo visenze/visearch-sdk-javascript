@@ -12,7 +12,7 @@
     }
   },
   "scripts": {
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint src types --ext .ts",
     "start-demo": "npm run build-dev && node examples/app.js",
     "write-version": "node -p \"'export const version =  \\'' + require('./package.json').version + '\\';'\" > src/version.ts",
     "prepack": "npm run write-version && npm run build-cjs && npm run build-esm && ./fixup",
