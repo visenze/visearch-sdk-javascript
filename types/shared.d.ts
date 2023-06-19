@@ -6,8 +6,8 @@ export interface ViSearchClient {
   q: any;
   set: (key: string, value: unknown) => void;
   setKeys: (keys: Record<string, unknown>) => void;
-  sendEvent: VAClient['sendEvent'],
-  sendEvents: VAClient['sendEvents'],
+  sendEvent: VAClient['sendEvent'];
+  sendEvents: VAClient['sendEvents'];
   productSearchByImage: (
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
