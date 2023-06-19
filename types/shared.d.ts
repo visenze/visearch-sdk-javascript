@@ -178,5 +178,5 @@ declare global {
     dataLayer?: any[];
     viInit?: (context: typeof globalThis, clientName: string) => ViSearchClient;
   }
-  const viInit: (context: typeof globalThis, clientName: string) => ViSearchClient;
+  var viInit: (context: typeof globalThis, clientName: string) => ViSearchClient;
 }
