@@ -1,8 +1,10 @@
+import { ResizeSettings } from '../types/shared';
+
 const MAX_WIDTH = 512;
 const MAX_HEIGHT = 512;
 const ENCODING = 'image/jpeg';
 
-function dataURItoBlob(dataURI) {
+function dataURItoBlob(dataURI: string): Blob {
   // convert base64 to raw binary data held in a string
   // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
   const byteString = atob(dataURI.split(',')[1]);
@@ -21,32 +23,35 @@ function dataURItoBlob(dataURI) {
   return blob;
 }
 
-function loadFile(reader, img, imgBlob) {
+async function loadFile(reader: FileReader, img: HTMLImageElement, imgBlob: Blob): Promise<void> {
   reader.readAsDataURL(imgBlob);
   return new Promise((resolve) => {
-    reader.onload = function onload(e) {
-      img.src = e.target.result;
+    reader.onload = function onload(e: ProgressEvent<FileReader>): void {
+      img.src = e.target?.result as string;
       resolve();
     };
   });
 }
 
-function loadImage(img) {
+async function loadImage(img: HTMLImageElement): Promise<void> {
   return new Promise((resolve) => {
-    img.onload = function onload(e) {
+    img.onload = function onload(): void {
       resolve();
     };
   });
 }
 
-function drawAndResize(img, resizeSettings) {
+function drawAndResize(img: HTMLImageElement, resizeSettings?: ResizeSettings): string | null {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    return null;
+  }
   ctx.drawImage(img, 0, 0);
   let { width, height } = img;
 
-  const maxWidth = resizeSettings.maxWidth || MAX_WIDTH;
-  const maxHeight = resizeSettings.maxHeight || MAX_HEIGHT;
+  const maxWidth = resizeSettings?.maxWidth || MAX_WIDTH;
+  const maxHeight = resizeSettings?.maxHeight || MAX_HEIGHT;
 
   if (width > height && width > maxWidth) {
     height *= maxWidth / width;
@@ -63,14 +68,14 @@ function drawAndResize(img, resizeSettings) {
   return canvas.toDataURL(ENCODING);
 }
 
-async function resizeImageFromDataUrl(imgAsDataUrl, resizeSettings = {}) {
+async function resizeImageFromDataUrl(imgAsDataUrl: string, resizeSettings?: ResizeSettings): Promise<string | null> {
   const img = new Image();
   img.src = imgAsDataUrl;
   await loadImage(img);
   return drawAndResize(img, resizeSettings) || imgAsDataUrl;
 }
 
-async function resizeImage(imgBlob, resizeSettings = {}) {
+async function resizeImage(imgBlob: Blob, resizeSettings?: ResizeSettings): Promise<Blob | null> {
   if (!(imgBlob instanceof Blob)) {
     return null;
   }
@@ -81,11 +86,9 @@ async function resizeImage(imgBlob, resizeSettings = {}) {
   await loadImage(img);
   const dataUrl = drawAndResize(img, resizeSettings);
   if (!dataUrl) {
-    return new Promise(resolve => resolve(imgBlob));
+    return new Promise((resolve) => resolve(imgBlob));
   }
-  return new Promise(async resolve => resolve(dataURItoBlob(dataUrl)));
+  return new Promise((resolve) => resolve(dataURItoBlob(dataUrl)));
 }
 
-module.exports = {
-  resizeImage, resizeImageFromDataUrl,
-};
+export { resizeImageFromDataUrl, resizeImage };

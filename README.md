@@ -40,6 +40,7 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
       - [5.2.3 Getting query Id](#523-getting-query-id)
     - [5.2 Send Batch Events](#52-send-batch-events)
   - [6. Resize settings](#6-resize-settings)
+  - [7. Migration from v3](#7-migration-from-v3)
 
 ----
 
@@ -63,104 +64,113 @@ npm install visearch-javascript-sdk
 
 ### 1.2 Setup
 
-Before you can start using the SDK, you will need to set up the SDK keys. Most of these keys can be found in your account's [dashboard](https://console.visenze.com).
+#### 1.2.1 Import and initialization
 
-Firstly, take a look at the table below to understand what each key represents:
+- In Node
+  
+  ```javascript
+  import ViSearch from 'visearch-javascript-sdk';
+
+  ...
+  
+  const visearch = ViSearch();
+  ```
+
+  - Create multiple instances
+
+  If you have multiple placements or if you want to run placements with different configurations, you would need to create multiple ViSearch instances.
+
+    ```javascript
+    const visearch1 = ViSearch();
+    const visearch2 = ViSearch();
+    ```
+
+- In browser
+
+  If you wish to include the SDK directly onto your webpage, add this to the header of your site
+
+  ```html
+  <script type="text/javascript">
+  !function(e,t,r,s,i){if(Array.isArray(i))for(var a=0;a<i.length;a++)n(e,t,r,s,i[a]);else n(e,t,r,s,i);function n(e,t,r,s,i){var a=e[i]||{};e[i]=a,a.q=a.q||[],a.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),a.q.push(t),a}},a.methods=["set","setKeys","sendEvent","sendEvents","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var n=0;n<a.methods.length;n++){var o=a.methods[n];a[o]=a.factory(o)}if(e.viInit)viInit(e,i);else{var c,d,u,f,p,g=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(p=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,p),f);g.onload=function(){viInit(e,i)},g.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.0.0-rc.0.min.js","visearch");
+  </script>
+  ```
+
+  - Create multiple instances
+
+  Copy the same code but change the keyword "visearch" into an array of your desired instances names.
+
+    ```html
+    <script type="text/javascript">
+    ...(window,document,"script",0,["visearch", "visearch2"]);
+    </script>
+    ```
+
+#### 1.2.2 Configure keys
+
+Before you can start using the SDK, you will need to set up . Most of these keys can be found in your account's [dashboard](https://console.visenze.com).
+
+Please take a look at the table below to understand what each key represents:
 
 | Key | Importance | Description |
 |:---|:---|:---|
 | app_key | Compulsory | All SDK functions depends on a valid app_key being set. The app key also limits the API features you can use. |
-| placement_id | Situational | Required if you are using [ProductSearch API](#2-api). |
+| placement_id | Compulsory | Placement id of the current placement |
 | endpoint | Situational | Default is `https://search.visenze.com/` |
 | timeout | Optional | Defaulted to 15000 |
+| uid | Optional | If this is not provided, we will auto generate the uid |
 
-Next, depending on how you are using the SDK, set up the relevant SDK keys:
 
-- If you are using the project provided directly from the main [repo](https://github.com/visenze/visearch-sdk-javascript):
-  - Locate all `*.html` files within the `./examples` directory
-  - Look for all `// TODO:` comments and fill them up:
-  - Any additional keys to be set should also be placed in the same area:
+Set up the ViSearch instance(s) with the keys from console.
 
-- If you included this SDK into your own project via npm, add the following at the start of your app:
-  
-  ```javascript
-  // Import module
-  import ViSearch from 'visearch-javascript-sdk';
+```javascript
+visearch.set('app_key', 'YOUR_APP_KEY');
+visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
+visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS);
+```
 
-  // Initialize visearch instance
-  const { visearch } = new ViSearch();
-  // Set up keys
-  visearch.set('app_key', 'YOUR_APP_KEY');
-  visearch.set('placement_id', 'YOUR_PLACEMENT_ID'); 
-  visearch.set('endpoint', 'YOUR_ENDPOINT');
-  visearch.set('timeout', TIMEOUT_INTERVAL_IN_MS);
-  ```
+or
 
-  or you can initialize visearch with the configs directly
+```javascript
+visearch.setKeys({
+  'app_key': 'YOUR_APP_KEY',
+  'placement_id': 'YOUR_PLACEMENT_ID'
+});
+visearch2.setKeys({
+  'app_key': 'YOUR_APP_KEY_2',
+  'placement_id': 'YOUR_PLACEMENT_ID_2'
+});
+```
 
-  ```javascript
-  const { visearch } = new ViSearch({
-    app_key: 'YOUR_APP_KEY',
-    placement_id: 'YOUR_PLACEMENT_ID', 
-    endpoint: 'YOUR_ENDPOINT',
-    timeout: TIMEOUT_INTERVAL_IN_MS
-  });
-  ```
+or
 
-  - If you want to create multiple instances of ViSearch, you can instantiate ViSearch multiple times.
-
-  ```javascript
-  // Import module
-  import ViSearch from 'visearch-javascript-sdk';
-
-  // Initialize visearch instance
-  const visearch = new ViSearch().visearch;
-  const visearch2 = new ViSearch().visearch;
-
-  // Set up keys
-  visearch.set('app_key', 'YOUR_APP_KEY');
-  visearch2.set('app_key', 'YOUR_APP_KEY');
-  ```
-
-- If you wish to include the SDK directly onto your webpage, add this to the header of your site:
-
-  ```html
-  <script type="text/javascript">
-  !function(e,t,r,s,a){if(Array.isArray(a))for(var i=0;i<a.length;i++)n(e,t,r,s,a[i]);else n(e,t,r,s,a);function n(e,t,r,s,a){var i=e[a]=e[a]||{};i.q=i.q||[],i.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),i.q.push(t),i}},i.methods=["set","setKeys","send","send_events","product_search_by_image","product_search_by_id","product_recommendations","product_search_by_id_by_post","product_recommendations_by_post","set_uid","get_uid","get_sid","get_last_query_id","get_session_time_remaining","get_default_tracking_params","reset_session","resize_image","generate_uuid"];for(var n=0;n<i.methods.length;n++){var o=i.methods[n];i[o]=i.factory(o)}if(e.initVisearchFactory)initVisearchFactory(e[a]);else{var c=function(e,t,r){var s=e.createElement(t);s.type="text/javascript",s.async=!0,s.src=r;var a=e.getElementsByTagName(t)[0];return a.parentNode.insertBefore(s,a),s}(t,r,s);c.onload=function(){initVisearchFactory(e[a])},c.onerror=function(){console.log("Unable to load ViSearch Javascript SDK")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-3.1.4.min.js","visearch");
-  visearch.set('app_key', 'YOUR_APP_KEY');
-  visearch.set('placement_id', 'YOUR_PLACEMENT_ID');
-  </script>
-  ```
-
-  - If you want to include multiple instances of ViSearch SDK onto the webpage but with different configurations and placements, copy the same code but change the keyword "visearch" into an array of your desired instances names and initialize all the instances in a similar manner
-
-  ```html
-  <script type="text/javascript">
-  ...(window,document,"script",0,["visearch", "visearch2"]);
-
-  visearch.set('app_key', 'YOUR_APP_KEY_1');
-  visearch.set('placement_id', 'YOUR_PLACEMENT_ID_1');
-  visearch2.set('app_key', 'YOUR_APP_KEY_2');
-  visearch2.set('placement_id', 'YOUR_PLACEMENT_ID_2');
-  </script>
-  ```
+if you are in a Node env, you can pass the configs in directly when creating the ViSearch client.
+```javascript
+const visearch = ViSearch({
+  'app_key': 'YOUR_APP_KEY',
+  'placement_id': 'YOUR_PLACEMENT_ID'
+})
+```
 
 ### 1.3 Demo
 
-The demo is only applicable to those who work directly off the main [repo](https://github.com/visenze/visearch-sdk-javascript). You are required to have a Node.js environment and remember to **fill up the relevant demo files**.
+The demo is only applicable to those who work directly off the main [repo](https://github.com/visenze/visearch-sdk-javascript). You are required to have a Node.js environment and remember to **fill up the relevant files**.
 
-- To run the Node.js demo:
-  
-  ```javascript
-  node testSDK
-  ```
+  > Create a `.env` file and fill in the relevant app key and placement id
 
-  > Update the `// TODO` in [here](/testSDK.js).
+```
+SEARCH_APP_KEY = 
+SEARCH_PLACEMENT_ID = 
+SEARCH_IM_URL = 
+REC_PID = 
+REC_APP_KEY = 
+REC_PLACEMENT_ID = 
+ENDPOINT = 
+```
 
 - To run the webpage demo:
   
   ```javascript
-  npm run gulp
+  npm run start-demo
   ```
 
   After the above command, you should see that the server is running locally on your device. You can then access the different demo webpages in your browser by using this format `http://localhost:3000/examples/*.html`.
@@ -172,8 +182,10 @@ The demo is only applicable to those who work directly off the main [repo](https
   - E.g. Product search by image:
 
     `http://localhost:3000/examples/product_search_by_image.html`
-  
-  > Update the `// TODO` in all `*.html` files within the `./examples` directory
+
+  - E.g. Tracking:
+
+  `http://localhost:3000/examples/tracking.html`
 
 ## 2. API
 
@@ -198,7 +210,7 @@ Searching by Image can happen in three different ways - by url, id or File.
     // TODO handle error
   }
 
-  visearch.product_search_by_image(parameters, onResponse, onError);
+  visearch.productSearchByImage(parameters, onResponse, onError);
   ```
 
 - Using image url:
@@ -216,7 +228,7 @@ Searching by Image can happen in three different ways - by url, id or File.
     // TODO handle error
   }
 
-  visearch.product_search_by_image(parameters, onResponse, onError);
+  visearch.productSearchByImage(parameters, onResponse, onError);
   ```
 
 - Using image file:
@@ -241,7 +253,7 @@ Searching by Image can happen in three different ways - by url, id or File.
     // TODO handle error
   }
 
-  visearch.product_search_by_image(parameters, onResponse, onError);
+  visearch.productSearchByImage(parameters, onResponse, onError);
   ```
 
 > The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/search-by-image-api-1).
@@ -266,7 +278,7 @@ const onError = (error)=> {
   // TODO handle error
 }
 
-visearch.product_recommendations(product_id, parameters, onResponse, onError);
+visearch.productRecommendations(product_id, parameters, onResponse, onError);
 ```
 
 > The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/search-by-image-api-1).
@@ -376,7 +388,7 @@ There are many parameters that our API support and we will be showing you a few 
 To retrieve metadata of your image results, provide the list of metadata keys for the metadata value to be returned in the `attrs_to_get` property:
 
 ```js
-visearch.product_search_by_image({
+visearch.productSearchByImage({
   im_url: 'your-image-url',
   attrs_to_get: ['price', 'brand', 'im-url'], // list of fields to be returned
 }, (res) => {
@@ -393,7 +405,7 @@ visearch.product_search_by_image({
 To filter search results based on metadata values, provide a string array of metadata key to filter value in the `filters` property. Only price, category, brand, original_price support filter parameter.
 
 ```js
-visearch.product_search_by_image({
+visearch.productSearchByImage({
   im_url: 'your-image-url',
   filters: ['brand:my_brand'],
 }, (res) => {
@@ -416,7 +428,7 @@ With Automatic Object Recognition, ViSearch Search by Image API is smart to dete
 You can turn on the feature in upload search by setting the API parameter `detection=all`. We are now able to detect various types of fashion items, including `top`, `dress`, `bottom`, `shoe`, `bag`, `watch`. The list is ever-expanding as we explore this feature for other categories.
 
 ```js
-visearch.product_search_by_image({
+visearch.productSearchByImage({
   im_url: 'your-image-url',
   detection: 'all',
 }, (res) => {
@@ -431,7 +443,7 @@ You could also recognize objects from a paticular type on the uploaded query ima
 Sample request to detect `bag` in an uploaded image:
 
 ```js
-visearch.product_search_by_image({
+visearch.productSearchByImage({
   im_url: 'your-image-url',
   detection: 'bag',
 }, (res) => {
@@ -461,7 +473,7 @@ visearch.set("is_cn", false);
 User action(s) can be sent through an event handler. Register an event handler to the element in which the user will interact.
 
 ```javascript
-visearch.send(action, {
+visearch.sendEvent(action, {
   queryId: '<search request ID>',
   pid: '<product ID> ',
   pos: <product position in Search Results>,
@@ -477,7 +489,7 @@ visearch.send(action, {
 To send events, first retrieve the search query ID (the `reqid`) found in the search results response call back.
 
 ```javascript
-visearch.product_search_by_id('product-id', {
+visearch.productSearchById('product-id', {
   // request parameters
 }, (res) => {
   // get search query ID
@@ -496,7 +508,7 @@ var onError = (err) => {
   /* do something */
 }
 
-visearch.get_sid(onSuccess, onError);
+visearch.getSid(onSuccess, onError);
 ```
 
 #### 5.2.2 Getting user Id
@@ -509,7 +521,7 @@ var onError = (err) => {
   /* do something */
 }
 
-visearch.get_uid(onSuccess, onError);
+visearch.getUid(onSuccess, onError);
 ```
 
 #### 5.2.3 Getting query Id
@@ -522,7 +534,7 @@ var onError = (err) => {
   /* do something */
 }
 
-visearch.get_last_query_id(onSuccess, onError);
+visearch.getLastQueryId(onSuccess, onError);
 ```
 
 This will fetch the last query Id from any request made by replacement, and if none is found retrieved from the last value saved in local storage.
@@ -531,21 +543,21 @@ Currently, we support the following event actions: `product_click`, `product_vie
 
 ```javascript
 // send product click
-visearch.send("product_click", {
+visearch.sendEvent("product_click", {
                 queryId: "<search reqid>",
                 pid: "<your im_name>",
                 pos: 1, // product position in Search Results, start from 1
             });
             
 // send product impression
-visearch.send("product_view", {
+visearch.sendEvent("product_view", {
                 queryId: "<search reqid>",
                 pid: "<your im_name>",
                 pos: 1, // product position in Search Results, start from 1
             });
             
 // send Transaction event e.g order purchase of $300
-visearch.send("transaction", {
+visearch.sendEvent("transaction", {
                 name: "<optional event name>" // optional event name
                 queryId: "<search reqid>",
                 transId: "<your transaction ID>"
@@ -553,14 +565,14 @@ visearch.send("transaction", {
          });
 
 // send Add to Cart Event
-visearch.send("add_to_cart", {
+visearch.sendEvent("add_to_cart", {
                 queryId: "<search reqid>",
                 pid: "<your im_name>",
                 pos: 1, // product position in Search Results, start from 1
             });
 
 // send custom event
-visearch.send("click", {
+visearch.sendEvent("click", {
                 queryId: "<search reqid>",
                 name: "click_on_camera_button",
                 cat: "visual_search"
@@ -574,7 +586,7 @@ User action(s) can be sent through an batch event handler.
 A common use case for this batch event method is to group up all `transaction` by sending it in a batch. This SDK will automatically generate a `transId` to group transactions as an order.
 
 ```javascript
-visearch.send_events('transaction', [{
+visearch.sendEvents('transaction', [{
   queryId: '<search request ID>',
   pid: '<product ID - 1> ',
   value: 300,
@@ -642,8 +654,12 @@ If your image contains fine details such as textile patterns and textures, you c
 visearch.set('resize_settings', {maxHeight: 1024, maxWidth: 1024});
 ```
 
-You can also call the `resize_image` method to resize the image yourself. The method takes in returns image in Data URL form.
+You can also call the `resizeImage` method to resize the image yourself. The method takes in returns image in Data URL form.
 
 ```javascript
-var resizedImage = visearch.resize_image(imgAsDataURL, resizeSettings, onSuccess, onFailure);
+var resizedImage = visearch.resizeImage(imgAsDataURL, resizeSettings, onSuccess, onFailure);
 ```
+
+## 7. Migration from v3
+
+The v4 SDK introduces a number of breaking changes, so if you're migrating from v3 you can refer [this guide](https://github.com/visenze/visearch-sdk-javascript/wiki/Migration-from-v3-to-v4.) for a smoother transition.

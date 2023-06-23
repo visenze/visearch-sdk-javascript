@@ -1,30 +1,29 @@
-body{
+body {
   background-color: #ecf0f1;
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
   color: #34495e;
-  padding:10px;
+  padding: 10px;
 }
-.similars {}
+
 .similars .entry {
   float: left;
   width: 100px;
   height: 100px;
   margin: 10px 5px;
-  border: 1px solid #ECEBEB;
+  border: 1px solid #ecebeb;
 }
 .similars .entry img {
   max-height: 100px;
   max-width: 100px;
 }
 
-.similars2 {}
 .similars2 .entry {
   float: left;
   width: 100px;
   height: 100px;
   margin: 10px 5px;
-  border: 1px solid #ECEBEB;
+  border: 1px solid #ecebeb;
 }
 .similars2 .entry img {
   max-height: 100px;
@@ -38,8 +37,22 @@ body{
 }
 .submit {
   background: #44921f;
-  background: -webkit-gradient( linear, left top, left bottom, color-stop(0, rgb(79, 188, 32)), color-stop(0.15, rgb(73, 157, 34)), color-stop(0.88, rgb(62, 135, 28)), color-stop(1, rgb(49, 114, 21)));
-  background: -moz-linear-gradient( center top, rgb(79, 188, 32) 0%, rgb(73, 157, 34) 15%, rgb(62, 135, 28) 88%, rgb(49, 114, 21) 100%);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0, rgb(79, 188, 32)),
+    color-stop(0.15, rgb(73, 157, 34)),
+    color-stop(0.88, rgb(62, 135, 28)),
+    color-stop(1, rgb(49, 114, 21))
+  );
+  background: -moz-linear-gradient(
+    center top,
+    rgb(79, 188, 32) 0%,
+    rgb(73, 157, 34) 15%,
+    rgb(62, 135, 28) 88%,
+    rgb(49, 114, 21) 100%
+  );
   border: 0;
   color: #eee;
   cursor: pointer;
@@ -60,34 +73,69 @@ body{
   background: #4ea923;
   /* Fallback color for non-css3 browsers */
   /* Gradients */
-  background: -webkit-gradient( linear, left top, left bottom, color-stop(0, rgb(89, 222, 27)), color-stop(0.15, rgb(83, 179, 38)), color-stop(0.8, rgb(66, 143, 27)), color-stop(1, rgb(54, 120, 22)));
-  background: -moz-linear-gradient( center top, rgb(89, 222, 27) 0%, rgb(83, 179, 38) 15%, rgb(66, 143, 27) 80%, rgb(54, 120, 22) 100%);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0, rgb(89, 222, 27)),
+    color-stop(0.15, rgb(83, 179, 38)),
+    color-stop(0.8, rgb(66, 143, 27)),
+    color-stop(1, rgb(54, 120, 22))
+  );
+  background: -moz-linear-gradient(
+    center top,
+    rgb(89, 222, 27) 0%,
+    rgb(83, 179, 38) 15%,
+    rgb(66, 143, 27) 80%,
+    rgb(54, 120, 22) 100%
+  );
 }
 .submit:active {
   background: #4ea923;
   /* Fallback color for non-css3 browsers */
   /* Gradients */
-  background: -webkit-gradient( linear, left bottom, left top, color-stop(0, rgb(89, 222, 27)), color-stop(0.15, rgb(83, 179, 38)), color-stop(0.8, rgb(66, 143, 27)), color-stop(1, rgb(54, 120, 22)));
-  background: -moz-linear-gradient( center bottom, rgb(89, 222, 27) 0%, rgb(83, 179, 38) 15%, rgb(66, 143, 27) 80%, rgb(54, 120, 22) 100%);
+  background: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, rgb(89, 222, 27)),
+    color-stop(0.15, rgb(83, 179, 38)),
+    color-stop(0.8, rgb(66, 143, 27)),
+    color-stop(1, rgb(54, 120, 22))
+  );
+  background: -moz-linear-gradient(
+    center bottom,
+    rgb(89, 222, 27) 0%,
+    rgb(83, 179, 38) 15%,
+    rgb(66, 143, 27) 80%,
+    rgb(54, 120, 22) 100%
+  );
 }
-.submit .glyphicon{
-    display: none;
+.submit .glyphicon {
+  display: none;
 }
 .glyphicon-refresh-animate {
-    -animation: spin .7s infinite linear;
-    -webkit-animation: spin2 .7s infinite linear;
+  -animation: spin 0.7s infinite linear;
+  -webkit-animation: spin2 0.7s infinite linear;
 }
 
 @-webkit-keyframes spin2 {
-    from { -webkit-transform: rotate(0deg);}
-    to { -webkit-transform: rotate(360deg);}
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
 @keyframes spin {
-    from { transform: scale(1) rotate(0deg);}
-    to { transform: scale(1) rotate(360deg);}
+  from {
+    transform: scale(1) rotate(0deg);
+  }
+  to {
+    transform: scale(1) rotate(360deg);
+  }
 }
-
 
 #image-preview {
   width: 320px;

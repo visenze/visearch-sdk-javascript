@@ -1,5 +1,4 @@
 node_modules/
-package-lock.json
 .DS_Store
 dist/
 *.log
@@ -7,4 +6,11 @@ dist/
 .sass-cache/
 .idea/
 .npmrc
+.vscode
+.env
 aws-profile.json
+
+lib/
+cjs/
+esm/
+src/version.ts
