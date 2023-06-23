@@ -177,11 +177,11 @@ ENDPOINT =
 
   - E.g. Product recommendation:
 
-    `http://localhost:3000/examples/product_search_by_id.html`
+  `http://localhost:3000/examples/product_search_by_id.html`
 
   - E.g. Product search by image:
 
-    `http://localhost:3000/examples/product_search_by_image.html`
+  `http://localhost:3000/examples/product_search_by_image.html`
 
   - E.g. Tracking:
 
