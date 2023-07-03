@@ -31,8 +31,8 @@ pipeline {
           sh 'npm ci'
           sh 'npx tsc'
           withCredentials([
-            string(credentialsId: CREDENTIAL_ID_IN_JENKINS, variable: SEARCH_APP_KEY),
-            string(credentialsId: CREDENTIAL_ID_IN_JENKINS, variable: REC_APP_KEY),
+            string(credentialsId: 'search.sg.app-1823.staging', variable: SEARCH_APP_KEY),
+            string(credentialsId: 'rec.sg.app-2967.staging', variable: REC_APP_KEY),
           ]) {
             codeclimate.testWithCoverage({
               sh 'npm run test-with-coverage'
