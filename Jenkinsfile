@@ -66,7 +66,7 @@ pipeline {
     stage('Archive') {
       steps {
         script {
-          sh("echo widget_version=${env.BRANCH_NAME}.${getVersion()} > version.txt")
+          sh("echo sdk_version=${env.BRANCH_NAME}.${getVersion()} > version.txt")
           archiveArtifacts('version.txt')
         }
       }
