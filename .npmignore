@@ -5,6 +5,7 @@ aws-profile.json
 .codeclimate.yml
 .idea
 .vscode
+coverage/
 
 examples/
 dist/

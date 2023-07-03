@@ -20,7 +20,8 @@
     "build-esm": "rm -fr esm/* && tsc -p tsconfig.json",
     "build-dev": "npm run write-version && webpack --mode development --config webpack.config.js",
     "build": "npm run write-version && webpack --config webpack.config.js",
-    "test": "jest"
+    "test": "jest",
+    "test-with-coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
