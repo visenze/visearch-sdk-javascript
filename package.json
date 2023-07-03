@@ -1,6 +1,6 @@
 {
   "name": "visearch-javascript-sdk",
-  "version": "4.0.0-rc.0",
+  "version": "4.0.0",
   "description": "JavaScript SDK for ViSearch of visenze.com",
   "main": "cjs/index.js",
   "module": "esm/index.js",
@@ -56,6 +56,6 @@
     "lodash.find": "^4.6.0",
     "lodash.isfunction": "^3.0.9",
     "node-fetch": "^2.6.11",
-    "visenze-tracking-javascript": "^2.0.0-rc.4"
+    "visenze-tracking-javascript": "^2.0.0"
   }
 }
