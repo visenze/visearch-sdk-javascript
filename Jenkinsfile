@@ -12,6 +12,14 @@ pipeline {
     label "${params.AGENT_LABEL ?: 'build'}"
   }
 
+  environment {
+    SEARCH_PLACEMENT_ID = 2967
+    SEARCH_IM_URL = "https://cdn.visenze.com/images/widget-2.jpg"
+    REC_PLACEMENT_ID = 1823
+    REC_PID = "184827-09"
+    ENDPOINT = "https://search-dev.visenze.com"
+  }
+
   tools {
     nodejs('NodeJS14')
   }
@@ -22,14 +30,19 @@ pipeline {
         script {
           sh 'npm ci'
           sh 'npx tsc'
-          codeclimate.testWithCoverage({
-            sh 'npm run test-with-coverage'
-          })
+          withCredentials([
+            string(credentialsId: CREDENTIAL_ID_IN_JENKINS, variable: SEARCH_APP_KEY),
+            string(credentialsId: CREDENTIAL_ID_IN_JENKINS, variable: REC_APP_KEY),
+          ]) {
+            codeclimate.testWithCoverage({
+              sh 'npm run test-with-coverage'
+            })
+          }
         }
       }
     }
 
-    stage('Build') {
+    stage('Tag') {
       steps {
         script {
           if (env.BRANCH_NAME == 'master') {
