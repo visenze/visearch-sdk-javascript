@@ -3,6 +3,7 @@ aws-profile.json
 
 *.tgz
 .codeclimate.yml
+codeclimate_id.txt
 .idea
 .vscode
 coverage/
