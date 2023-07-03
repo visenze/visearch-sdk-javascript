@@ -19,7 +19,7 @@ const s3plugin = new S3Plugin({
   },
   basePathTransform: function () {
     return new Promise(function (resolve, _) {
-      resolve('visearch/dist');
+      resolve('visearch/dist/js');
     });
   },
 });
