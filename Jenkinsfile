@@ -9,7 +9,7 @@ def getVersion() {
 
 pipeline {
   agent {
-    label "${params.AGENT_LABEL ?: 'build'}"
+    label "${params.AGENT_LABEL ?: 'build-amd64'}"
   }
 
   environment {
