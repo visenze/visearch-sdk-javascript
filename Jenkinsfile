@@ -21,7 +21,7 @@ pipeline {
   }
 
   tools {
-    nodejs('NodeJS14')
+    nodejs('NodeJS16')
   }
 
   stages {
