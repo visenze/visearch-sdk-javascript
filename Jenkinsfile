@@ -52,7 +52,7 @@ pipeline {
               parameters: [
                 string(name: 'GITHUB_REPO', value: GIT_REPO),
                 string(name: 'TAG_NAME', value: version),
-                string(name: 'TARGET_COMMITISH', value: 'production'),
+                string(name: 'TARGET_COMMITISH', value: 'master'),
                 string(name: 'NAME', value: "${version} Release"),
                 string(name: 'BODY', value: "Auto release by Jenkins"),
               ]
