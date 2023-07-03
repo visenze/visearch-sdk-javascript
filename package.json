@@ -18,7 +18,7 @@
     "prepack": "npm run write-version && npm run build-cjs && npm run build-esm && ./fixup",
     "build-cjs": "rm -fr cjs/* && tsc -p tsconfig.cjs.json",
     "build-esm": "rm -fr esm/* && tsc -p tsconfig.json",
-    "build-dev": "npm run write-version && webpack --mode development  --config webpack.config.js",
+    "build-dev": "npm run write-version && webpack --mode development --config webpack.config.js",
     "build": "npm run write-version && webpack --config webpack.config.js",
     "test": "jest"
   },
