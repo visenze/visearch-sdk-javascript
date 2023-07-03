@@ -19,14 +19,12 @@ pipeline {
   stages {
     stage('Test') {
       steps {
-        dir(BUILD_DIR) {
-          script {
-            sh 'npm ci'
-            sh 'npx tsc'
-            codeclimate.testWithCoverage({
-              sh 'npm run test-with-coverage'
-            })
-          }
+        script {
+          sh 'npm ci'
+          sh 'npx tsc'
+          codeclimate.testWithCoverage({
+            sh 'npm run test-with-coverage'
+          })
         }
       }
     }
