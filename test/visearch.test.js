@@ -6,12 +6,14 @@ dotenv.config();
 const searchConfigs = {
   app_key: process.env.SEARCH_APP_KEY,
   placement_id: process.env.SEARCH_PLACEMENT_ID,
+  endpoint: process.env.ENDPOINT,
   timeOut: 2000,
 };
 
 const recConfigs = {
   app_key: process.env.REC_APP_KEY,
   placement_id: process.env.REC_PLACEMENT_ID,
+  endpoint: process.env.ENDPOINT,
   timeOut: 2000,
 };
 
