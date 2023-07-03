@@ -29,6 +29,7 @@ pipeline {
       steps {
         script {
           sh 'npm ci'
+          sh 'npm run write-version'
           sh 'npx tsc'
           withCredentials([
             string(credentialsId: 'search.sg.app-1823.staging', variable: SEARCH_APP_KEY),
