@@ -1,4 +1,4 @@
-version: "2"
+version: '2'
 plugins:
   # https://en.wikipedia.org/wiki/Rule_of_three_(computer_programming)
   duplication:
@@ -7,10 +7,10 @@ plugins:
       count_threshold: 4
 # https://docs.codeclimate.com/docs/excluding-files-and-folders
 exclude_patterns:
-- "**/vendor/"
-- "**/3rdparty/"
-- "**/*.conf.js"
-- "**/*.config.js"
+  - '**/vendor/'
+  - '**/3rdparty/'
+  - '**/*.conf.js'
+  - '**/*.config.js'
 # https://docs.codeclimate.com/docs/maintainability
 checks:
   argument-count:
