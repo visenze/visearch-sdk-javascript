@@ -62,14 +62,5 @@ pipeline {
         }
       }
     }
-
-    stage('Archive') {
-      steps {
-        script {
-          sh("echo sdk_version=${env.BRANCH_NAME}.${getVersion()} > version.txt")
-          archiveArtifacts('version.txt')
-        }
-      }
-    }
   }
 }

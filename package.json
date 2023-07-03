@@ -14,6 +14,7 @@
   "scripts": {
     "lint": "eslint src types --ext .ts",
     "start-demo": "npm run build-dev && node examples/app.js",
+    "get-version": "echo $npm_package_version",
     "write-version": "node -p \"'export const version =  \\'' + require('./package.json').version + '\\';'\" > src/version.ts",
     "prepack": "npm run write-version && npm run build-cjs && npm run build-esm && ./fixup",
     "build-cjs": "rm -fr cjs/* && tsc -p tsconfig.cjs.json",
