@@ -46,7 +46,7 @@ pipeline {
     stage('Tag') {
       steps {
         script {
-          if (env.BRANCH_NAME == 'master') {
+          if (env.BRANCH_NAME == 'production') {
             def version = getVersion()
             build(
               job: 'devops_github_utility_create_release',
