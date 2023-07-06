@@ -14,13 +14,15 @@
   "scripts": {
     "lint": "eslint src types --ext .ts",
     "start-demo": "npm run build-dev && node examples/app.js",
+    "get-version": "echo $npm_package_version",
     "write-version": "node -p \"'export const version =  \\'' + require('./package.json').version + '\\';'\" > src/version.ts",
     "prepack": "npm run write-version && npm run build-cjs && npm run build-esm && ./fixup",
     "build-cjs": "rm -fr cjs/* && tsc -p tsconfig.cjs.json",
     "build-esm": "rm -fr esm/* && tsc -p tsconfig.json",
     "build-dev": "npm run write-version && webpack --mode development --config webpack.config.js",
     "build": "npm run write-version && webpack --config webpack.config.js",
-    "test": "jest"
+    "test": "jest",
+    "test-with-coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -46,6 +48,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "prettier": "^2.8.8",
     "terser-webpack-plugin": "^5.3.8",
+    "typescript": "^5.1.6",
     "webpack": "^5.82.1",
     "webpack-cli": "^5.1.1",
     "webpack-s3-plugin": "^1.2.0-rc.0"
