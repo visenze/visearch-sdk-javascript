@@ -8,6 +8,7 @@ dist/
 .npmrc
 .vscode
 .env
+coverage/
 aws-profile.json
 
 lib/
