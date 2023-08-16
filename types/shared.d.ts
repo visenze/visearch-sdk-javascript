@@ -127,7 +127,7 @@ export interface Product {
   data: Record<string, unknown>;
   score?: number;
   image_s3_url?: string;
-  pinned?: boolean;
+  pinned?: 'true' | 'false';
   [key: string]: unknown;
 }
 
