@@ -149,7 +149,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
   function wrapCallback(
     productId: string | undefined,
     callback: ((resp: ProductSearchResponse) => void) | undefined,
-    resp: ProductSearchResponse
+    resp: ProductSearchResponse,
   ): void {
     wrapExperimentResponse(resp);
     callback?.(resp);
@@ -207,7 +207,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
           },
           (err) => {
             failure?.(err);
-          }
+          },
         );
       }
     },

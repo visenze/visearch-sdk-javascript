@@ -9,7 +9,7 @@ const PATH_REC = 'v1/product/recommendations';
 
 function getAnalyticsParams(
   queryParams: Record<string, unknown> | undefined,
-  vaParams?: Record<string, unknown>
+  vaParams?: Record<string, unknown>,
 ): Record<string, unknown> {
   const params: Record<string, unknown> = {};
   if (vaParams) {
@@ -45,7 +45,7 @@ function getEndpoint(settings: ViSearchSettings): string {
 function getQueryParams(
   params: Record<string, unknown> | undefined,
   vaParams: Record<string, unknown>,
-  settings: ViSearchSettings
+  settings: ViSearchSettings,
 ): Record<string, unknown> {
   return {
     ...(params ?? {}),
@@ -59,7 +59,7 @@ function searchByImage(
   params: Record<string, unknown>,
   vaParams: Record<string, unknown>,
   callback?: GenericCallback,
-  failure?: GenericCallback
+  failure?: GenericCallback,
 ): Promise<void> {
   const queryParams = getQueryParams(params, vaParams, settings);
   return sendPostRequest(settings, getEndpoint(settings), PATH_SEARCH, queryParams, callback, failure);
@@ -71,7 +71,7 @@ function searchById(
   params: Record<string, unknown> | undefined,
   vaParams: Record<string, unknown>,
   callback?: GenericCallback,
-  failure?: GenericCallback
+  failure?: GenericCallback,
 ): Promise<void> {
   const queryParams = getQueryParams(params, vaParams, settings);
   return sendGetRequest(settings, getEndpoint(settings), `${PATH_REC}/${productId}`, queryParams, callback, failure);
@@ -83,7 +83,7 @@ function searchByIdByPost(
   params: Record<string, unknown> | undefined,
   vaParams: Record<string, unknown>,
   callback?: GenericCallback,
-  failure?: GenericCallback
+  failure?: GenericCallback,
 ): Promise<void> {
   const queryParams = getQueryParams(params, vaParams, settings);
   return sendPostRequest(settings, getEndpoint(settings), `${PATH_REC}/${productId}`, queryParams, callback, failure);
