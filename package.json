@@ -1,6 +1,6 @@
 {
   "name": "visearch-javascript-sdk",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "JavaScript SDK for ViSearch of visenze.com",
   "main": "cjs/index.js",
   "module": "esm/index.js",
