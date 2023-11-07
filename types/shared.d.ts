@@ -133,10 +133,10 @@ export interface Product {
 
 export interface ObjectProductResponse extends ProductType {
   id: string;
-  category: string;
-  name: string;
+  category?: string;
+  name?: string;
   excluded_pids?: string[];
-  total: number;
+  total?: number;
   result: Product[];
   facets?: Facet[];
   group_results?: GroupProductResponse[];
