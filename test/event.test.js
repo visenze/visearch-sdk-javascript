@@ -113,7 +113,7 @@ describe('sendEvents', () => {
       'add_to_cart',
       { sdk: 'visearch js sdk', v: version },
       expect.any(Function),
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -129,7 +129,7 @@ describe('sendEvents', () => {
       'TRANSACTION',
       { sdk: 'visearch js sdk', v: version, transId: mockUUID },
       expect.any(Function),
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -147,13 +147,13 @@ describe('sendEvents', () => {
       'transaction',
       { sdk: 'visearch js sdk', v: version, transId: mockUUID },
       expect.any(Function),
-      expect.any(Function)
+      expect.any(Function),
     );
     expect(mockTracker.sendEvent).toBeCalledWith(
       'transaction',
       { sdk: 'visearch js sdk', v: version, transId: 'sample-transId' },
       expect.any(Function),
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 });

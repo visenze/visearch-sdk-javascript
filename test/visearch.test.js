@@ -96,7 +96,7 @@ describe('search', () => {
         },
         (res) => {
           resolve(res);
-        }
+        },
       );
     });
     await assertSearchSuccess(searchClient, res);
@@ -113,7 +113,7 @@ describe('recommendations', () => {
         },
         (res) => {
           resolve(res);
-        }
+        },
       );
     });
     await assertSearchSuccess(recClient, res);

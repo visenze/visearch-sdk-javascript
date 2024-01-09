@@ -3,8 +3,6 @@
  * @author dejun@visenze.com, @author rachel.ngo@visenze.com
  */
 
-import find from 'lodash.find';
-import URI from 'jsuri';
 import va, { VAClient } from 'visenze-tracking-javascript';
 import { version } from './version.js';
 
@@ -17,9 +15,6 @@ const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
 const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';
 const SDK = 'visearch js sdk';
 const SDK_VERSION = version;
-const QUERY_REQID = 'reqid';
-const QUERY_IMNAME = 'im_name';
-const QUERY_ACTION = 'action';
 const RESULT_LOAD = 'result_load';
 
 function getSdkVersion(): Record<string, string> {
@@ -27,13 +22,6 @@ function getSdkVersion(): Record<string, string> {
     v: SDK_VERSION,
     sdk: SDK,
   };
-}
-
-/**
- * Get query parameters from url [URI] object
- */
-function getQueryParamValue(uri: URI, name: string): unknown {
-  return find([`__vi_${name}`, name], () => uri.getQueryParamValue(name));
 }
 
 export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
@@ -149,39 +137,12 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
   function wrapCallback(
     productId: string | undefined,
     callback: ((resp: ProductSearchResponse) => void) | undefined,
-    resp: ProductSearchResponse
+    resp: ProductSearchResponse,
   ): void {
     wrapExperimentResponse(resp);
     callback?.(resp);
     saveQueryId(resp);
     sendResultLoadEvent(productId, resp);
-  }
-
-  function sendRefClickEvent(): void {
-    // For browser env
-    // Check the link of current page, to check if the page is come from a previous search click.
-    let refReqId: unknown = null;
-    if (document.referrer) {
-      const refUri = new URI(document.referrer);
-      refReqId = getQueryParamValue(refUri, QUERY_REQID);
-    }
-    // Get reqid from current url or from its referrer url
-    const curUri = new URI(window.location.href);
-    const reqid = getQueryParamValue(curUri, QUERY_REQID) || refReqId;
-    const imName = getQueryParamValue(curUri, QUERY_IMNAME);
-    // If reqid, action and imName are found in current page content, send event tracking.
-    if (reqid && imName) {
-      // Get event 'action' for page will set it as 'click' action by default if not specified.
-      const action = (getQueryParamValue(curUri, QUERY_ACTION) as string) || 'click';
-      prototypes.sendEvent(action, {
-        queryId: getQueryParamValue(curUri, QUERY_REQID),
-        im_name: getQueryParamValue(curUri, QUERY_IMNAME),
-      });
-    }
-  }
-
-  if (typeof window !== 'undefined') {
-    sendRefClickEvent();
   }
 
   const prototypes: ViSearchClient = {
@@ -207,7 +168,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
           },
           (err) => {
             failure?.(err);
-          }
+          },
         );
       }
     },
