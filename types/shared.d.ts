@@ -11,31 +11,31 @@ export interface ViSearchClient {
   productSearchByImage: (
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
-    failure?: GenericCallback
+    failure?: GenericCallback,
   ) => Promise<void>;
   productSearchById: (
     pid: string,
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
-    failure?: GenericCallback
+    failure?: GenericCallback,
   ) => Promise<void>;
   productRecommendations: (
     pid: string,
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
-    failure?: GenericCallback
+    failure?: GenericCallback,
   ) => Promise<void>;
   productRecommendationsByPost: (
     pid: string,
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
-    failure?: GenericCallback
+    failure?: GenericCallback,
   ) => Promise<void>;
   productSearchByIdByPost: (
     pid: string,
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
-    failure?: GenericCallback
+    failure?: GenericCallback,
   ) => Promise<void>;
   setUid: (uid: string, callback?: (uid: string) => void, failure?: GenericCallback) => void;
   getUid: (callback: (uid: string) => void, failure?: GenericCallback) => void;
@@ -49,7 +49,7 @@ export interface ViSearchClient {
     imageAsDataUrl: string,
     resizeSettings: ResizeSettings | undefined,
     onSuccess: (dataUrl: null | string) => void,
-    onFailure?: GenericCallback
+    onFailure?: GenericCallback,
   ) => Promise<void>;
   generateUuid: (callback: (uuid: string) => void, failure?: GenericCallback) => void;
 }

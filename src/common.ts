@@ -40,7 +40,7 @@ function sendRequest(
   fetchObj: Promise<Response>,
   path: string,
   callback?: GenericCallback,
-  failure?: GenericCallback
+  failure?: GenericCallback,
 ): Promise<void> {
   const start = new Date().getTime();
   let reqid: string | null;
@@ -74,7 +74,7 @@ export const sendGetRequest = (
   path: string,
   queryParams: Record<string, unknown>,
   callback?: GenericCallback,
-  failure?: GenericCallback
+  failure?: GenericCallback,
 ): Promise<void> => {
   const url = new URI(endpoint).setPath(path);
   Object.entries(queryParams).forEach(([key, value]) => {
@@ -94,7 +94,7 @@ export const sendPostRequest = async (
   path: string,
   queryParams: Record<string, unknown>,
   callback?: GenericCallback,
-  failure?: GenericCallback
+  failure?: GenericCallback,
 ): Promise<void> => {
   const url = new URI(endpoint).setPath(path).toString();
 

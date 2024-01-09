@@ -5,9 +5,9 @@ const config = {
   testEnvironment: 'jsdom',
   setupFiles: ['<rootDir>/test/setup/setup.js'],
   moduleNameMapper: {
-    '(.+)\\.js': '$1'
+    '(.+)\\.js': '$1',
   },
-  extensionsToTreatAsEsm: ['.ts']
+  extensionsToTreatAsEsm: ['.ts'],
 };
 
 module.exports = config;
