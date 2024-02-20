@@ -121,6 +121,12 @@ export interface GroupProductResponse {
   result: Product[];
 }
 
+export interface BestImage {
+  type: string;
+  url: string;
+  index: string;
+}
+
 export interface Product {
   product_id: string;
   main_image_url: string;
@@ -128,6 +134,7 @@ export interface Product {
   score?: number;
   image_s3_url?: string;
   pinned?: 'true' | 'false';
+  best_images?: BestImage[];
   [key: string]: unknown;
 }
 
