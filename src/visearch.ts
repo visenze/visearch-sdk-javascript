@@ -9,7 +9,7 @@ import { version } from './version.js';
 import { searchById, searchByImage, searchByIdByPost, multisearch, multisearchAutocomplete } from './productsearch.js';
 import { resizeImageFromDataUrl } from './resizer.js';
 import isFunction from 'lodash.isfunction';
-import { ProductSearchResponse, ViSearchSettings, ViSearchClient } from '../types/shared';
+import { ProductSearchResponse, ViSearchSettings, ViSearchClient, AutoCompleteResponse } from '../types/shared';
 
 const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
 const ANALYTICS_STAGING_ENDPOINT = 'https://staging-analytics.data.visenze.com/v3';
@@ -145,6 +145,13 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     sendResultLoadEvent(productId, resp);
   }
 
+  function wrapCallbackAutoComplete(
+    callback: ((resp: AutoCompleteResponse) => void) | undefined,
+    resp: AutoCompleteResponse,
+  ): void {
+    callback?.(resp);
+  }
+
   const prototypes: ViSearchClient = {
     q,
     set: function (key, value) {
@@ -197,7 +204,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       return multisearch(settings, params, getDefaultTrackingParams(), altCallback, failure);
     },
     productMultisearchAutocomplete: function (params, callback, failure) {
-      const altCallback = wrapCallback.bind(undefined, undefined, callback);
+      const altCallback = wrapCallbackAutoComplete.bind(undefined, callback);
       return multisearchAutocomplete(settings, params, getDefaultTrackingParams(), altCallback, failure);
     },
     productSearchByImage: function (params, callback, failure) {
