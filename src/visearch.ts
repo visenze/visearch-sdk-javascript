@@ -6,7 +6,7 @@
 import va, { VAClient } from 'visenze-tracking-javascript';
 import { version } from './version.js';
 
-import { searchById, searchByImage, searchByIdByPost } from './productsearch.js';
+import { searchById, searchByImage, searchByIdByPost, multisearch, multisearchAutocomplete } from './productsearch.js';
 import { resizeImageFromDataUrl } from './resizer.js';
 import isFunction from 'lodash.isfunction';
 import { ProductSearchResponse, ViSearchSettings, ViSearchClient } from '../types/shared';
@@ -191,6 +191,14 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
           prototypes.sendEvent(action, params, callback, failure);
         });
       }
+    },
+    productMultisearch: function (params, callback, failure) {
+      const altCallback = wrapCallback.bind(undefined, undefined, callback);
+      return multisearch(settings, params, getDefaultTrackingParams(), altCallback, failure);
+    },
+    productMultisearchAutocomplete: function (params, callback, failure) {
+      const altCallback = wrapCallback.bind(undefined, undefined, callback);
+      return multisearchAutocomplete(settings, params, getDefaultTrackingParams(), altCallback, failure);
     },
     productSearchByImage: function (params, callback, failure) {
       const altCallback = wrapCallback.bind(undefined, undefined, callback);

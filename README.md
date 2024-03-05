@@ -15,10 +15,14 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
   - [1. Quickstart](#1-quickstart)
     - [1.1 Installation](#11-installation)
     - [1.2 Setup](#12-setup)
+      - [1.2.1 Import and initialization](#121-import-and-initialization)
+      - [1.2.2 Configure keys](#122-configure-keys)
     - [1.3 Demo](#13-demo)
   - [2. API](#2-api)
     - [2.1 Search by Image](#21-search-by-image)
     - [2.2 Recommendations](#22-recommendations)
+    - [2.3 Multisearch](#23-multisearch)
+    - [2.3 Multisearch Autocomplete](#23-multisearch-autocomplete)
   - [3. Search Results](#3-search-results)
     - [3.1 ErrorData](#31-errordata)
     - [3.2 ProductType](#32-producttype)
@@ -282,6 +286,181 @@ visearch.productRecommendations(product_id, parameters, onResponse, onError);
 ```
 
 > The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/search-by-image-api-1).
+
+### 2.3 Multisearch
+
+POST /product/multisearch
+
+Multisearch can happen in three different ways - by text, url, id or File.
+
+- Using text:
+
+  ```javascript
+  const parameters = {
+    q: 'your-text-query'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearch(parameters, onResponse, onError);
+  ```
+
+- Using image id:
+
+  ```javascript
+  const parameters = {
+    im_id: 'your-image-id'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearch(parameters, onResponse, onError);
+  ```
+
+- Using image url:
+
+  ```javascript
+  const parameters = {
+    im_url: 'your-image-url'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearch(parameters, onResponse, onError);
+  ```
+
+- Using image file:
+
+  ```html
+  <form>
+    Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
+    <input type="submit" value="Submit">
+  </form>
+  ```
+
+  ```javascript
+  const parameters = {
+    image: document.getElementById('fileUpload')
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearch(parameters, onResponse, onError);
+  ```
+
+> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-api).
+
+### 2.3 Multisearch Autocomplete
+
+POST /product/multisearch/autocomplete
+
+Multisearch autocomplete can happen in three different ways - by text, url, id or File.
+
+- Using text:
+
+  ```javascript
+  const parameters = {
+    q: 'your-text-query'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
+  ```
+
+- Using image id:
+
+  ```javascript
+  const parameters = {
+    im_id: 'your-image-id'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
+  ```
+
+- Using image url:
+
+  ```javascript
+  const parameters = {
+    im_url: 'your-image-url'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
+  ```
+
+- Using image file:
+
+  ```html
+  <form>
+    Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
+    <input type="submit" value="Submit">
+  </form>
+  ```
+
+  ```javascript
+  const parameters = {
+    image: document.getElementById('fileUpload')
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
+  ```
+
+> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-api).
+
 
 ## 3. Search Results
 

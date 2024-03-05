@@ -8,6 +8,16 @@ export interface ViSearchClient {
   setKeys: (keys: Record<string, unknown>) => void;
   sendEvent: VAClient['sendEvent'];
   sendEvents: VAClient['sendEvents'];
+  productMultisearch: (
+    params: Record<string, unknown>,
+    callback: (resp: ProductSearchResponse) => void,
+    failure?: GenericCallback,
+  ) => Promise<void>;
+  productMultisearchAutocomplete: (
+    params: Record<string, unknown>,
+    callback: (resp: AutoCompleteResponse) => void,
+    failure?: GenericCallback,
+  ) => Promise<void>;
   productSearchByImage: (
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
@@ -72,6 +82,17 @@ export interface SimpleResponse {
 }
 
 export type ProductSearchResponse = ProductSearchResponseSuccess | ProductSearchResponseError;
+export type AutoCompleteResponse = AutoCompleteResponseSuccess | ProductSearchResponseError;
+
+export interface AutoCompleteResponseSuccess extends SimpleResponse {
+  status: 'OK';
+  result?: AutoCompleteResultItem[];
+}
+
+export interface AutoCompleteResultItem {
+  text: string;
+  score: number;
+}
 
 export interface ProductSearchResponseError extends SimpleResponse {
   status: 'fail';
