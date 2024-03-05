@@ -22,7 +22,7 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
     - [2.1 Search by Image](#21-search-by-image)
     - [2.2 Recommendations](#22-recommendations)
     - [2.3 Multisearch](#23-multisearch)
-    - [2.3 Multisearch Autocomplete](#23-multisearch-autocomplete)
+    - [2.4 Multisearch Autocomplete](#24-multisearch-autocomplete)
   - [3. Search Results](#3-search-results)
     - [3.1 ErrorData](#31-errordata)
     - [3.2 ProductType](#32-producttype)
@@ -291,7 +291,7 @@ visearch.productRecommendations(product_id, parameters, onResponse, onError);
 
 POST /product/multisearch
 
-Multisearch can happen in three different ways - by text, url, id or File.
+Multisearch can happen in four different ways - by text, url, id or File.
 
 - Using text:
 
@@ -374,11 +374,11 @@ Multisearch can happen in three different ways - by text, url, id or File.
 
 > The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-api).
 
-### 2.3 Multisearch Autocomplete
+### 2.4 Multisearch Autocomplete
 
 POST /product/multisearch/autocomplete
 
-Multisearch autocomplete can happen in three different ways - by text, url, id or File.
+Multisearch autocomplete can happen in four different ways - by text, url, id or File.
 
 - Using text:
 
