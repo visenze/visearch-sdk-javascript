@@ -44,6 +44,8 @@
       'setKeys',
       'sendEvent',
       'sendEvents',
+      'productMultisearch',
+      'productMultisearchAutocomplete',
       'productSearchByImage',
       'productSearchById',
       'productRecommendations',

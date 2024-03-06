@@ -1,0 +1,234 @@
+<html>
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="/styles/uploadsearch.css" />
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script type="text/javascript"
+    src="http://opoloo.github.io/jquery_upload_preview/assets/js/jquery.uploadPreview.min.js"></script>
+  <script type="text/javascript" src="/js/snippet.js"></script>
+  <script type="text/javascript">
+
+    $(function () {
+      function getKey(path) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", `/env/${path}`, false);
+        xhr.send();
+        return xhr.response;
+      }
+
+      // TODO: please fill in the .env file with relevant keys
+      visearch.set("app_key", getKey("SEARCH_APP_KEY"));
+      visearch.set("placement_id", getKey("SEARCH_PLACEMENT_ID"));
+      visearch.set("endpoint", getKey("ENDPOINT"))
+
+      const refreshTrackingInfo = () => {
+        // display uid & sid
+        visearch.getUid((uid) => {
+          $("#uid").text(uid);
+        });
+
+        visearch.getSid((sid) => {
+          $("#sid").text(sid);
+        });
+
+        visearch.getSessionTimeRemaining((time) => {
+          $("#sessionTimeRemaining").text(time);
+        });
+      };
+
+      setInterval(() => {
+        refreshTrackingInfo();
+      }, 1000);
+
+      // reset session
+      $("#resetSessionBtn").click(function () {
+        visearch.resetSession();
+        refreshTrackingInfo();
+      });
+
+      // change uid
+      $("#newUidBtn").click(function () {
+        const newUid = $("#newUidTxt").val();
+        $("#newUidTxt").val("");
+        visearch.setUid(newUid);
+
+        refreshTrackingInfo();
+      });
+
+      //setup image preview box
+      $.uploadPreview({
+        input_field: "#image",   // Default: .image-upload
+        preview_box: "#image-preview",  // Default: .image-preview
+        label_field: "#image-label",    // Default: .image-label
+      });
+      // setup display template
+      var response_template = Handlebars.compile($("#response-template").html());
+      var autocomplete_template = Handlebars.compile($("#autocomplete-template").html());
+
+      //setup visearch client.
+      $("form .submit").click(function () {
+        params = {};
+        if ($("#image").val() != "") {
+          params['image'] = $("#image")[0];
+        }
+
+        if ($("#q-input").val() != "") {
+          params['q'] = $("#q-input").val();
+        }
+
+        if (Object.keys(params).length > 0) {
+          event.preventDefault();
+          $(".submit .glyphicon").show();
+          //*************************
+          //start of the visearch api
+          visearch.productMultisearch(params, function (res) {
+            if (res.status == "OK") {
+              $(".main .similars").html(response_template(res));
+            } else {
+              $(".main .similars").html(res.error);
+            }
+            $(".submit .glyphicon").hide();
+          }, function (err) {
+            /**
+             *{message:"Failed to fetch"}
+             **/
+            alert(err);
+          });
+          // end of the visearch api
+
+          //*************************
+        } else {
+          alert("please select a image or input a text query")
+        }
+        return false;
+      });
+
+      $("#btn-autocomplete").click(function () {
+        params = {};
+        if ($("#image").val() != "") {
+          params['image'] = $("#image")[0];
+        }
+
+        if ($("#q-input").val() != "") {
+          params['q'] = $("#q-input").val();
+        }
+
+        if (Object.keys(params).length > 0) {
+          event.preventDefault();
+          $("#btn-autocomplete .glyphicon").show();
+          //*************************
+          //start of the visearch api
+          visearch.productMultisearchAutocomplete(params, function (res) {
+            if (res.status == "OK") {
+              $("#autocomplete").html(autocomplete_template(res));
+            } else {
+              $("#autocomplete").html(res.error);
+            }
+            $("#btn-autocomplete .glyphicon").hide();
+          }, function (err) {
+            /**
+             *{message:"Failed to fetch"}
+             **/
+            alert(err);
+          });
+          // end of the visearch api
+
+          //*************************
+        } else {
+          alert("please select a image or input a text query")
+        }
+        return false;
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="main container-fluid">
+    <div class="content">
+      <h2>Example for productMultisearch with uploaded image file</h2>
+      <form action="" method="">
+        <div class="row">
+          <div id="image-preview" class="col-xs-10 col-sm-10 col-md-4">
+            <label for="image" id="image-label">Choose File</label>
+            <input type="file" name="image" id="image" accept="image/*;capture=camera" />
+          </div>
+        </div>
+
+        <div class="row">
+          Text query:
+          <input id="q-input" type="text" />
+
+          <button id="btn-autocomplete">
+            Autocomplete
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+          </button>
+        </div>
+
+        <div class="row">
+          <button class="submit" class="prefix">
+            Search
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+          </button>
+
+        </div>
+      </form>
+
+
+      <h3>Tracking info</h3>
+      <div>
+        <div>
+          <p>
+            uid: <span id="uid"></span>
+            <br />
+            sid: <span id="sid"></span>
+            <br />
+            session time remaining: <span id="sessionTimeRemaining"></span>
+          </p>
+        </div>
+
+        <div>
+          <button id="resetSessionBtn">reset session</button>
+          <br />
+          <input id="newUidTxt" /> <button id="newUidBtn">set new uid</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="similars">
+      </div>
+    </div>
+
+    <div>
+      <div id="autocomplete"></div>
+    </div>
+  </div>
+
+  <script id="response-template" type="text/x-handlebars-template">
+    <h4>Find Similars Result</h4>
+    <div class="multisearch">
+      {{#each result}}
+      <div class="entry multisearch">
+        <img src="{{main_image_url}}">
+      </div>
+      {{/each}}
+    </div>
+  </script>
+
+  <script id="autocomplete-template" type="text/x-handlebars-template">
+    <h4>Auto complete result</h4>
+    <ul>
+    {{#each result}}
+      <li>{{text}} ({{score}})</li>
+    {{/each}}
+    </ul>
+  </script>
+
+</body>
+
+</html>
