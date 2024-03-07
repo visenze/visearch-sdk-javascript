@@ -6,12 +6,20 @@ body {
   padding: 10px;
 }
 
+.multisearch {
+  display: flex;
+}
+
 .similars .entry {
   float: left;
   width: 100px;
   height: 100px;
   margin: 10px 5px;
   border: 1px solid #ecebeb;
+
+  &.multisearch {
+    float: none;
+  }
 }
 .similars .entry img {
   max-height: 100px;
@@ -114,6 +122,11 @@ body {
 .submit .glyphicon {
   display: none;
 }
+
+#btn-autocomplete .glyphicon {
+  display: none;
+}
+
 .glyphicon-refresh-animate {
   -animation: spin 0.7s infinite linear;
   -webkit-animation: spin2 0.7s infinite linear;

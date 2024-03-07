@@ -15,10 +15,14 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
   - [1. Quickstart](#1-quickstart)
     - [1.1 Installation](#11-installation)
     - [1.2 Setup](#12-setup)
+      - [1.2.1 Import and initialization](#121-import-and-initialization)
+      - [1.2.2 Configure keys](#122-configure-keys)
     - [1.3 Demo](#13-demo)
   - [2. API](#2-api)
     - [2.1 Search by Image](#21-search-by-image)
     - [2.2 Recommendations](#22-recommendations)
+    - [2.3 Multisearch](#23-multisearch)
+    - [2.4 Multisearch Autocomplete](#24-multisearch-autocomplete)
   - [3. Search Results](#3-search-results)
     - [3.1 ErrorData](#31-errordata)
     - [3.2 ProductType](#32-producttype)
@@ -91,7 +95,7 @@ npm install visearch-javascript-sdk
 
   ```html
   <script type="text/javascript">
-  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.0.2.min.js","visearch");
+  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.1.0.min.js","visearch");
   </script>
   ```
 
@@ -282,6 +286,181 @@ visearch.productRecommendations(product_id, parameters, onResponse, onError);
 ```
 
 > The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/search-by-image-api-1).
+
+### 2.3 Multisearch
+
+POST /product/multisearch
+
+Multisearch can happen in four different ways - by text, url, id or File.
+
+- Using text:
+
+  ```javascript
+  const parameters = {
+    q: 'your-text-query'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearch(parameters, onResponse, onError);
+  ```
+
+- Using image id:
+
+  ```javascript
+  const parameters = {
+    im_id: 'your-image-id'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearch(parameters, onResponse, onError);
+  ```
+
+- Using image url:
+
+  ```javascript
+  const parameters = {
+    im_url: 'your-image-url'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearch(parameters, onResponse, onError);
+  ```
+
+- Using image file:
+
+  ```html
+  <form>
+    Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
+    <input type="submit" value="Submit">
+  </form>
+  ```
+
+  ```javascript
+  const parameters = {
+    image: document.getElementById('fileUpload')
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearch(parameters, onResponse, onError);
+  ```
+
+> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-api).
+
+### 2.4 Multisearch Autocomplete
+
+POST /product/multisearch/autocomplete
+
+Multisearch autocomplete can happen in four different ways - by text, url, id or File.
+
+- Using text:
+
+  ```javascript
+  const parameters = {
+    q: 'your-text-query'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
+  ```
+
+- Using image id:
+
+  ```javascript
+  const parameters = {
+    im_id: 'your-image-id'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
+  ```
+
+- Using image url:
+
+  ```javascript
+  const parameters = {
+    im_url: 'your-image-url'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
+  ```
+
+- Using image file:
+
+  ```html
+  <form>
+    Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
+    <input type="submit" value="Submit">
+  </form>
+  ```
+
+  ```javascript
+  const parameters = {
+    image: document.getElementById('fileUpload')
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
+  ```
+
+> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-api).
+
 
 ## 3. Search Results
 

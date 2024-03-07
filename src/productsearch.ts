@@ -6,6 +6,8 @@ const CN_END_POINT = 'https://search.visenze.com.cn';
 
 const PATH_SEARCH = 'v1/product/search_by_image';
 const PATH_REC = 'v1/product/recommendations';
+const PATH_MULTISEARCH = 'v1/product/multisearch'
+const PATH_MULTISEARCH_AUTOCOMPLETE = 'v1/product/multisearch/autocomplete'
 
 function getAnalyticsParams(
   queryParams: Record<string, unknown> | undefined,
@@ -54,6 +56,28 @@ function getQueryParams(
   };
 }
 
+function multisearch(
+  settings: ViSearchSettings,
+  params: Record<string, unknown>,
+  vaParams: Record<string, unknown>,
+  callback?: GenericCallback,
+  failure?: GenericCallback,
+): Promise<void> {
+  const queryParams = getQueryParams(params, vaParams, settings);
+  return sendPostRequest(settings, getEndpoint(settings), PATH_MULTISEARCH, queryParams, callback, failure);
+}
+
+function multisearchAutocomplete(
+  settings: ViSearchSettings,
+  params: Record<string, unknown>,
+  vaParams: Record<string, unknown>,
+  callback?: GenericCallback,
+  failure?: GenericCallback,
+): Promise<void> {
+  const queryParams = getQueryParams(params, vaParams, settings);
+  return sendPostRequest(settings, getEndpoint(settings), PATH_MULTISEARCH_AUTOCOMPLETE, queryParams, callback, failure);
+}
+
 function searchByImage(
   settings: ViSearchSettings,
   params: Record<string, unknown>,
@@ -89,4 +113,4 @@ function searchByIdByPost(
   return sendPostRequest(settings, getEndpoint(settings), `${PATH_REC}/${productId}`, queryParams, callback, failure);
 }
 
-export { searchById, searchByImage, searchByIdByPost };
+export { searchById, searchByImage, searchByIdByPost, multisearch, multisearchAutocomplete };
