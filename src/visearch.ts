@@ -212,14 +212,14 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       return searchByImage(settings, params, getDefaultTrackingParams(), altCallback, failure);
     },
     productSearchById: function (productId, params, callback, failure) {
-      const altCallback = wrapCallback.bind(undefined, undefined, callback);
+      const altCallback = wrapCallback.bind(undefined, productId, callback);
       return searchById(settings, productId, params, getDefaultTrackingParams(), altCallback, failure);
     },
     productRecommendations: function (productId, params, callback, failure) {
       return this.productSearchById(productId, params, callback, failure);
     },
     productRecommendationsByPost: function (productId, params, callback, failure) {
-      const altCallback = wrapCallback.bind(undefined, undefined, callback);
+      const altCallback = wrapCallback.bind(undefined, productId, callback);
       return searchByIdByPost(settings, productId, params, getDefaultTrackingParams(), altCallback, failure);
     },
     productSearchByIdByPost: function (productId, params, callback, failure) {
