@@ -95,7 +95,7 @@ npm install visearch-javascript-sdk
 
   ```html
   <script type="text/javascript">
-  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.1.0.min.js","visearch");
+  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.1.1.min.js","visearch");
   </script>
   ```
 
@@ -737,25 +737,25 @@ visearch.sendEvent("product_view", {
             
 // send Transaction event e.g order purchase of $300
 visearch.sendEvent("transaction", {
-                name: "<optional event name>" // optional event name
-                queryId: "<search reqid>",
-                transId: "<your transaction ID>"
-                value: 300
-         });
+  name: "<optional event name>" // optional event name
+  queryId: "<search reqid>",
+  transId: "<your transaction ID>"
+  value: 300
+});
 
 // send Add to Cart Event
 visearch.sendEvent("add_to_cart", {
-                queryId: "<search reqid>",
-                pid: "<your im_name>",
-                pos: 1, // product position in Search Results, start from 1
-            });
+  queryId: "<search reqid>",
+  pid: "<your im_name>",
+  pos: 1, // product position in Search Results, start from 1
+});
 
 // send custom event
 visearch.sendEvent("click", {
-                queryId: "<search reqid>",
-                name: "click_on_camera_button",
-                cat: "visual_search"
-            });
+  queryId: "<search reqid>",
+  name: "click_on_camera_button",
+  cat: "visual_search"
+});
 ```
 
 ### 5.2 Send Batch Events

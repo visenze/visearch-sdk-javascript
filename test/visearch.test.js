@@ -105,6 +105,16 @@ describe('search', () => {
 
 describe('recommendations', () => {
   test('search success', async () => {
+    window.vsPlacementLoaded = {};
+    window.vsPlacementLoaded[process.env.REC_PLACEMENT_ID] = true;
+    let pid = '';
+    let action = '';
+
+    jest.spyOn(recClient, 'sendEvent').mockImplementation((event, params) => {
+      action = event;
+      pid = params.pid;
+    });
+    
     const res = await new Promise((resolve) => {
       recClient.productSearchById(
         PID,
@@ -117,5 +127,8 @@ describe('recommendations', () => {
       );
     });
     await assertSearchSuccess(recClient, res);
+    expect(recClient.sendEvent).toBeCalledTimes(1);
+    expect(action).toBe('result_load');
+    expect(pid).toBe(process.env.REC_PID);
   });
 });
