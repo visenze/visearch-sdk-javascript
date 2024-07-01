@@ -75,10 +75,16 @@ export const sendGetRequest = (
   queryParams: Record<string, unknown>,
   callback?: GenericCallback,
   failure?: GenericCallback,
+  splitParams?: Record<string, string>,
 ): Promise<void> => {
   const url = new URI(endpoint).setPath(path);
   Object.entries(queryParams).forEach(([key, value]) => {
-    url.addQueryParam(key, value as string);
+    const delimiter = splitParams?.[key]
+    if (delimiter && typeof value === 'string') {
+      value.split(delimiter).forEach((v) => url.addQueryParam(key, v));
+    } else {
+      url.addQueryParam(key, String(value));
+    }
   });
 
   const fetchObj = fetch(url.toString(), {
