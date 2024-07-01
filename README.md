@@ -592,6 +592,14 @@ visearch.productSearchByImage({
 }, (err) => {
   // TODO handle error
 });
+
+visearch.productSearchById(productId, {
+  filters: ['sale_price:50,500','merchant_category:Shirt OR Jacket OR Dresses'],
+}, (res) => {
+  // TODO handle response
+}, (err) => {
+  // TODO handle error
+});
 ```
 
 Params | Filter Query Behaviour | Example
