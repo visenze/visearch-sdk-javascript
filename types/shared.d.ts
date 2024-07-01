@@ -28,7 +28,6 @@ export interface ViSearchClient {
     params: Record<string, unknown>,
     callback: (resp: ProductSearchResponse) => void,
     failure?: GenericCallback,
-    splitParams?: Record<string, string>
   ) => Promise<void>;
   productRecommendations: (
     pid: string,

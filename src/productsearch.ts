@@ -96,10 +96,9 @@ function searchById(
   vaParams: Record<string, unknown>,
   callback?: GenericCallback,
   failure?: GenericCallback,
-  splitParams?: Record<string, string>
 ): Promise<void> {
   const queryParams = getQueryParams(params, vaParams, settings);
-  return sendGetRequest(settings, getEndpoint(settings), `${PATH_REC}/${productId}`, queryParams, callback, failure, splitParams);
+  return sendGetRequest(settings, getEndpoint(settings), `${PATH_REC}/${productId}`, queryParams, callback, failure);
 }
 
 function searchByIdByPost(

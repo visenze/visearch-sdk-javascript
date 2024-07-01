@@ -75,15 +75,17 @@ export const sendGetRequest = (
   queryParams: Record<string, unknown>,
   callback?: GenericCallback,
   failure?: GenericCallback,
-  splitParams?: Record<string, string>,
 ): Promise<void> => {
   const url = new URI(endpoint).setPath(path);
-  Object.entries(queryParams).forEach(([key, value]) => {
-    const delimiter = splitParams?.[key]
-    if (delimiter && typeof value === 'string') {
-      value.split(delimiter).forEach((v) => url.addQueryParam(key, v));
-    } else {
-      url.addQueryParam(key, String(value));
+  Object.entries(queryParams).forEach(([param, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((i) => {
+        if (i != null) {
+          url.addQueryParam(param, i);
+        }
+      });
+    } else if (value != null) {
+      url.addQueryParam(param, String(value));
     }
   });
 

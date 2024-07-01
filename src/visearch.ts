@@ -211,9 +211,9 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       const altCallback = wrapCallback.bind(undefined, undefined, callback);
       return searchByImage(settings, params, getDefaultTrackingParams(), altCallback, failure);
     },
-    productSearchById: function (productId, params, callback, failure, splitParams) {
+    productSearchById: function (productId, params, callback, failure) {
       const altCallback = wrapCallback.bind(undefined, productId, callback);
-      return searchById(settings, productId, params, getDefaultTrackingParams(), altCallback, failure, splitParams);
+      return searchById(settings, productId, params, getDefaultTrackingParams(), altCallback, failure);
     },
     productRecommendations: function (productId, params, callback, failure) {
       return this.productSearchById(productId, params, callback, failure);

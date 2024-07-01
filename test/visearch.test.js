@@ -132,39 +132,18 @@ describe('recommendations', () => {
     expect(pid).toBe(process.env.REC_PID);
   });
 
-  test('search with filters and split params success', async () => {
+  test('search with filters in an array success', async () => {
     const res = await new Promise((resolve) => {
       recClient.productSearchById(
         PID,
         {
-          filters: 'sale_price:50,500|merchant_category:Shirt OR Jacket OR Dresses'
+          filters: ['sale_price:50,500','merchant_category:Shirt OR Jacket OR Dresses']
         },
         (res) => {
           resolve(res);
         },
-        undefined,
-        {
-          filters: '|'
-        }
       );
     });
     await assertSearchSuccess(recClient, res);
-  });
-
-  test('search with filters without split params fail', async () => {
-    const res = await new Promise((resolve) => {
-      recClient.productSearchById(
-        PID,
-        {
-          filters: 'sale_price:50,500|merchant_category:Shirt OR Jacket OR Dresses'
-        },
-        (res) => {
-          resolve(res);
-        },
-        undefined,
-      );
-    });
-    expect(res.status).toBe('fail');
-    expect(res.error.message).toBe('filters parameter syntax error.');
   });
 });
