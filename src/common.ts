@@ -81,7 +81,7 @@ export const sendGetRequest = (
     if (Array.isArray(value)) {
       value.forEach((i) => {
         if (i != null) {
-          url.addQueryParam(param, i);
+          url.addQueryParam(param, String(i));
         }
       });
     } else if (value != null) {
