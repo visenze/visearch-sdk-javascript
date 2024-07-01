@@ -114,7 +114,7 @@ describe('recommendations', () => {
       action = event;
       pid = params.pid;
     });
-    
+
     const res = await new Promise((resolve) => {
       recClient.productSearchById(
         PID,
@@ -130,5 +130,20 @@ describe('recommendations', () => {
     expect(recClient.sendEvent).toBeCalledTimes(1);
     expect(action).toBe('result_load');
     expect(pid).toBe(process.env.REC_PID);
+  });
+
+  test('search with filters in an array success', async () => {
+    const res = await new Promise((resolve) => {
+      recClient.productSearchById(
+        PID,
+        {
+          filters: ['sale_price:50,500','merchant_category:Shirt OR Jacket OR Dresses']
+        },
+        (res) => {
+          resolve(res);
+        },
+      );
+    });
+    await assertSearchSuccess(recClient, res);
   });
 });
