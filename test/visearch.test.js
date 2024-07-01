@@ -105,11 +105,39 @@ describe('search', () => {
 
 describe('recommendations', () => {
   test('search success', async () => {
+    window.vsPlacementLoaded = {};
+    window.vsPlacementLoaded[process.env.REC_PLACEMENT_ID] = true;
+    let pid = '';
+    let action = '';
+
+    jest.spyOn(recClient, 'sendEvent').mockImplementation((event, params) => {
+      action = event;
+      pid = params.pid;
+    });
+
     const res = await new Promise((resolve) => {
       recClient.productSearchById(
         PID,
         {
           attrs_to_get: ['product_id', 'main_image_url'],
+        },
+        (res) => {
+          resolve(res);
+        },
+      );
+    });
+    await assertSearchSuccess(recClient, res);
+    expect(recClient.sendEvent).toBeCalledTimes(1);
+    expect(action).toBe('result_load');
+    expect(pid).toBe(process.env.REC_PID);
+  });
+
+  test('search with filters in an array success', async () => {
+    const res = await new Promise((resolve) => {
+      recClient.productSearchById(
+        PID,
+        {
+          filters: ['sale_price:50,500','merchant_category:Shirt OR Jacket OR Dresses']
         },
         (res) => {
           resolve(res);

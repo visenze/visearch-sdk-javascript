@@ -77,8 +77,16 @@ export const sendGetRequest = (
   failure?: GenericCallback,
 ): Promise<void> => {
   const url = new URI(endpoint).setPath(path);
-  Object.entries(queryParams).forEach(([key, value]) => {
-    url.addQueryParam(key, value as string);
+  Object.entries(queryParams).forEach(([param, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((i) => {
+        if (i != null) {
+          url.addQueryParam(param, String(i));
+        }
+      });
+    } else if (value != null) {
+      url.addQueryParam(param, String(value));
+    }
   });
 
   const fetchObj = fetch(url.toString(), {
