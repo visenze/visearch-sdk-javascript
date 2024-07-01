@@ -95,7 +95,7 @@ npm install visearch-javascript-sdk
 
   ```html
   <script type="text/javascript">
-  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.1.1.min.js","visearch");
+  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-4.1.2.min.js","visearch");
   </script>
   ```
 
@@ -587,6 +587,14 @@ To filter search results based on metadata values, provide a string array of met
 visearch.productSearchByImage({
   im_url: 'your-image-url',
   filters: ['brand:my_brand'],
+}, (res) => {
+  // TODO handle response
+}, (err) => {
+  // TODO handle error
+});
+
+visearch.productSearchById(productId, {
+  filters: ['sale_price:50,500','merchant_category:Shirt OR Jacket OR Dresses'],
 }, (res) => {
   // TODO handle response
 }, (err) => {
