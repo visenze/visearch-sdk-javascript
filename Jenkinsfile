@@ -8,7 +8,7 @@ def getVersion() {
 }
 
 def runDockerCmd(cmd, envVars = "") {
-  return "docker run --rm -v ${WORKSPACE}:${WORKSPACE} ${envVars} -w ${WORKSPACE} node:16-bullseye-slim ${cmd}"
+  return "docker run --rm -v ${WORKSPACE}:${WORKSPACE} ${envVars} -w ${WORKSPACE} node:18-bullseye-slim ${cmd}"
 }
 
 pipeline {

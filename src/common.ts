@@ -1,8 +1,6 @@
-import FormData from 'form-data';
 import { version } from './version.js';
 import { resizeImage } from './resizer.js';
 import { ViSearchSettings, GenericCallback, ProductSearchResponse } from '../types/shared';
-import fetch, { Response, HeadersInit } from 'node-fetch';
 const DEFAULT_TIMEOUT = 15000;
 const USER_AGENT = `visearch-js-sdk/${version}`;
 
