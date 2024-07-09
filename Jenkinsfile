@@ -24,6 +24,10 @@ pipeline {
     ENDPOINT = "https://search-dev.visenze.com"
   }
 
+  tools {
+    nodejs('NodeJS16') // Only to get version number; no problem in using an EOL version
+  }
+
   stages {
     stage('Test') {
       steps {
