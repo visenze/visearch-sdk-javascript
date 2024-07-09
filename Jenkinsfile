@@ -8,7 +8,7 @@ def getVersion() {
 }
 
 def runDockerCmd(cmd, envVars = "") {
-  return "docker run --rm -v ${WORKSPACE}:${WORKSPACE} ${envVars} -w ${WORKSPACE} node:16-bullseye-slim ${cmd}"
+  return "docker run --rm -v ${WORKSPACE}:${WORKSPACE} ${envVars} -w ${WORKSPACE} node:18-bullseye-slim ${cmd}"
 }
 
 pipeline {
@@ -22,6 +22,10 @@ pipeline {
     REC_PLACEMENT_ID = 1823
     REC_PID = "184827-09"
     ENDPOINT = "https://search-dev.visenze.com"
+  }
+
+  tools {
+    nodejs('NodeJS16') // Only to get version number; no problem in using an EOL version
   }
 
   stages {
