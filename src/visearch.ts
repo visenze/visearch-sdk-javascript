@@ -290,6 +290,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
       const fnName = command[0];
       const args = command.slice(1);
       if (isFunction(prototypes[fnName])) {
+        // @ts-expect-error https://github.com/microsoft/TypeScript/issues/49700
         prototypes[fnName](...args);
       }
     },
