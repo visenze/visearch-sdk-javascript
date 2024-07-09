@@ -7,9 +7,13 @@ def getVersion() {
   return version
 }
 
+def runDockerCmd(cmd, envVars = "") {
+  return "docker run --rm -v ${WORKSPACE}:${WORKSPACE} ${envVars} -w ${WORKSPACE} node:16-bullseye-slim ${cmd}"
+}
+
 pipeline {
   agent {
-    label "${params.AGENT_LABEL ?: 'build-amd64'}"
+    label "${params.AGENT_LABEL ?: 'build-arm64'}"
   }
 
   environment {
@@ -20,23 +24,23 @@ pipeline {
     ENDPOINT = "https://search-dev.visenze.com"
   }
 
-  tools {
-    nodejs('NodeJS16')
-  }
-
   stages {
     stage('Test') {
       steps {
         script {
-          sh 'npm ci'
-          sh 'npm run write-version'
-          sh 'npx tsc'
+          sh runDockerCmd('npm ci')
+          sh runDockerCmd('npm run write-version')
+          sh runDockerCmd('npx tsc')
           withCredentials([
             string(credentialsId: 'search.sg.app-1823.staging', variable: 'SEARCH_APP_KEY'),
             string(credentialsId: 'rec.sg.app-2967.staging', variable: 'REC_APP_KEY'),
           ]) {
+            def envVars = "-e SEARCH_PLACEMENT_ID=${SEARCH_PLACEMENT_ID} -e SEARCH_IM_URL=${SEARCH_IM_URL} \
+              -e REC_PLACEMENT_ID=${REC_PLACEMENT_ID} -e REC_PID=${REC_PID} \
+              -e SEARCH_APP_KEY=${SEARCH_APP_KEY} -e REC_APP_KEY=${REC_APP_KEY} \
+              -e ENDPOINT=${ENDPOINT}"
             codeclimate.testWithCoverage({
-              sh 'npm run test-with-coverage'
+              sh runDockerCmd('npm run test-with-coverage', envVars)
             })
           }
         }
