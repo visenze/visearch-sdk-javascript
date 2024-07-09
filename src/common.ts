@@ -110,9 +110,9 @@ export const sendPostRequest = async (
   if (queryParams['image']) {
     const img = queryParams['image'];
     delete queryParams['image'];
-    let resizedImage;
+    let resizedImage: Blob | null = null;
     if (settings['disable_resize']) {
-      resizedImage = img;
+      resizedImage = img as Blob;
     } else {
       if (img instanceof Blob) {
         resizedImage = await resizeImage(img, settings.resize_settings);
@@ -120,7 +120,9 @@ export const sendPostRequest = async (
         resizedImage = await resizeImage(img.files[0], settings.resize_settings);
       }
     }
-    postData.append('image', resizedImage);
+    if (resizedImage) {
+      postData.append('image', resizedImage);
+    }
   }
   Object.entries(queryParams).forEach(([param, values]) => {
     if (Array.isArray(values)) {
@@ -130,7 +132,7 @@ export const sendPostRequest = async (
         }
       });
     } else if (values != null) {
-      postData.append(param, values);
+      postData.append(param, values as string | Blob);
     }
   });
 
