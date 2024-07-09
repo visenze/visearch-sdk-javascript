@@ -8,7 +8,6 @@ import { version } from './version.js';
 
 import { searchById, searchByImage, searchByIdByPost, multisearch, multisearchAutocomplete } from './productsearch.js';
 import { resizeImageFromDataUrl } from './resizer.js';
-import isFunction from 'lodash.isfunction';
 import { ProductSearchResponse, ViSearchSettings, ViSearchClient, AutoCompleteResponse } from '../types/shared';
 
 const STAGING_ENDPOINT = 'https://search-dev.visenze.com';
@@ -289,8 +288,7 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     applyPrototypesCall: function (command) {
       const fnName = command[0];
       const args = command.slice(1);
-      if (isFunction(prototypes[fnName])) {
-        // @ts-expect-error https://github.com/microsoft/TypeScript/issues/49700
+      if (typeof prototypes[fnName] === 'function') {
         prototypes[fnName](...args);
       }
     },

@@ -1,6 +1,4 @@
-import URI from 'jsuri';
 import FormData from 'form-data';
-import isFunction from 'lodash.isfunction';
 import { version } from './version.js';
 import { resizeImage } from './resizer.js';
 import { ViSearchSettings, GenericCallback, ProductSearchResponse } from '../types/shared';
@@ -56,13 +54,13 @@ function sendRequest(
       if (reqid && !(json as ProductSearchResponse).reqid) {
         (json as ProductSearchResponse).reqid = reqid;
       }
-      if (isFunction(callback)) {
+      if (typeof callback === 'function') {
         callback(json);
       }
     })
     .catch((ex) => {
       console.error(`Failed to process api: ${path}.`, ex);
-      if (isFunction(failure)) {
+      if (typeof failure === 'function') {
         failure(ex);
       }
     });
@@ -76,20 +74,21 @@ export const sendGetRequest = (
   callback?: GenericCallback,
   failure?: GenericCallback,
 ): Promise<void> => {
-  const url = new URI(endpoint).setPath(path);
+  const url = new URL(endpoint);
+  url.pathname = path;
   Object.entries(queryParams).forEach(([param, value]) => {
     if (Array.isArray(value)) {
       value.forEach((i) => {
         if (i != null) {
-          url.addQueryParam(param, String(i));
+          url.searchParams.append(param, String(i));
         }
       });
     } else if (value != null) {
-      url.addQueryParam(param, String(value));
+      url.searchParams.append(param, String(value));
     }
   });
 
-  const fetchObj = fetch(url.toString(), {
+  const fetchObj = fetch(url, {
     method: 'GET',
     headers: getHeaders(settings),
   });
@@ -104,7 +103,8 @@ export const sendPostRequest = async (
   callback?: GenericCallback,
   failure?: GenericCallback,
 ): Promise<void> => {
-  const url = new URI(endpoint).setPath(path).toString();
+  const url = new URL(endpoint);
+  url.pathname = path;
 
   const postData = new FormData();
   if (queryParams['image']) {
