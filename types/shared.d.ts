@@ -13,6 +13,16 @@ export interface ViSearchClient {
     callback: (resp: ProductSearchResponse) => void,
     failure?: GenericCallback,
   ) => Promise<void>;
+  productMultisearchComplementary: (
+    params: Record<string, unknown>,
+    callback: (resp: ProductSearchResponse) => void,
+    failure?: GenericCallback,
+  ) => Promise<void>;
+  productMultisearchOutfitRecommendations: (
+    params: Record<string, unknown>,
+    callback: (resp: ProductSearchResponse) => void,
+    failure?: GenericCallback,
+  ) => Promise<void>;
   productMultisearchAutocomplete: (
     params: Record<string, unknown>,
     callback: (resp: AutoCompleteResponse) => void,

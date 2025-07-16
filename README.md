@@ -22,7 +22,9 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
     - [2.1 Search by Image](#21-search-by-image)
     - [2.2 Recommendations](#22-recommendations)
     - [2.3 Multisearch](#23-multisearch)
-    - [2.4 Multisearch Autocomplete](#24-multisearch-autocomplete)
+    - [2.4 Multisearch Complementary](#24-multisearch-complementary)
+    - [2.5 Multisearch Outfit Recommendations](#25-multisearch-outfit-recommendations)
+    - [2.6 Multisearch Autocomplete](#26-multisearch-autocomplete)
   - [3. Search Results](#3-search-results)
     - [3.1 ErrorData](#31-errordata)
     - [3.2 ProductType](#32-producttype)
@@ -95,7 +97,7 @@ npm install visearch-javascript-sdk
 
   ```html
   <script type="text/javascript">
-  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-5.0.0.min.js","visearch");
+  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchComplementary","productMultisearchOutfitRecommendations","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-5.1.0-beta.2.min.js","visearch");
   </script>
   ```
 
@@ -178,6 +180,18 @@ ENDPOINT =
   ```
 
   After the above command, you should see that the server is running locally on your device. You can then access the different demo webpages in your browser by using this format `http://localhost:3000/examples/*.html`.
+
+  - E.g. Product Multisearch:
+
+  `http://localhost:3000/examples/product_multisearch.html`
+
+  - E.g. Product Multisearch Complementary:
+
+  `http://localhost:3000/examples/product_multisearch_complementary.html`
+
+- E.g. Product Multisearch Outfit Recommendations:
+
+  `http://localhost:3000/examples/product_multisearch_outfit_recommendations.html`
 
   - E.g. Product recommendation:
 
@@ -291,7 +305,7 @@ visearch.productRecommendations(product_id, parameters, onResponse, onError);
 
 POST /product/multisearch
 
-Multisearch can happen in four different ways - by text, url, id or File.
+Multisearch can happen in five different ways - by text, product id, image url, image id or image file.
 
 - Using text:
 
@@ -301,6 +315,24 @@ Multisearch can happen in four different ways - by text, url, id or File.
   };
 
   const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearch(parameters, onResponse, onError);
+  ```
+
+- Using product id:
+  
+  ```javascript
+  const parameters = {
+    pid: 'your-product-id'
+  }
+
+  const onResponse = (response)=>{
     // TODO handle response
   }
 
@@ -374,11 +406,101 @@ Multisearch can happen in four different ways - by text, url, id or File.
 
 > The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-api).
 
-### 2.4 Multisearch Autocomplete
+### 2.4 Multisearch Complementary
+
+POST /product/multisearch/complementary
+
+Multisearch complementary can happen with product id and text.
+
+- Using product id:
+  
+  ```javascript
+  const parameters = {
+    pid: 'your-product-id',
+  }
+
+  const onResponse = (response)=>{
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchComplementary(parameters, onResponse, onError);
+  ```
+
+- Using product id and text:
+  
+  ```javascript
+  const parameters = {
+    pid: 'your-product-id',
+    q: 'your-text-query',
+  }
+
+  const onResponse = (response)=>{
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchComplementary(parameters, onResponse, onError);
+  ```
+
+> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-complementary-api).
+
+### 2.5 Multisearch Outfit Recommendations
+
+POST /product/multisearch/outfit-recommendations
+
+Multisearch outfit recommendations can happen with product id and text.
+
+- Using product id:
+  
+  ```javascript
+  const parameters = {
+    pid: 'your-product-id',
+  }
+
+  const onResponse = (response)=>{
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchOutfitRecommendations(parameters, onResponse, onError);
+  ```
+
+- Using product id and text:
+  
+  ```javascript
+  const parameters = {
+    pid: 'your-product-id',
+    q: 'your-text-query',
+  }
+
+  const onResponse = (response)=>{
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchOutfitRecommendations(parameters, onResponse, onError);
+  ```
+
+> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-outfit-recommendations-api).
+
+### 2.6 Multisearch Autocomplete
 
 POST /product/multisearch/autocomplete
 
-Multisearch autocomplete can happen in four different ways - by text, url, id or File.
+Multisearch autocomplete can happen in five different ways - by text, product id, image url, image id or image file.
 
 - Using text:
 
@@ -388,6 +510,24 @@ Multisearch autocomplete can happen in four different ways - by text, url, id or
   };
 
   const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
+  ```
+
+  - Using product id:
+  
+  ```javascript
+  const parameters = {
+    pid: 'your-product-id'
+  }
+
+  const onResponse = (response)=>{
     // TODO handle response
   }
 
@@ -459,7 +599,7 @@ Multisearch autocomplete can happen in four different ways - by text, url, id or
   visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
   ```
 
-> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-api).
+> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-autocomplete-api).
 
 
 ## 3. Search Results
