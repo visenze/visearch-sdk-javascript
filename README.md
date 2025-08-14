@@ -97,7 +97,7 @@ npm install visearch-javascript-sdk
 
   ```html
   <script type="text/javascript">
-  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchComplementary","productMultisearchOutfitRecommendations","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-5.1.0-beta.3.min.js","visearch");
+  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchComplementary","productMultisearchOutfitRecommendations","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-5.1.0.min.js","visearch");
   </script>
   ```
 
@@ -410,7 +410,7 @@ Multisearch can happen in five different ways - by text, product id, image url, 
 
 POST /product/multisearch/complementary
 
-Multisearch complementary can happen with product id and text.
+Multisearch complementary can happen with product id / image url /image id / image file and text.
 
 - Using product id:
   
@@ -449,13 +449,74 @@ Multisearch complementary can happen with product id and text.
   visearch.productMultisearchComplementary(parameters, onResponse, onError);
   ```
 
+- Using image id:
+
+  ```javascript
+  const parameters = {
+    im_id: 'your-image-id'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchComplementary(parameters, onResponse, onError);
+  ```
+
+- Using image url:
+
+  ```javascript
+  const parameters = {
+    im_url: 'your-image-url'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchComplementary(parameters, onResponse, onError);
+  ```
+
+- Using image file:
+
+  ```html
+  <form>
+    Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
+    <input type="submit" value="Submit">
+  </form>
+  ```
+
+  ```javascript
+  const parameters = {
+    image: document.getElementById('fileUpload')
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchComplementary(parameters, onResponse, onError);
+  ```
+
 > The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-complementary-api).
 
 ### 2.5 Multisearch Outfit Recommendations
 
 POST /product/multisearch/outfit-recommendations
 
-Multisearch outfit recommendations can happen with product id and text.
+Multisearch outfit recommendations can happen with product id / image url /image id / image file and text.
 
 - Using product id:
   
@@ -484,6 +545,67 @@ Multisearch outfit recommendations can happen with product id and text.
   }
 
   const onResponse = (response)=>{
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchOutfitRecommendations(parameters, onResponse, onError);
+  ```
+
+- Using image id:
+
+  ```javascript
+  const parameters = {
+    im_id: 'your-image-id'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchOutfitRecommendations(parameters, onResponse, onError);
+  ```
+
+- Using image url:
+
+  ```javascript
+  const parameters = {
+    im_url: 'your-image-url'
+  };
+
+  const onResponse = (response)=> {
+    // TODO handle response
+  }
+
+  const onError = (error)=> {
+    // TODO handle error
+  }
+
+  visearch.productMultisearchOutfitRecommendations(parameters, onResponse, onError);
+  ```
+
+- Using image file:
+
+  ```html
+  <form>
+    Upload image: <input type="file" id="fileUpload" name="fileInput"><br>
+    <input type="submit" value="Submit">
+  </form>
+  ```
+
+  ```javascript
+  const parameters = {
+    image: document.getElementById('fileUpload')
+  };
+
+  const onResponse = (response)=> {
     // TODO handle response
   }
 

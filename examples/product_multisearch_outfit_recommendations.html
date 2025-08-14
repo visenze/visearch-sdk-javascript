@@ -72,10 +72,6 @@
           params['pid'] = $("#pid-input").val();
         }
 
-        if ($("#pairing-rules-input").val() != "") {
-          params['pairing_rules'] = $("#pairing-rules-input").val();
-        }
-
         if ($("#q-input").val() != "") {
           params['q'] = $("#q-input").val();
         }
@@ -155,11 +151,6 @@
         <div class="row">
           Product ID (Required):
           <input id="pid-input" type="text" />
-        </div>
-
-        <div class="row">
-          Pairing Rules (Optional):
-            <textarea id="pairing-rules-input" rows="10" cols="50" style="width: 100%; resize: vertical;"></textarea>
         </div>
 
         <div class="row">
