@@ -6,7 +6,7 @@
 import va, { VAClient } from 'visenze-tracking-javascript';
 import { version } from './version.js';
 
-import { searchById, searchByImage, searchByIdByPost, multisearch, multisearchAutocomplete } from './productsearch.js';
+import { searchById, searchByImage, searchByIdByPost, multisearch, multisearchAutocomplete, multisearchComplementary, multisearchOutfitRecommendations } from './productsearch.js';
 import { resizeImageFromDataUrl } from './resizer.js';
 import { ProductSearchResponse, ViSearchSettings, ViSearchClient, AutoCompleteResponse } from '../types/shared';
 
@@ -201,6 +201,14 @@ export function ViSearch(configs?: Record<string, unknown>): ViSearchClient {
     productMultisearch: function (params, callback, failure) {
       const altCallback = wrapCallback.bind(undefined, undefined, callback);
       return multisearch(settings, params, getDefaultTrackingParams(), altCallback, failure);
+    },
+    productMultisearchComplementary: function (params, callback, failure) {
+      const altCallback = wrapCallback.bind(undefined, undefined, callback);
+      return multisearchComplementary(settings, params, getDefaultTrackingParams(), altCallback, failure);
+    },
+    productMultisearchOutfitRecommendations: function (params, callback, failure) {
+      const altCallback = wrapCallback.bind(undefined, undefined, callback);
+      return multisearchOutfitRecommendations(settings, params, getDefaultTrackingParams(), altCallback, failure);
     },
     productMultisearchAutocomplete: function (params, callback, failure) {
       const altCallback = wrapCallbackAutoComplete.bind(undefined, callback);

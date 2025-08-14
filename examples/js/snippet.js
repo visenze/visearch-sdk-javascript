@@ -45,6 +45,8 @@
       'sendEvent',
       'sendEvents',
       'productMultisearch',
+      'productMultisearchComplementary',
+      'productMultisearchOutfitRecommendations',
       'productMultisearchAutocomplete',
       'productSearchByImage',
       'productSearchById',

@@ -13,6 +13,16 @@ export interface ViSearchClient {
     callback: (resp: ProductSearchResponse) => void,
     failure?: GenericCallback,
   ) => Promise<void>;
+  productMultisearchComplementary: (
+    params: Record<string, unknown>,
+    callback: (resp: ProductSearchResponse) => void,
+    failure?: GenericCallback,
+  ) => Promise<void>;
+  productMultisearchOutfitRecommendations: (
+    params: Record<string, unknown>,
+    callback: (resp: ProductSearchResponse) => void,
+    failure?: GenericCallback,
+  ) => Promise<void>;
   productMultisearchAutocomplete: (
     params: Record<string, unknown>,
     callback: (resp: AutoCompleteResponse) => void,
@@ -119,6 +129,7 @@ export interface ProductSearchResponseSuccess extends SimpleResponse {
   explanation?: { [index: string]: any };
   alt_limit?: number;
   product_info?: Product;
+  q_info?: Product;
   query_sys_meta?: { [index: string]: string };
   query_tmp_url?: string;
   excluded_pids?: string[];
@@ -152,6 +163,8 @@ export interface Product {
   product_id: string;
   main_image_url: string;
   data: Record<string, unknown>;
+  sys?: Record<string, unknown>;
+  alternatives?: Product[];
   score?: number;
   image_s3_url?: string;
   pinned?: 'true' | 'false';
