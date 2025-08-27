@@ -129,7 +129,7 @@ export interface ProductSearchResponseSuccess extends SimpleResponse {
   explanation?: { [index: string]: any };
   alt_limit?: number;
   product_info?: Product;
-  q_info?: Product;
+  qinfo?: Product;
   query_sys_meta?: { [index: string]: string };
   query_tmp_url?: string;
   excluded_pids?: string[];
