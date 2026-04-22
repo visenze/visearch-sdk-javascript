@@ -17,6 +17,7 @@ Rezolve's Javascript SDK provides accurate, reliable and scalable image search A
     - [1.2 Setup](#12-setup)
       - [1.2.1 Import and initialization](#121-import-and-initialization)
       - [1.2.2 Configure keys](#122-configure-keys)
+      - [1.2.3 Cloud-specific domains](#123-cloud-specific-domains)
     - [1.3 Demo](#13-demo)
   - [2. API](#2-api)
     - [2.1 Search by Image](#21-search-by-image)
@@ -121,7 +122,8 @@ Please take a look at the table below to understand what each key represents:
 |:---|:---|:---|
 | app_key | Compulsory | All SDK functions depends on a valid app_key being set. The app key also limits the API features you can use. |
 | placement_id | Compulsory | Placement id of the current placement |
-| endpoint | Situational | Default is `https://search.visenze.com/` (AWS). For Azure-deployed apps, use `https://multimodal.search.rezolve.com/` |
+| cloud | Optional | Cloud deployment target. Set to `'aws'` or `'azure'` to route to the new cloud-specific domains (`multisearch-aw.rezolve.com` / `multisearch-az.rezolve.com`) with their updated API paths. If `endpoint` is also set, it takes precedence over `cloud`. |
+| endpoint | Situational | Overrides the resolved domain entirely. If set to one of the new cloud domains, the updated API paths are used automatically. Use for custom or staging endpoints. |
 | timeout | Optional | Defaulted to 15000 |
 | uid | Optional | If this is not provided, we will auto generate the uid |
 
@@ -156,6 +158,57 @@ const visearch = ViSearch({
   'placement_id': 'YOUR_PLACEMENT_ID'
 })
 ```
+
+#### 1.2.3 Cloud-specific domains
+
+Rezolve now provides dedicated cloud-specific domains that offer faster latency, more intuitive API paths and allow traffic to be routed to the exact cloud infrastructure where your app is deployed. Using the cloud-specific domain for your deployment is recommended over the legacy domain.
+
+| `cloud` value | Domain | When to use |
+|:---|:---|:---|
+| `'aws'` | `https://multisearch-aw.rezolve.com` | App deployed on AWS |
+| `'azure'` | `https://multisearch-az.rezolve.com` | App deployed on Azure |
+| _(unset)_ | `https://multimodal.search.rezolve.com` | Legacy — maintained for backwards compatibility |
+
+The new domains also use updated API paths:
+
+| API | Legacy path | New cloud path |
+|:---|:---|:---|
+| Search by image | `v1/product/search_by_image` | `v1/visearch/search_by_image` |
+| Recommendations | `v1/product/recommendations` | `v1/visearch/recommendations` |
+| Multisearch | `v1/product/multisearch` | `v1/search` |
+| Multisearch complementary | `v1/product/multisearch/complementary` | `v1/search/complementary` |
+| Multisearch outfit recommendations | `v1/product/multisearch/outfit-recommendations` | `v1/search/outfit-recommendations` |
+| Multisearch autocomplete | `v1/product/multisearch/autocomplete` | `v1/autocomplete` |
+
+The SDK switches paths automatically — you only need to set `cloud`:
+
+```javascript
+// AWS deployment
+const visearch = ViSearch({
+  app_key: 'YOUR_APP_KEY',
+  placement_id: 'YOUR_PLACEMENT_ID',
+  cloud: 'aws',
+});
+
+// Azure deployment
+const visearch = ViSearch({
+  app_key: 'YOUR_APP_KEY',
+  placement_id: 'YOUR_PLACEMENT_ID',
+  cloud: 'azure',
+});
+```
+
+If you need to point directly at a cloud domain URL (e.g. for testing), you can set `endpoint` instead of `cloud` — the SDK detects the cloud domain and uses the new paths automatically:
+
+```javascript
+const visearch = ViSearch({
+  app_key: 'YOUR_APP_KEY',
+  placement_id: 'YOUR_PLACEMENT_ID',
+  endpoint: 'https://multisearch-aw.rezolve.com',
+});
+```
+
+> For full details on the domain and path changes see [`docs/rezolve-domains-update.md`](docs/rezolve-domains-update.md).
 
 ### 1.3 Demo
 

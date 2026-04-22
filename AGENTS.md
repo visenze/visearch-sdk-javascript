@@ -60,7 +60,7 @@ This is a JavaScript/TypeScript SDK for the ViSearch / Rezolve product search AP
 
 **Tracking**: A `visenze-tracking-javascript` (`VAClient`) instance is lazily created on first use. Analytics params (`va_uid`, `va_sdk`, `va_sid`, `va_sdk_version`) are injected into every search request via `getAnalyticsParams`. Successful responses persist `reqid` to `localStorage` under the key `visenze_query_id_<placement_id>`.
 
-**Endpoint resolution** (`productsearch.ts`): defaults to `https://multimodal.search.rezolve.com`; overridden by `settings.endpoint` or `settings.is_cn` (points to `https://search.visenze.com.cn`).
+**Endpoint resolution** (`productsearch.ts`): defaults to `https://multimodal.search.rezolve.com` (legacy). Set `cloud: 'aws'` for `https://multisearch-aw.rezolve.com` or `cloud: 'azure'` for `https://multisearch-az.rezolve.com`; these also switch API paths to the new `v1/visearch/*` / `v1/search/*` / `v1/autocomplete` layout. `settings.endpoint` takes full precedence — if it matches a cloud domain URL, new paths are used automatically; any other value uses legacy paths regardless of `cloud`. `settings.is_cn` routes to `https://search.visenze.com.cn` with legacy paths.
 
 **Stub/async loading pattern** (`index.ts`): The SDK supports async script loading. Before the bundle loads, callers push commands onto `window.<clientName>.q`. After load, `viInit` replays those queued commands against the real client via `applyPrototypesCall`.
 
