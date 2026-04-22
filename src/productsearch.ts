@@ -22,7 +22,15 @@ const CLOUD_PATH_MULTISEARCH_COMPLEMENTARY = 'v1/search/complementary';
 const CLOUD_PATH_MULTISEARCH_OUTFIT        = 'v1/search/outfit-recommendations';
 const CLOUD_PATH_MULTISEARCH_AUTOCOMPLETE  = 'v1/autocomplete';
 
-const CLOUD_ENDPOINTS = new Set([END_POINT_AWS, END_POINT_AZURE]);
+function toOrigin(urlString: string): string | undefined {
+  try {
+    return new URL(urlString).origin;
+  } catch {
+    return undefined;
+  }
+}
+
+const CLOUD_ENDPOINTS = new Set([toOrigin(END_POINT_AWS), toOrigin(END_POINT_AZURE)].filter(Boolean));
 
 function getAnalyticsParams(
   queryParams: Record<string, unknown> | undefined,
@@ -63,7 +71,10 @@ function getEndpoint(settings: ViSearchSettings): string {
 // settings.endpoint takes priority: if set, check against known cloud domains.
 // Only falls back to settings.cloud when no endpoint is provided.
 function isCloudDomain(settings: ViSearchSettings): boolean {
-  if (settings.endpoint) return CLOUD_ENDPOINTS.has(settings.endpoint);
+  if (settings.endpoint) {
+    const endpointOrigin = toOrigin(settings.endpoint);
+    return endpointOrigin ? CLOUD_ENDPOINTS.has(endpointOrigin) : false;
+  }
   if (settings['is_cn']) return false;
   return settings.cloud === 'aws' || settings.cloud === 'azure';
 }

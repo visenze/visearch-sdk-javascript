@@ -113,6 +113,28 @@ describe('cloud domain routing', () => {
     expect(url).not.toContain('v1/product');
   });
 
+  test('endpoint with trailing slash on cloud domain uses new paths', async () => {
+    const client = ViSearch({ app_key: 'k', placement_id: 'p', endpoint: 'https://multisearch-aw.rezolve.com/' });
+    await new Promise((resolve) => client.productMultisearch({ q: 'test' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('multisearch-aw.rezolve.com');
+    expect(url).toContain('v1/search');
+    expect(url).not.toContain('v1/product');
+  });
+
+  test('endpoint with cloud origin and extra URL components uses new paths', async () => {
+    const client = ViSearch({
+      app_key: 'k',
+      placement_id: 'p',
+      endpoint: 'https://multisearch-az.rezolve.com/some/path?x=1#frag',
+    });
+    await new Promise((resolve) => client.productMultisearch({ q: 'test' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('multisearch-az.rezolve.com');
+    expect(url).toContain('v1/search');
+    expect(url).not.toContain('v1/product');
+  });
+
   test('custom staging endpoint uses legacy paths even when cloud is set', async () => {
     const client = ViSearch({
       app_key: 'k',
