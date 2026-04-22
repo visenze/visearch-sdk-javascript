@@ -49,8 +49,10 @@ beforeEach(() => {
 
 describe('cloud domain routing', () => {
   let fetchMock;
+  let originalFetch;
 
   beforeEach(() => {
+    originalFetch = global.fetch;
     fetchMock = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -62,6 +64,7 @@ describe('cloud domain routing', () => {
   });
 
   afterEach(() => {
+    global.fetch = originalFetch;
     jest.restoreAllMocks();
   });
 
