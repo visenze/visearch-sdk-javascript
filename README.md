@@ -122,8 +122,8 @@ Please take a look at the table below to understand what each key represents:
 |:---|:---|:---|
 | app_key | Compulsory | All SDK functions depends on a valid app_key being set. The app key also limits the API features you can use. |
 | placement_id | Compulsory | Placement id of the current placement |
-| cloud | Optional | Cloud deployment target. Set to `'aws'` or `'azure'` to route to the new cloud-specific domains (`multisearch-aw.rezolve.com` / `multisearch-az.rezolve.com`) with their updated API paths. If `endpoint` is also set, it takes precedence over `cloud`. |
-| endpoint | Situational | Overrides the resolved domain entirely. If set to one of the new cloud domains, the updated API paths are used automatically. Use for custom or staging endpoints. |
+| cloud | Optional | Cloud deployment target. Set to `'aws'` or `'azure'` to route to the new cloud-specific domains (`https://multisearch-aw.rezolve.com` / `https://multisearch-az.rezolve.com`) with their updated API paths. If `endpoint` is also set, it takes precedence over `cloud`. |
+| endpoint | Situational | Overrides the resolved domain entirely. Must be a full URL including scheme, e.g. `https://multisearch-aw.rezolve.com`. If set to one of the new cloud domain URLs, the updated API paths are used automatically. Takes precedence over `cloud`. |
 | timeout | Optional | Defaulted to 15000 |
 | uid | Optional | If this is not provided, we will auto generate the uid |
 
