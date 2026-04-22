@@ -11,6 +11,7 @@ We now have 2 new cloud specific domains with updated paths (clearer and more in
 The API paths for the new domain has also changed.
 
 | Current host path | New host path | Description
+|:---|:---|:---|
 | https://search.visenze.com/v1/product/search_by_image | https://multisearch-aw.rezolve.com/v1/visearch/search_by_image | Legacy image search API.
 | https://search.visenze.com/v1/product/recommendations | https://multisearch-aw.rezolve.com/v1/visearch/recommendations | Legacy recommendations API.
 | https://search.visenze.com/v1/product/search_by_id | https://multisearch-aw.rezolve.com/v1/visearch/search_by_id | Legacy recommendations API.
