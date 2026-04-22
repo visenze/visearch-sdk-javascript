@@ -1,7 +1,7 @@
 import { sendGetRequest, sendPostRequest } from './common.js';
 import { GenericCallback, ViSearchSettings } from '../types/shared';
 
-const END_POINT = 'https://search.visenze.com';
+const END_POINT = 'https://multimodal.search.rezolve.com';
 const CN_END_POINT = 'https://search.visenze.com.cn';
 
 const PATH_SEARCH = 'v1/product/search_by_image';
