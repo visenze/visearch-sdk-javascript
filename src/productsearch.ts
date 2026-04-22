@@ -64,6 +64,7 @@ function getEndpoint(settings: ViSearchSettings): string {
 // Only falls back to settings.cloud when no endpoint is provided.
 function isCloudDomain(settings: ViSearchSettings): boolean {
   if (settings.endpoint) return CLOUD_ENDPOINTS.has(settings.endpoint);
+  if (settings['is_cn']) return false;
   return settings.cloud === 'aws' || settings.cloud === 'azure';
 }
 

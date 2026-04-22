@@ -2,7 +2,7 @@
 
 For Product Search API, the current domain is "https://search.visenze.com" or "https://multimodal.search.rezolve.com" for apps deployed in AWS/Azure respectively.
 
-We now have 2 new cloud specific domain with updated path (clearer and more intuitive):
+We now have 2 new cloud specific domains with updated paths (clearer and more intuitive):
 - https://multisearch-aw.rezolve.com for apps deployed in AWS
 - https://multisearch-az.rezolve.com for apps deployed in Azure
 
