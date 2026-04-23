@@ -2,9 +2,9 @@
 
 [![npm version](https://img.shields.io/npm/v/visearch-javascript-sdk.svg?style=flat)](https://www.npmjs.com/package/visearch-javascript-sdk)
 
-ViSenze's Javascript SDK provides accurate, reliable and scalable image search APIs within our catalogs. The APIs included in this SDK aims to provide developers with endpoints that executes image search efficiently while also making it easy to integrate into webapps.
+Rezolve's Javascript SDK provides accurate, reliable and scalable image search APIs within our catalogs. The APIs included in this SDK aims to provide developers with endpoints that executes image search efficiently while also making it easy to integrate into webapps.
 
-> Note: In order to use any of our SDKs, you are required to have a ViSenze developer account. You will gain access to your own dashboard to manage your appkeys and catalogs. Visit [here](https://console.visenze.com) for more info.
+> Note: In order to use any of our SDKs, you are required to have a Rezolve developer account. You will gain access to your own dashboard to manage your appkeys and catalogs. Visit [here](https://ms.console.rezolve.com/) for more info.
 
 ----
 
@@ -17,6 +17,7 @@ ViSenze's Javascript SDK provides accurate, reliable and scalable image search A
     - [1.2 Setup](#12-setup)
       - [1.2.1 Import and initialization](#121-import-and-initialization)
       - [1.2.2 Configure keys](#122-configure-keys)
+      - [1.2.3 Cloud-specific domains](#123-cloud-specific-domains)
     - [1.3 Demo](#13-demo)
   - [2. API](#2-api)
     - [2.1 Search by Image](#21-search-by-image)
@@ -97,7 +98,7 @@ npm install visearch-javascript-sdk
 
   ```html
   <script type="text/javascript">
-  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchComplementary","productMultisearchOutfitRecommendations","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-5.1.1.min.js","visearch");
+  !function(e,t,r,s,a){if(Array.isArray(a))for(var n=0;n<a.length;n++)o(e,t,r,s,a[n]);else o(e,t,r,s,a);function o(e,t,r,s,a){var n=e[a]||{};e[a]=n,n.q=n.q||[],n.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.q.push(t),n}},n.methods=["set","setKeys","sendEvent","sendEvents","productMultisearch","productMultisearchComplementary","productMultisearchOutfitRecommendations","productMultisearchAutocomplete","productSearchByImage","productSearchById","productRecommendations","productSearchByIdByPost","productRecommendationsByPost","setUid","getUid","getSid","getLastQueryId","getSessionTimeRemaining","getDefaultTrackingParams","resetSession","resizeImage","generateUuid",];for(var o=0;o<n.methods.length;o++){var i=n.methods[o];n[i]=n.factory(i)}if(e.viInit)viInit(e,a);else{var c,d,u,f,g,m=(c=t,d=r,u=s,(f=c.createElement(d)).type="text/javascript",f.async=!0,f.src=u,(g=c.getElementsByTagName(d)[0]).parentNode.insertBefore(f,g),f);m.onload=function(){viInit(e,a)},m.onerror=function(){console.log("ViSearch Javascript SDK load fails")}}}}(window,document,"script","https://cdn.visenze.com/visearch/dist/js/visearch-5.2.0.min.js","visearch");
   </script>
   ```
 
@@ -113,7 +114,7 @@ npm install visearch-javascript-sdk
 
 #### 1.2.2 Configure keys
 
-Before you can start using the SDK, you will need to set up . Most of these keys can be found in your account's [dashboard](https://console.visenze.com).
+Before you can start using the SDK, you will need to set up . Most of these keys can be found in your account's [dashboard](https://ms.console.rezolve.com/).
 
 Please take a look at the table below to understand what each key represents:
 
@@ -121,7 +122,8 @@ Please take a look at the table below to understand what each key represents:
 |:---|:---|:---|
 | app_key | Compulsory | All SDK functions depends on a valid app_key being set. The app key also limits the API features you can use. |
 | placement_id | Compulsory | Placement id of the current placement |
-| endpoint | Situational | Default is `https://search.visenze.com/` |
+| cloud | Optional | Cloud deployment target. Set to `'aws'` or `'azure'` to route to the new cloud-specific domains (`https://multisearch-aw.rezolve.com` / `https://multisearch-az.rezolve.com`) with their updated API paths. If `endpoint` is also set, it takes precedence over `cloud`. |
+| endpoint | Situational | Overrides the resolved domain entirely. Must be a full URL including scheme, e.g. `https://multisearch-aw.rezolve.com`. If set to one of the new cloud domain URLs, the updated API paths are used automatically. Takes precedence over `cloud`. |
 | timeout | Optional | Defaulted to 15000 |
 | uid | Optional | If this is not provided, we will auto generate the uid |
 
@@ -156,6 +158,57 @@ const visearch = ViSearch({
   'placement_id': 'YOUR_PLACEMENT_ID'
 })
 ```
+
+#### 1.2.3 Cloud-specific domains
+
+Rezolve now provides dedicated cloud-specific domains that offer faster latency, more intuitive API paths and allow traffic to be routed to the exact cloud infrastructure where your app is deployed. Using the cloud-specific domain for your deployment is recommended over the legacy domain.
+
+| `cloud` value | Domain | When to use |
+|:---|:---|:---|
+| `'aws'` | `https://multisearch-aw.rezolve.com` | App deployed on AWS |
+| `'azure'` | `https://multisearch-az.rezolve.com` | App deployed on Azure |
+| _(unset)_ | `https://multimodal.search.rezolve.com` | Legacy — maintained for backwards compatibility |
+
+The new domains also use updated API paths:
+
+| API | Legacy path | New cloud path |
+|:---|:---|:---|
+| Search by image | `v1/product/search_by_image` | `v1/visearch/search_by_image` |
+| Recommendations | `v1/product/recommendations` | `v1/visearch/recommendations` |
+| Multisearch | `v1/product/multisearch` | `v1/search` |
+| Multisearch complementary | `v1/product/multisearch/complementary` | `v1/search/complementary` |
+| Multisearch outfit recommendations | `v1/product/multisearch/outfit-recommendations` | `v1/search/outfit-recommendations` |
+| Multisearch autocomplete | `v1/product/multisearch/autocomplete` | `v1/autocomplete` |
+
+The SDK switches paths automatically — you only need to set `cloud`:
+
+```javascript
+// AWS deployment
+const visearch = ViSearch({
+  app_key: 'YOUR_APP_KEY',
+  placement_id: 'YOUR_PLACEMENT_ID',
+  cloud: 'aws',
+});
+
+// Azure deployment
+const visearch = ViSearch({
+  app_key: 'YOUR_APP_KEY',
+  placement_id: 'YOUR_PLACEMENT_ID',
+  cloud: 'azure',
+});
+```
+
+If you need to point directly at a cloud domain URL (e.g. for testing), you can set `endpoint` instead of `cloud` — the SDK detects the cloud domain and uses the new paths automatically:
+
+```javascript
+const visearch = ViSearch({
+  app_key: 'YOUR_APP_KEY',
+  placement_id: 'YOUR_PLACEMENT_ID',
+  endpoint: 'https://multisearch-aw.rezolve.com',
+});
+```
+
+> For full details on the domain and path changes see [`docs/rezolve-domains-update.md`](docs/rezolve-domains-update.md).
 
 ### 1.3 Demo
 
@@ -274,7 +327,7 @@ Searching by Image can happen in three different ways - by url, id or File.
   visearch.productSearchByImage(parameters, onResponse, onError);
   ```
 
-> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/search-by-image-api-1).
+> The request parameters for this API can be found at [Rezolve Documentation Hub](https://msdocs.rezolve.com/reference/search-by-image-api-1).
 
 ### 2.2 Recommendations
 
@@ -299,7 +352,7 @@ const onError = (error)=> {
 visearch.productRecommendations(product_id, parameters, onResponse, onError);
 ```
 
-> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/search-by-image-api-1).
+> The request parameters for this API can be found at [Rezolve Documentation Hub](https://msdocs.rezolve.com/reference/search-by-image-api-1).
 
 ### 2.3 Multisearch
 
@@ -404,7 +457,7 @@ Multisearch can happen in five different ways - by text, product id, image url, 
   visearch.productMultisearch(parameters, onResponse, onError);
   ```
 
-> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-api).
+> The request parameters for this API can be found at [Rezolve Documentation Hub](https://msdocs.rezolve.com/reference/multimodal-api).
 
 ### 2.4 Multisearch Complementary
 
@@ -510,7 +563,7 @@ Multisearch complementary can happen with product id / image url /image id / ima
   visearch.productMultisearchComplementary(parameters, onResponse, onError);
   ```
 
-> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-complementary-api).
+> The request parameters for this API can be found at [Rezolve Documentation Hub](https://msdocs.rezolve.com/reference/multimodal-complementary-api).
 
 ### 2.5 Multisearch Outfit Recommendations
 
@@ -616,7 +669,7 @@ Multisearch outfit recommendations can happen with product id / image url /image
   visearch.productMultisearchOutfitRecommendations(parameters, onResponse, onError);
   ```
 
-> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-outfit-recommendations-api).
+> The request parameters for this API can be found at [Rezolve Documentation Hub](https://msdocs.rezolve.com/reference/multimodal-outfit-recommendations-api).
 
 ### 2.6 Multisearch Autocomplete
 
@@ -721,7 +774,7 @@ Multisearch autocomplete can happen in five different ways - by text, product id
   visearch.productMultisearchAutocomplete(parameters, onResponse, onError);
   ```
 
-> The request parameters for this API can be found at [ViSenze Documentation Hub](https://ref-docs.visenze.com/reference/multimodal-autocomplete-api).
+> The request parameters for this API can be found at [Rezolve Documentation Hub](https://msdocs.rezolve.com/reference/multimodal-autocomplete-api).
 
 
 ## 3. Search Results
@@ -772,7 +825,7 @@ The fields returned under here are dependent on the product metadata requested t
 
 Other than that, we return 2 default fields.
 
-|ViSenze pre-defined catalog fields|Client X's catalog original names|
+|Rezolve pre-defined catalog fields|Client X's catalog original names|
 |:---|:---|
 |product_id|sku|
 |main_image_url|medium_image|
@@ -798,7 +851,7 @@ Facets are used to perform potential filtering of results.
 | items | [object](#36-facetitem)[] |  |
 | range | [object](#37-facetrange) |  |
 
-To check usage guideline, please refer [here](https://ref-docs.visenze.com/reference/facets)
+To check usage guideline, please refer [here](https://msdocs.rezolve.com/reference/facets)
 
 ### 3.6 FacetItem
 
@@ -822,7 +875,7 @@ Facet for value range filtering.
 
 There are many parameters that our API support and we will be showing you a few examples of how to use them in this section.
 
-> You can find all of the supported advance search parameters for ProductSearch API [here](https://ref-docs.visenze.com/reference/search-by-image-api-1).
+> You can find all of the supported advance search parameters for ProductSearch API [here](https://msdocs.rezolve.com/reference/search-by-image-api-1).
 
 ### 4.1 Example - Retrieving Metadata
 
@@ -868,7 +921,7 @@ Params | Filter Query Behaviour | Example
 --- | --- | ---
 string | The filter queries are treated as exact match conditions. Applies to String, Integer and Float type fields. | `filters=brand:my_brand` means the brand (String) value of the search results must be strictly equal to “my_brand”. `filters=price:10,199` means the price (Integer) value of the search results must be strictly within the range between 10 to 199 inclusive.
 
-For more details, check out [Filters and Text Filters](https://ref-docs.visenze.com/reference/filters-and-text-filters) section in the ViSenze Documentation Hub.
+For more details, check out [Filters and Text Filters](https://msdocs.rezolve.com/reference/filters-and-text-filters) section in the Rezolve Documentation Hub.
 
 ### 4.3 Example - Automatic Object Recognition
 

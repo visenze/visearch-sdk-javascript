@@ -43,9 +43,7 @@ pipeline {
               -e REC_PLACEMENT_ID=${REC_PLACEMENT_ID} -e REC_PID=${REC_PID} \
               -e SEARCH_APP_KEY=${SEARCH_APP_KEY} -e REC_APP_KEY=${REC_APP_KEY} \
               -e ENDPOINT=${ENDPOINT}"
-            codeclimate.testWithCoverage({
-              sh runDockerCmd('npm run test-with-coverage', envVars)
-            })
+            sh runDockerCmd('npm run test-with-coverage', envVars)
           }
         }
       }

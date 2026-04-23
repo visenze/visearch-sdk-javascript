@@ -47,6 +47,119 @@ beforeEach(() => {
   localStorage.clear();
 });
 
+describe('cloud domain routing', () => {
+  let fetchMock;
+  let originalFetch;
+
+  beforeEach(() => {
+    originalFetch = global.fetch;
+    fetchMock = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        headers: { get: () => 'test-reqid' },
+        json: () => Promise.resolve({ status: 'OK', reqid: 'test-reqid', result: [{ product_id: 'p1' }] }),
+      }),
+    );
+    global.fetch = fetchMock;
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+    jest.restoreAllMocks();
+  });
+
+  function getCalledUrl() {
+    return fetchMock.mock.calls[0][0].toString();
+  }
+
+  test('cloud:aws uses multisearch-aw domain and v1/search path', async () => {
+    const client = ViSearch({ app_key: 'k', placement_id: 'p', cloud: 'aws' });
+    await new Promise((resolve) => client.productMultisearch({ q: 'test' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('multisearch-aw.rezolve.com');
+    expect(url).toContain('v1/search');
+    expect(url).not.toContain('v1/product');
+  });
+
+  test('cloud:azure uses multisearch-az domain and v1/search path', async () => {
+    const client = ViSearch({ app_key: 'k', placement_id: 'p', cloud: 'azure' });
+    await new Promise((resolve) => client.productMultisearch({ q: 'test' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('multisearch-az.rezolve.com');
+    expect(url).toContain('v1/search');
+    expect(url).not.toContain('v1/product');
+  });
+
+  test('no cloud key uses legacy domain and v1/product/multisearch path', async () => {
+    const client = ViSearch({ app_key: 'k', placement_id: 'p' });
+    await new Promise((resolve) => client.productMultisearch({ q: 'test' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('multimodal.search.rezolve.com');
+    expect(url).toContain('v1/product/multisearch');
+  });
+
+  test('endpoint set to aws cloud domain (no cloud key) uses new paths', async () => {
+    const client = ViSearch({ app_key: 'k', placement_id: 'p', endpoint: 'https://multisearch-aw.rezolve.com' });
+    await new Promise((resolve) => client.productMultisearch({ q: 'test' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('multisearch-aw.rezolve.com');
+    expect(url).toContain('v1/search');
+    expect(url).not.toContain('v1/product');
+  });
+
+  test('endpoint set to azure cloud domain (no cloud key) uses new paths', async () => {
+    const client = ViSearch({ app_key: 'k', placement_id: 'p', endpoint: 'https://multisearch-az.rezolve.com' });
+    await new Promise((resolve) => client.productMultisearch({ q: 'test' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('multisearch-az.rezolve.com');
+    expect(url).toContain('v1/search');
+    expect(url).not.toContain('v1/product');
+  });
+
+  test('endpoint with trailing slash on cloud domain uses new paths', async () => {
+    const client = ViSearch({ app_key: 'k', placement_id: 'p', endpoint: 'https://multisearch-aw.rezolve.com/' });
+    await new Promise((resolve) => client.productMultisearch({ q: 'test' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('multisearch-aw.rezolve.com');
+    expect(url).toContain('v1/search');
+    expect(url).not.toContain('v1/product');
+  });
+
+  test('endpoint with cloud origin and extra URL components uses new paths', async () => {
+    const client = ViSearch({
+      app_key: 'k',
+      placement_id: 'p',
+      endpoint: 'https://multisearch-az.rezolve.com/some/path?x=1#frag',
+    });
+    await new Promise((resolve) => client.productMultisearch({ q: 'test' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('multisearch-az.rezolve.com');
+    expect(url).toContain('v1/search');
+    expect(url).not.toContain('v1/product');
+  });
+
+  test('custom staging endpoint uses legacy paths even when cloud is set', async () => {
+    const client = ViSearch({
+      app_key: 'k',
+      placement_id: 'p',
+      endpoint: 'https://staging.example.com',
+      cloud: 'aws',
+    });
+    await new Promise((resolve) => client.productMultisearch({ q: 'test' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('staging.example.com');
+    expect(url).toContain('v1/product/multisearch');
+  });
+
+  test('cloud:aws uses v1/visearch path for searchByImage', async () => {
+    const client = ViSearch({ app_key: 'k', placement_id: 'p', cloud: 'aws' });
+    await new Promise((resolve) => client.productSearchByImage({ im_url: 'http://img.example.com/x.jpg' }, resolve));
+    const url = getCalledUrl();
+    expect(url).toContain('multisearch-aw.rezolve.com');
+    expect(url).toContain('v1/visearch/search_by_image');
+  });
+});
+
 describe('init ViSearch', () => {
   test('from init config', async () => {
     const client = ViSearch({
