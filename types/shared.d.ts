@@ -77,6 +77,7 @@ export interface ViSearchClient {
 export type ViSearchSettings = {
   app_key: string;
   placement_id: string;
+  cloud?: 'aws' | 'azure';
   uid?: string;
   analytics_endpoint?: string;
   endpoint?: string;

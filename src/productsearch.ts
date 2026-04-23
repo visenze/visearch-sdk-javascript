@@ -1,15 +1,36 @@
 import { sendGetRequest, sendPostRequest } from './common.js';
 import { GenericCallback, ViSearchSettings } from '../types/shared';
 
-const END_POINT = 'https://search.visenze.com';
-const CN_END_POINT = 'https://search.visenze.com.cn';
+const END_POINT_LEGACY = 'https://multimodal.search.rezolve.com';
+const END_POINT_AWS    = 'https://multisearch-aw.rezolve.com';
+const END_POINT_AZURE  = 'https://multisearch-az.rezolve.com';
+const CN_END_POINT     = 'https://search.visenze.com.cn';
 
-const PATH_SEARCH = 'v1/product/search_by_image';
-const PATH_REC = 'v1/product/recommendations';
-const PATH_MULTISEARCH = 'v1/product/multisearch'
-const PATH_MULTISEARCH_COMPLEMENTARY = 'v1/product/multisearch/complementary'
-const PATH_MULTISEARCH_OUTFIT_RECOMMENDATIONS = 'v1/product/multisearch/outfit-recommendations'
-const PATH_MULTISEARCH_AUTOCOMPLETE = 'v1/product/multisearch/autocomplete'
+// Legacy paths
+const PATH_SEARCH                    = 'v1/product/search_by_image';
+const PATH_REC                       = 'v1/product/recommendations';
+const PATH_MULTISEARCH               = 'v1/product/multisearch';
+const PATH_MULTISEARCH_COMPLEMENTARY = 'v1/product/multisearch/complementary';
+const PATH_MULTISEARCH_OUTFIT        = 'v1/product/multisearch/outfit-recommendations';
+const PATH_MULTISEARCH_AUTOCOMPLETE  = 'v1/product/multisearch/autocomplete';
+
+// Cloud paths
+const CLOUD_PATH_SEARCH                    = 'v1/visearch/search_by_image';
+const CLOUD_PATH_REC                       = 'v1/visearch/recommendations';
+const CLOUD_PATH_MULTISEARCH               = 'v1/search';
+const CLOUD_PATH_MULTISEARCH_COMPLEMENTARY = 'v1/search/complementary';
+const CLOUD_PATH_MULTISEARCH_OUTFIT        = 'v1/search/outfit-recommendations';
+const CLOUD_PATH_MULTISEARCH_AUTOCOMPLETE  = 'v1/autocomplete';
+
+function toOrigin(urlString: string): string | undefined {
+  try {
+    return new URL(urlString).origin;
+  } catch {
+    return undefined;
+  }
+}
+
+const CLOUD_ENDPOINTS = new Set([toOrigin(END_POINT_AWS), toOrigin(END_POINT_AZURE)].filter(Boolean));
 
 function getAnalyticsParams(
   queryParams: Record<string, unknown> | undefined,
@@ -40,10 +61,22 @@ function getAuthParams(settings: ViSearchSettings): Record<string, unknown> {
 }
 
 function getEndpoint(settings: ViSearchSettings): string {
+  if (settings.endpoint) return settings.endpoint;
+  if (settings['is_cn']) return CN_END_POINT;
+  if (settings.cloud === 'aws') return END_POINT_AWS;
+  if (settings.cloud === 'azure') return END_POINT_AZURE;
+  return END_POINT_LEGACY;
+}
+
+// settings.endpoint takes priority: if set, check against known cloud domains.
+// Only falls back to settings.cloud when no endpoint is provided.
+function isCloudDomain(settings: ViSearchSettings): boolean {
   if (settings.endpoint) {
-    return settings.endpoint;
+    const endpointOrigin = toOrigin(settings.endpoint);
+    return endpointOrigin ? CLOUD_ENDPOINTS.has(endpointOrigin) : false;
   }
-  return settings['is_cn'] ? CN_END_POINT : END_POINT;
+  if (settings['is_cn']) return false;
+  return settings.cloud === 'aws' || settings.cloud === 'azure';
 }
 
 function getQueryParams(
@@ -65,8 +98,9 @@ function multisearch(
   callback?: GenericCallback,
   failure?: GenericCallback,
 ): Promise<void> {
+  const path = isCloudDomain(settings) ? CLOUD_PATH_MULTISEARCH : PATH_MULTISEARCH;
   const queryParams = getQueryParams(params, vaParams, settings);
-  return sendPostRequest(settings, getEndpoint(settings), PATH_MULTISEARCH, queryParams, callback, failure);
+  return sendPostRequest(settings, getEndpoint(settings), path, queryParams, callback, failure);
 }
 
 function multisearchComplementary(
@@ -76,8 +110,9 @@ function multisearchComplementary(
   callback?: GenericCallback,
   failure?: GenericCallback,
 ): Promise<void> {
+  const path = isCloudDomain(settings) ? CLOUD_PATH_MULTISEARCH_COMPLEMENTARY : PATH_MULTISEARCH_COMPLEMENTARY;
   const queryParams = getQueryParams(params, vaParams, settings);
-  return sendPostRequest(settings, getEndpoint(settings), PATH_MULTISEARCH_COMPLEMENTARY, queryParams, callback, failure);
+  return sendPostRequest(settings, getEndpoint(settings), path, queryParams, callback, failure);
 }
 
 function multisearchOutfitRecommendations(
@@ -87,8 +122,9 @@ function multisearchOutfitRecommendations(
   callback?: GenericCallback,
   failure?: GenericCallback,
 ): Promise<void> {
+  const path = isCloudDomain(settings) ? CLOUD_PATH_MULTISEARCH_OUTFIT : PATH_MULTISEARCH_OUTFIT;
   const queryParams = getQueryParams(params, vaParams, settings);
-  return sendPostRequest(settings, getEndpoint(settings), PATH_MULTISEARCH_OUTFIT_RECOMMENDATIONS, queryParams, callback, failure);
+  return sendPostRequest(settings, getEndpoint(settings), path, queryParams, callback, failure);
 }
 
 function multisearchAutocomplete(
@@ -98,8 +134,9 @@ function multisearchAutocomplete(
   callback?: GenericCallback,
   failure?: GenericCallback,
 ): Promise<void> {
+  const path = isCloudDomain(settings) ? CLOUD_PATH_MULTISEARCH_AUTOCOMPLETE : PATH_MULTISEARCH_AUTOCOMPLETE;
   const queryParams = getQueryParams(params, vaParams, settings);
-  return sendPostRequest(settings, getEndpoint(settings), PATH_MULTISEARCH_AUTOCOMPLETE, queryParams, callback, failure);
+  return sendPostRequest(settings, getEndpoint(settings), path, queryParams, callback, failure);
 }
 
 function searchByImage(
@@ -109,8 +146,9 @@ function searchByImage(
   callback?: GenericCallback,
   failure?: GenericCallback,
 ): Promise<void> {
+  const path = isCloudDomain(settings) ? CLOUD_PATH_SEARCH : PATH_SEARCH;
   const queryParams = getQueryParams(params, vaParams, settings);
-  return sendPostRequest(settings, getEndpoint(settings), PATH_SEARCH, queryParams, callback, failure);
+  return sendPostRequest(settings, getEndpoint(settings), path, queryParams, callback, failure);
 }
 
 function searchById(
@@ -121,8 +159,9 @@ function searchById(
   callback?: GenericCallback,
   failure?: GenericCallback,
 ): Promise<void> {
+  const basePath = isCloudDomain(settings) ? CLOUD_PATH_REC : PATH_REC;
   const queryParams = getQueryParams(params, vaParams, settings);
-  return sendGetRequest(settings, getEndpoint(settings), `${PATH_REC}/${productId}`, queryParams, callback, failure);
+  return sendGetRequest(settings, getEndpoint(settings), `${basePath}/${productId}`, queryParams, callback, failure);
 }
 
 function searchByIdByPost(
@@ -133,8 +172,9 @@ function searchByIdByPost(
   callback?: GenericCallback,
   failure?: GenericCallback,
 ): Promise<void> {
+  const basePath = isCloudDomain(settings) ? CLOUD_PATH_REC : PATH_REC;
   const queryParams = getQueryParams(params, vaParams, settings);
-  return sendPostRequest(settings, getEndpoint(settings), `${PATH_REC}/${productId}`, queryParams, callback, failure);
+  return sendPostRequest(settings, getEndpoint(settings), `${basePath}/${productId}`, queryParams, callback, failure);
 }
 
 export { searchById, searchByImage, searchByIdByPost, multisearch, multisearchComplementary, multisearchOutfitRecommendations, multisearchAutocomplete };
