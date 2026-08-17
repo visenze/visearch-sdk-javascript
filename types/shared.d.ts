@@ -165,7 +165,10 @@ export interface Product {
   main_image_url: string;
   data: Record<string, unknown>;
   sys?: Record<string, unknown>;
+  /** Other products paired with this result by pairing-rule search APIs (e.g. outfit recommendations, complementary search). See CONTEXT.md. */
   alternatives?: Product[];
+  /** Other products collapsed into this result by a backend deduping mechanism, distinct from `alternatives` and from this SDK's `group_by_key`/`group_results` feature. See CONTEXT.md. */
+  variants?: Product[];
   score?: number;
   image_s3_url?: string;
   pinned?: 'true' | 'false';
