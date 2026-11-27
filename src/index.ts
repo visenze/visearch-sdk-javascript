@@ -19,6 +19,8 @@ import {
   FacetItem,
   FacetRange,
   Facet,
+  SearchTrace,
+  SearchTraceStep,
 } from '../types/shared';
 
 (function init(context): void {
@@ -56,4 +58,6 @@ export {
   FacetItem,
   FacetRange,
   Facet,
+  SearchTrace,
+  SearchTraceStep,
 };
