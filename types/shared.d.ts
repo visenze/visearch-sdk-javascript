@@ -111,6 +111,36 @@ export interface ProductSearchResponseError extends SimpleResponse {
     code: number;
     message: string;
   };
+  /** The steps the search went through, when the request sets `return_trace: true`. See SearchTrace. */
+  trace?: SearchTrace;
+}
+
+/**
+ * The steps a multisearch went through, returned when the request sets `return_trace: true`. A debugging
+ * aid: the steps and their details change as the search pipeline changes, so treat them as data to show,
+ * not a contract to code against.
+ */
+export interface SearchTrace {
+  /** Time the whole search took, in milliseconds. */
+  total_ms: number;
+  /** Steps in the order they started; some run at the same time. */
+  steps: SearchTraceStep[];
+}
+
+export interface SearchTraceStep {
+  /** The step's name, e.g. `similarity_search` or `boosting`. */
+  step: string;
+  /** The sub-search the step belongs to, e.g. `pairing_rule:0` or `outfit_object:1`; absent for the request's own steps. */
+  group?: string;
+  /** When the step started, in milliseconds from the start of the search. */
+  start_ms: number;
+  duration_ms: number;
+  /** True when the step failed and the search carried on without it. */
+  failed?: boolean;
+  /** What the step did, in a sentence for people to read. */
+  summary?: string;
+  /** The step's own fields, e.g. candidate counts or the query before and after. */
+  details?: Record<string, unknown>;
 }
 
 export interface ProductSearchResponseSuccess extends SimpleResponse {
@@ -120,6 +150,8 @@ export interface ProductSearchResponseSuccess extends SimpleResponse {
   total?: number;
   im_id?: string;
   debug?: { [index: string]: any };
+  /** The steps the search went through, when the request sets `return_trace: true`. See SearchTrace. */
+  trace?: SearchTrace;
   product_types?: ProductType[];
   group_by_key?: string;
   group_limit?: number;
